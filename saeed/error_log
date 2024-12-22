@@ -1,0 +1,14 @@
+[20-May-2024 03:30:12 UTC] PHP Fatal error:  Uncaught RuntimeException: A facade root has not been set. in /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php:258
+Stack trace:
+#0 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/RegisterErrorViewPaths.php(18): Illuminate\Support\Facades\Facade::__callStatic('replaceNamespac...', Array)
+#1 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(598): Illuminate\Foundation\Exceptions\RegisterErrorViewPaths->__invoke()
+#2 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(579): Illuminate\Foundation\Exceptions\Handler->registerErrorViewPaths()
+#3 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(490): Illuminate\Foundation\Exceptions\Handler->renderHttpException(Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#4 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(356): Illuminate\Foundation\Exceptions\Handler->prepareResponse(Object(Illuminate\Http\Request), Object(Symfony\Component\HttpKernel\Exception\HttpException))
+#5 /home/novintarashe/public_html/app/Exceptions/Handler.php(134): Illuminate\Foundation\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(Error))
+#6 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(427): App\Exceptions\Handler->render(Object(Illuminate\Http\Request), Object(Error))
+#7 /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(115): Illuminate\Foundation\Http\Kernel->renderException(Object(Illuminate\Http\Request), Object(Error))
+#8 /home/novintarashe/public_html/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#9 /home/novintarashe/public_html/server.php(21): require_once('/home/novintara...')
+#10 {main}
+  thrown in /home/novintarashe/public_html/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php on line 258

@@ -1,0 +1,41 @@
+{
+  "name": "نوین تراشه گنجی",
+  "description": "نوین تراشه گنجی",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+          {
+            "src": "./img/logo.png",
+            "type": "image/png",
+            "sizes": "24x24"
+        },
+        {
+            "src": "./img/logo.png",
+            "type": "image/png",
+            "sizes": "32x32"
+        },
+        {
+            "src": "./img/logo.png",
+            "type": "image/png",
+            "sizes": "64x64"
+        },
+        {
+            "src": "./img/logo.png",
+            "type": "image/png",
+            "sizes": "128x128"
+        },
+        {
+            "src": "./img/logo.png",
+            "type": "image/png",
+            "sizes": "256x256"
+        },
+        {
+            "src": "./img/logo.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+    
+}
