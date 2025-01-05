@@ -24,7 +24,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
     public function handle()
     {
-        
+
         // if (!checkApiAccounting()) {
         //     return false;
         // }
@@ -114,7 +114,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                         $product_exist->morePrice = $morePrice;
                         $product_exist->fldTedadKarton = $fldTedadKarton;
                         $product_exist->published = $status;
-                        $product_exist->image = $image;
+                        //$product_exist->image = $image;
                         $product_exist->type = "physical";
                         $product_exist->category_id = $Mcategory->id;
                         ///$product->product_id=$productId . '-' . $productIds;
