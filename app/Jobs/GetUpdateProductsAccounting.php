@@ -12,7 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Artisan;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class GetUpdateProductsAccounting implements ShouldQueue
 {
@@ -31,7 +31,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                 $responseData = json_decode($responseBody, true);
 
                 if (json_last_error() !== JSON_ERROR_NONE) {
-                    \Log::error('Invalid JSON response: ' . json_last_error_msg());
+                    Log::error('Invalid JSON response: ' . json_last_error_msg());
                     return false;
                 }
 
@@ -44,14 +44,14 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 if ($i === $retryCount - 1) {
-                    \Log::error('Failed to fetch products after ' . $retryCount . ' attempts: ' . $e->getMessage(), [
+                    Log::error('Failed to fetch products after ' . $retryCount . ' attempts: ' . $e->getMessage(), [
                         'trace' => $e->getTraceAsString()
                     ]);
                     return false;
                 }
                 sleep($retryDelay);
             } catch (\Exception $e) {
-                \Log::error('An unexpected error occurred: ' . $e->getMessage(), [
+                Log::error('An unexpected error occurred: ' . $e->getMessage(), [
                     'trace' => $e->getTraceAsString()
                 ]);
                 return false;
@@ -221,13 +221,13 @@ class GetUpdateProductsAccounting implements ShouldQueue
                 // اگر خطا رخ داد و تلاش‌ها تمام نشده، کمی صبر کنید و دوباره تلاش کنید
                 if ($i === $retryCount - 1) {
                     // اگر تعداد تلاش‌ها به پایان رسید، خطا را لاگ کنید
-                    \Log::error('Failed to fetch products after ' . $retryCount . ' attempts: ' . $e->getMessage());
+                    Log::error('Failed to fetch products after ' . $retryCount . ' attempts: ' . $e->getMessage());
                     return false;
                 }
                 sleep($retryDelay); // تأخیر قبل از تلاش مجدد
             } catch (\Exception $e) {
                 // خطاهای دیگر را لاگ کنید
-                \Log::error('An unexpected error occurred: ' . $e->getMessage());
+                Log::error('An unexpected error occurred: ' . $e->getMessage());
                 return false;
             }
         }
