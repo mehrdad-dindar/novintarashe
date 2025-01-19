@@ -21,7 +21,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
     public function handle()
     {
         $client = new \GuzzleHttp\Client();
-        $retryCount = 3;
+        $retryCount = 10;
         $retryDelay = 2;
 
         for ($i = 0; $i < $retryCount; $i++) {
