@@ -30,9 +30,9 @@
             <img data-src="{{ $product->image ? asset($product->image) : asset('/no-image-product.png') }}" src="{{ theme_asset('images/600-600.png') }}" alt="{{ $product->title }}">
         </a>
         <div class="product-card-body">
-            <h5 class="product-title">
+            <h3 class="product-title">
                 <a href="{{ route('front.products.show', ['product' => $product]) }}">{{ $product->title }}</a>
-            </h5>
+            </h3>
             <a class="product-meta" href="{{ $product->category ? $product->category->link : '#' }}">{{ $product->category ? $product->category->title : trans('front::messages.partials.no-category') }}</a>
             <div class="price-index-h">
                 <span class="product-price">{{ $product->getLowestPrice() }}</span>
