@@ -14,7 +14,7 @@
                             <div class="col-12 col-md-6 col-lg-4">
                                 <div class="widget-menu widget card">
                                     <header class="card-header">
-                                        <h3 class="card-title">{{ option('link_groups_' . $group['key'], $group['name']) }}</h3>
+                                        <p class="card-title">{{ option('link_groups_' . $group['key'], $group['name']) }}</p>
                                     </header>
                                     <ul class="footer-menu">
                                         @foreach($links->where('link_group_id', $group['key']) as $link)
