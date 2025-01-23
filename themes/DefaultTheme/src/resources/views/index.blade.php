@@ -28,7 +28,12 @@
     <main class="main-content dt-sl mt-4 mb-3">
         <div class="container main-container">
 
-            <h1 class="display-hidden">{{ option('site_title') }}</h1>
+            <h1 class="display-hidden"> @isset($title)
+                {{ $title }} |
+            @endisset
+
+            {{ option('info_site_title', 'فن وب') }}
+        </h1>
 
             @foreach ($widgets as $widget)
                 @switch($widget->key)
