@@ -1479,6 +1479,10 @@ main.main-content {
     font-size: 19px;
 }
 
+.category-section-title h2 {
+    font-size: 19px;
+}
+
 .category-section-slider .category-slider .item {
     text-align: center;
     padding: 10px 0 0;

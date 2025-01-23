@@ -28,7 +28,7 @@
     <main class="main-content dt-sl mt-4 mb-3">
         <div class="container main-container">
 
-            <h1 class="display-hidden"> @isset($title)
+            <h1 style="display: none"> @isset($title)
                 {{ $title }} |
             @endisset
 

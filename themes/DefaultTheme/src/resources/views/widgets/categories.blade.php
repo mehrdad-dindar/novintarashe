@@ -9,7 +9,7 @@
     <div class="col-12">
         <div class="category-section dt-sn dt-sl">
             <div class="category-section-title dt-sl">
-                <h3>{{ trans('front::messages.index.products-categorization') }}</h3>
+                <h2>{{ trans('front::messages.index.products-categorization') }}</h2>
             </div>
             <div class="category-section-slider dt-sl">
                 <div class="category-slider owl-carousel">
