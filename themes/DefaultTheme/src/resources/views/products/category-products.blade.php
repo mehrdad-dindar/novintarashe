@@ -33,7 +33,7 @@
                             @foreach ($category->parents() as $parent)
                                 <a href="{{ route('front.products.category', ['category' => $parent]) }}">{{ $parent->title }}</a>
                             @endforeach
-                            <span>{{ $category->title }}</span>
+                            <h1 class="title-breadcrumb-h1 display-inline" style='font-size: 14px;font-weight: 700;'>{{ $category->title }}</h1>
                         </nav>
                     </div>
                 </div>
