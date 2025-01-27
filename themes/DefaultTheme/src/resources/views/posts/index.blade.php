@@ -16,7 +16,7 @@
                        <div class="breadcrumb dt-sl">
                            <nav>
                                <a href="/">{{ trans('front::messages.posts.home') }}</a>
-                               <h1 style="font-weight: 700;font-size: 15px" class="d-inline" href="#">{{ trans('front::messages.posts.blog') }}</a>
+                               <h1 style="font-weight: 700;font-size: 15px" class="d-inline" href="#">{{ trans('front::messages.posts.blog') }}</h2>
                            </nav>
                        </div>
                    </div>
@@ -41,7 +41,7 @@
 
                                         </div>
                                         <div class="post-title">
-                                            <a href="{{ route('front.posts.show', ['post' => $post]) }}">{{ $post->title }}</a>
+                                            <h2 style="font-size: 14px" href="{{ route('front.posts.show', ['post' => $post]) }}">{{ $post->title }}</h2>
                                             <span class="post-date">{{ jdate($post->created_at)->format('%d %B %Y') }}</span>
                                         </div>
                                     </div>
