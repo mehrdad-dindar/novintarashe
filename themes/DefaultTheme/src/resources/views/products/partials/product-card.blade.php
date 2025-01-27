@@ -35,9 +35,9 @@
     </a>
     <div class="product-card-body">
 
-        <h5 class="product-title">
+        <h2 class="product-title">
             <a href="{{ route('front.products.show', ['product' => $product]) }}">{{ $product->title }}</a>
-        </h5>
+        </h2>
 
         @if($product->category)
             <a class="product-meta" href="{{ route('front.products.category', ['category' => $product->category]) }}">{{ $product->category->title }}</a>
