@@ -28,7 +28,6 @@
                         <nav class="pr-4">
                             <a href="/">{{ trans('front::messages.products.home') }}</a>
                             <a href="{{ route('front.products.index') }}">{{ trans('front::messages.products.products') }}</a>
-
                             @foreach ($category->parents() as $parent)
                                 <a href="{{ route('front.products.category', ['category' => $parent]) }}">{{ $parent->title }}</a>
                             @endforeach
@@ -37,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 @if ($has_filter)
                     @include('front::products.partials.category-filters')
