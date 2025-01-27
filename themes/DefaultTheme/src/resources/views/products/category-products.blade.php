@@ -37,6 +37,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="row">
                 @if ($has_filter)
                     @include('front::products.partials.category-filters')
