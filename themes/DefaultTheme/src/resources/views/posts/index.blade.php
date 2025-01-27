@@ -16,7 +16,7 @@
                        <div class="breadcrumb dt-sl">
                            <nav>
                                <a href="/">{{ trans('front::messages.posts.home') }}</a>
-                               <a href="#">{{ trans('front::messages.posts.blog') }}</a>
+                               <h1 style="font-weight: 700;font-size: 15px" class="d-inline" href="#">{{ trans('front::messages.posts.blog') }}</a>
                            </nav>
                        </div>
                    </div>
