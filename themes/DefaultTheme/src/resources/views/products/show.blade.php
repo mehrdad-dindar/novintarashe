@@ -411,8 +411,8 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header pb-0">
-                        <h5 class="modal-title"
-                            id="price-changes-modal-label">{{ trans('front::messages.products.sales-price-chart') }}</h5>
+                        <span class="modal-title"
+                            id="price-changes-modal-label">{{ trans('front::messages.products.sales-price-chart') }}</span>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

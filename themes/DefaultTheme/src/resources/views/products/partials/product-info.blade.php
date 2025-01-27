@@ -3,7 +3,7 @@
     <div class="product-info dt-sl">
         <div class="product-title">
             <h1>{{ $product->title }}</h1>
-            <h3 class="mb-1">{{ $product->title_en }}</h3>
+            <span class="mb-1">{{ $product->title_en }}</span>
         </div>
 
         <div class="row pt-2">
