@@ -26,14 +26,14 @@
                 <!-- Start Content -->
                 <div class="title-breadcrumb-special dt-sl mb-3">
                     <div class="breadcrumb dt-sl">
-                        <nav>
+                        <nav class="pr-4">
                             <a href="/">{{ trans('front::messages.products.home') }}</a>
                             <a href="{{ route('front.products.index') }}">{{ trans('front::messages.products.products') }}</a>
 
                             @foreach ($category->parents() as $parent)
                                 <a href="{{ route('front.products.category', ['category' => $parent]) }}">{{ $parent->title }}</a>
                             @endforeach
-                            <h1 class="title-breadcrumb-h1 display-inline" style='font-size: 14px;font-weight: 700;'>{{ $category->title }}</h1>
+                            <h1 class="title-breadcrumb-h1 d-inline" style='font-size: 14px;font-weight: 700;'>{{ $category->title }}</h1>
                         </nav>
                     </div>
                 </div>
