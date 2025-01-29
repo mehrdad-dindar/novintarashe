@@ -5,6 +5,7 @@
 /storage/*.key
 /storage/debugbar
 /storage/installed
+/bootstrap/cache
 .env
 .env.backup
 .phpunit.result.cache

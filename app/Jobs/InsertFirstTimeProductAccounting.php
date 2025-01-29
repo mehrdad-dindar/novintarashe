@@ -45,13 +45,13 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
             // $response = $client->request('GET', 'http://2.187.99.27:5000/api/products');
             $response = $response->getBody()->getContents();
             $response = json_decode($response, true);
-
+Log::info($response);
             //$productId = Setting::where('key', 'productId')->pluck('value')->first();
             //$productIds = Post::buildCode();
             // if ($response->status == 200) {
             option_update('last_time_insertFirstTime_product', now());
             foreach ($response as $article) {
-                
+
                 if (!Product::where('fldId', $article['A_Code'])->exists()) {
 
                     $fldId = $article['A_Code'];
