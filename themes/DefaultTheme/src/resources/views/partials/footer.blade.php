@@ -30,7 +30,9 @@
                     </div>
 
                     <div class="row">
-                        <p class="text-right" style="    color: #666;">{!! option('about_us_in_footer') !!}</p>
+                        <div class="col-12">
+                            <p class="text-right" style="color: #666;">{!! option('about_us_in_footer') !!}</p>
+                        </div>
                     </div>
                 </div>
 
