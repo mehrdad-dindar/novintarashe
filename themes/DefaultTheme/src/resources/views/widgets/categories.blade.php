@@ -17,7 +17,7 @@
                         <div class="item">
                             <a href="{{ $category->link }}" class="promotion-category">
                                 <img data-src="{{ $category->image ? asset($category->image) : asset('no-image-product.png') }}" alt="{{ $category->title }}">
-                                <h3 class="promotion-category-name" style="font-size: 12px;color: #2a2a2a;">{{ $category->title }}</h3>
+                                <h3 class="promotion-category-name" style="font-size: 12px;color: #2a2a2a;line-height: 30px">{{ $category->title }}</h3>
                                 <p class="promotion-category-quantity">{{ $category->allPublishedProducts()->count() }}{{ trans('front::messages.header.kala') }}</p>
                             </a>
                         </div>
