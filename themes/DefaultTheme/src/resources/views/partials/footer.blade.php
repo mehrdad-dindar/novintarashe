@@ -31,7 +31,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card widget ">
                                  <p class="text-right" style="color: #666;">
                                 {!! option('about_us_in_footer') !!}
                             </p>
