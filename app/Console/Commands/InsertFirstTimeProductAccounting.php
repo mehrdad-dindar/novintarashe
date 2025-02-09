@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\GetCategoriesAccounting;
+use App\Jobs\InsertFirstTimeProductAccounting as JobsInsertFirstTimeProductAccounting;
 use Illuminate\Console\Command;
 
 class InsertFirstTimeProductAccounting extends Command
@@ -20,6 +21,6 @@ class InsertFirstTimeProductAccounting extends Command
     {
         GetCategoriesAccounting::dispatch()->onQueue('get_category_accounting');
 
-        InsertFirstTimeProductAccounting::dispatch()->onQueue('insert_first_time_product_accounting');
+        JobsInsertFirstTimeProductAccounting::dispatch()->onQueue('insert_first_time_product_accounting');
     }
 }
