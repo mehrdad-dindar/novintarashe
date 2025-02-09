@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 class GetCategoriesAccounting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $tries = 3;
     public function handle()
     {
         // if (!checkApiAccounting()) {
