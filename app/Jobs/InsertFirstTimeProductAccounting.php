@@ -41,7 +41,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
 
         try {
             // $response = $client->request('GET', 'http://127.0.0.1:5000/api/products');
-            $response = $client->request('GET', 'http://srv3.noipservice.ir:7068/api/categories');
+            $response = $client->request('GET', 'http://109.122.229.114:5000/api/products');
             // $response = $client->request('GET', 'http://2.187.99.27:5000/api/products');
             $response = $response->getBody()->getContents();
             $response = json_decode($response, true);
