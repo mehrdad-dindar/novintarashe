@@ -21,7 +21,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
     public function __construct()
     {
     }
-
+    public $tries = 3;
     public function handle()
     {
 
