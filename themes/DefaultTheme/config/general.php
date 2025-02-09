@@ -286,50 +286,21 @@ return [
                 'html' => '<hr>'
             ],
             [
-                'title'      => 'نوع پاپ آپ صفحه اصلی',
-                'key'        => 'dt_index_popup_type',
+                'title'      => 'بازیابی رمز ورود',
+                'key'        => 'forgot_password_link',
                 'input-type' => 'select',
                 'class'      => 'col-md-3 col-6',
                 'options'    => [
                     [
-                        'value' => 'none',
-                        'title' => 'هیچکدام'
+                        'value' => 'on',
+                        'title' => 'فعال'
                     ],
                     [
-                        'value' => 'image',
-                        'title' => 'تصویر'
-                    ],
-                    [
-                        'value' => 'text',
-                        'title' => 'متن'
+                        'value' => 'off',
+                        'title' => 'غیرفعال'
                     ]
                 ],
                 'attributes' => 'required'
-            ],
-            [
-                'title'      => 'تصویر پاپ آپ',
-                'key'        => 'dt_index_popup_image',
-                'input-type' => 'file',
-                'class'      => 'col-md-3 col-6',
-            ],
-            [
-                'title'      => 'تصویر پاپ آپ مخصوص موبایل',
-                'key'        => 'dt_index_popup_image_mobile',
-                'input-type' => 'file',
-                'class'      => 'col-md-3 col-6',
-            ],
-            [
-                'title'      => 'لینک تصویر',
-                'key'        => 'dt_index_popup_link',
-                'input-type' => 'input',
-                'type'       => 'text',
-                'class'      => 'col-md-3 col-6',
-            ],
-            [
-                'title'      => 'متن پاپ آپ',
-                'key'        => 'dt_index_popup_text',
-                'input-type' => 'inline-editor',
-                'class'      => 'col-md-7',
             ],
         ],
         'rules' => [
