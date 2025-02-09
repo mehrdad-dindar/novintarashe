@@ -242,10 +242,10 @@ return [
                 'attributes' => 'required'
             ],
             [
-                'title'      => 'نمایش نمودار قیمت در صفحه محصول',
+                'title'      => 'نمایش نمودار قیمت محصول',
                 'key'        => 'dt_show_price_change_chart',
                 'input-type' => 'select',
-                'class'      => 'col-md-4 col-6',
+                'class'      => 'col-md-3 col-6',
                 'options'    => [
                     [
                         'value' => 'yes',
@@ -259,11 +259,78 @@ return [
                 'attributes' => 'required'
             ],
             [
+                'title'      => 'نمایش اشتراک گذاری محصول',
+                'key'        => 'show_product_share_links',
+                'input-type' => 'select',
+                'class'      => 'col-md-3 col-6',
+                'options'    => [
+                    [
+                        'value' => '1',
+                        'title' => 'بله'
+                    ],
+                    [
+                        'value' => '0',
+                        'title' => 'خیر'
+                    ]
+                ],
+                'attributes' => 'required'
+            ],
+            [
                 'title'      => 'متن توضیحات نظرات محصول',
                 'key'        => 'dt_product_reviews_description',
                 'input-type' => 'inline-editor',
-                'class'      => 'col-md-8',
-            ]
+                'class'      => 'col-md-7',
+            ],
+            [
+                'input-type' => 'linebreak',
+                'html' => '<hr>'
+            ],
+            [
+                'title'      => 'نوع پاپ آپ صفحه اصلی',
+                'key'        => 'dt_index_popup_type',
+                'input-type' => 'select',
+                'class'      => 'col-md-3 col-6',
+                'options'    => [
+                    [
+                        'value' => 'none',
+                        'title' => 'هیچکدام'
+                    ],
+                    [
+                        'value' => 'image',
+                        'title' => 'تصویر'
+                    ],
+                    [
+                        'value' => 'text',
+                        'title' => 'متن'
+                    ]
+                ],
+                'attributes' => 'required'
+            ],
+            [
+                'title'      => 'تصویر پاپ آپ',
+                'key'        => 'dt_index_popup_image',
+                'input-type' => 'file',
+                'class'      => 'col-md-3 col-6',
+            ],
+            [
+                'title'      => 'تصویر پاپ آپ مخصوص موبایل',
+                'key'        => 'dt_index_popup_image_mobile',
+                'input-type' => 'file',
+                'class'      => 'col-md-3 col-6',
+            ],
+            [
+                'title'      => 'لینک تصویر',
+                'key'        => 'dt_index_popup_link',
+                'input-type' => 'input',
+                'type'       => 'text',
+                'class'      => 'col-md-3 col-6',
+            ],
+            [
+                'title'      => 'متن پاپ آپ',
+                'key'        => 'dt_index_popup_text',
+                'input-type' => 'inline-editor',
+                'class'      => 'col-md-7',
+            ],
         ],
         'rules' => [
             'dt_show_price_change_chart' => 'required|in:yes,no'
