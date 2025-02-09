@@ -61,7 +61,7 @@
 
 
                         <div class="row">
-                        <div class="footer-social">
+                        <div class="footer-social d-block">
                             <div class="text-center">
                                 <div class="col-4" style="float: right;">
                                                                        <div id="qrcode" style=" float: right;
