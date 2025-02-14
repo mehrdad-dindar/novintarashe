@@ -31,7 +31,8 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
         return ($number >= -9 && $number <= 9);
     }
 
-    public $tries = 3;
+    public $tries = 5;
+    public $timeout = 300;
     public function handle()
     {
         // if (!checkApiAccounting()) {
