@@ -312,7 +312,7 @@ function renderPriceChart(discountPrices, realPrices, discounts, categories) {
                         ${discountTemplate}
                         <div class="mt-1"><strong>${number_format(
                             series[0][dataPointIndex]
-                        )}</strong> <small> تومان </small></div>
+                        )}</strong> <small> ریال </small></div>
                     </div>
                 </div>`;
             }

@@ -85,7 +85,7 @@
                                                                     <input class="form-control form-control-sm ltr text-center amount-input"
                                                                         name="products[{{ $product->id }}][prices][{{ $price->id }}][price]"
                                                                         value="{{ $price->price() }}"
-                                                                        data-unit="{{ $price->product->currency ? $price->product->currency->title : 'تومان' }}"
+                                                                        data-unit="{{ $price->product->currency ? $price->product->currency->title : 'ریال' }}"
                                                                         type="number">
                                                                 </div>
                                                                 <div class="col-md-2">

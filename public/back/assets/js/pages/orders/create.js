@@ -95,7 +95,7 @@ $('#add-product-to-order')
                 <div class="ml-2">
                     ${item.title}
                     <small class="text-muted">
-                        <p class="m-0">${number_format(item.price)} تومان</p>
+                        <p class="m-0">${number_format(item.price)} ریال</p>
                     </small>
                 </div>
             </li>`

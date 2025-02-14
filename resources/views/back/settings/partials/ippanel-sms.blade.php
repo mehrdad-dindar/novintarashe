@@ -95,7 +95,7 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label>متن نمونه ایجاد پترن</label>
-                    <textarea readonly class="form-control wallet_increase_sms" rows="4">مبلغ %amount% تومان به اعتبار کیف پول شما اضافه شد.&#13;&#10{{ option('info_site_title') }}</textarea>
+                    <textarea readonly class="form-control wallet_increase_sms" rows="4">مبلغ %amount% ریال به اعتبار کیف پول شما اضافه شد.&#13;&#10{{ option('info_site_title') }}</textarea>
                 </div>
             </div>
         </div>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label>متن نمونه ایجاد پترن</label>
-                    <textarea readonly class="form-control wallet_decrease_sms" rows="4">مبلغ %amount% تومان از اعتبار کیف پول شما کسر شد.&#13;&#10{{ option('info_site_title') }}</textarea>
+                    <textarea readonly class="form-control wallet_decrease_sms" rows="4">مبلغ %amount% ریال از اعتبار کیف پول شما کسر شد.&#13;&#10{{ option('info_site_title') }}</textarea>
                 </div>
             </div>
         </div>

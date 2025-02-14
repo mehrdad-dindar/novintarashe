@@ -219,10 +219,10 @@
                                                                         <select name="rounding_amount" class="form-control">
                                                                             <option data-value="{{ option('default_rounding_amount', 'no') }}" value="default" {{ $copy_product && $copy_product->rounding_amount == "default" ? 'selected' : '' }}>پیشفرض</option>
                                                                             <option data-value="no" value="no" {{ $copy_product && $copy_product->rounding_amount == "no" ? 'selected' : '' }}>خیر</option>
-                                                                            <option data-value="100" value="100" {{ $copy_product && $copy_product->rounding_amount == "100" ? 'selected' : '' }}>100 تومان</option>
-                                                                            <option data-value="1000" value="1000" {{ $copy_product && $copy_product->rounding_amount == "1000" ? 'selected' : '' }}>1000 تومان</option>
-                                                                            <option data-value="10000" value="10000" {{ $copy_product && $copy_product->rounding_amount == "10000" ? 'selected' : '' }}>10000 تومان</option>
-                                                                            <option data-value="100000" value="100000" {{ $copy_product && $copy_product->rounding_amount == "100000" ? 'selected' : '' }}>100000 تومان</option>
+                                                                            <option data-value="100" value="100" {{ $copy_product && $copy_product->rounding_amount == "100" ? 'selected' : '' }}>100 ریال</option>
+                                                                            <option data-value="1000" value="1000" {{ $copy_product && $copy_product->rounding_amount == "1000" ? 'selected' : '' }}>1000 ریال</option>
+                                                                            <option data-value="10000" value="10000" {{ $copy_product && $copy_product->rounding_amount == "10000" ? 'selected' : '' }}>10000 ریال</option>
+                                                                            <option data-value="100000" value="100000" {{ $copy_product && $copy_product->rounding_amount == "100000" ? 'selected' : '' }}>100000 ریال</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>

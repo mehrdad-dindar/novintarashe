@@ -50,10 +50,10 @@
                                                     <label>گرد کردن</label>
                                                     <select name="default_rounding_amount" class="form-control">
                                                         <option value="no" {{ option('default_rounding_amount', 'no') == 'no' ? 'selected' : '' }}>خیر</option>
-                                                        <option value="100" {{ option('default_rounding_amount') == 100 ? 'selected' : '' }}>100 تومان</option>
-                                                        <option value="1000" {{ option('default_rounding_amount') == 1000 ? 'selected' : '' }}>1000 تومان</option>
-                                                        <option value="10000" {{ option('default_rounding_amount') == 10000 ? 'selected' : '' }}>10000 تومان</option>
-                                                        <option value="100000" {{ option('default_rounding_amount') == 100000 ? 'selected' : '' }}>100000 تومان</option>
+                                                        <option value="100" {{ option('default_rounding_amount') == 100 ? 'selected' : '' }}>100 ریال</option>
+                                                        <option value="1000" {{ option('default_rounding_amount') == 1000 ? 'selected' : '' }}>1000 ریال</option>
+                                                        <option value="10000" {{ option('default_rounding_amount') == 10000 ? 'selected' : '' }}>10000 ریال</option>
+                                                        <option value="100000" {{ option('default_rounding_amount') == 100000 ? 'selected' : '' }}>100000 ریال</option>
                                                     </select>
                                                 </div>
                                             </div>

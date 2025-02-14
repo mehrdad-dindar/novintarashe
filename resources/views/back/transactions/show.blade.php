@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <th scope="row">مبلغ</th>
-                <td>{{ number_format($transaction->amount) }} تومان</td>
+                <td>{{ number_format($transaction->amount) }} ریال</td>
 
             </tr>
             <tr>

@@ -42,7 +42,7 @@
                                         <tr>
                                             <th>ردیف</th>
                                             <th>عنوان</th>
-                                            <th>نرخ (تومان)</th>
+                                            <th>نرخ (ریال)</th>
                                             <th class="text-center">عملیات</th>
                                         </tr>
                                     </thead>

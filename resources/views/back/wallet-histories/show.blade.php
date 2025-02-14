@@ -14,7 +14,7 @@
 
             <tr>
                 <th scope="row">مبلغ</th>
-                <td>{{ number_format($wallet_history->amount) }} تومان</td>
+                <td>{{ number_format($wallet_history->amount) }} ریال</td>
             </tr>
             <tr>
                 <th scope="row">نوع تراکنش</th>

@@ -142,7 +142,7 @@
                         <div class="card user-statistics-card">
                             <div class="card-header d-flex align-items-start pb-0">
                                 <div>
-                                    <h2 title="ارزش سفارشات: {{ number_format($orders_sum) }} تومان" class="text-bold-700 mb-0">{{ formatPriceUnits($orders_sum) }}</h2>
+                                    <h2 title="ارزش سفارشات: {{ number_format($orders_sum) }} ریال" class="text-bold-700 mb-0">{{ formatPriceUnits($orders_sum) }}</h2>
                                     <p>ارزش سفارشات موفق</p>
                                 </div>
                                 <div class="avatar bg-rgba-primary p-50 m-0">
@@ -289,7 +289,7 @@
                                                         <tr>
                                                             <td>{{ $order->id }}</td>
                                                             <td title="{{ jdate($order->created_at) }}">{{ jdate($order->created_at)->ago() }}</td>
-                                                            <td title="{{ convert_number($order->price) }} تومان">{{ number_format($order->price) }}</td>
+                                                            <td title="{{ convert_number($order->price) }} ریال">{{ number_format($order->price) }}</td>
                                                             <td>{{ $order->statusText() }}</td>
                                                             <td class="text-center">
                                                                 <a href="{{ route('admin.orders.show', ['order' => $order]) }}" class="btn btn-warning waves-effect waves-light">مشاهده</a>

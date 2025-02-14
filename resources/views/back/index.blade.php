@@ -132,7 +132,7 @@
                                                     <i class="feather icon-credit-card text-success font-medium-5"></i>
                                                 </div>
                                             </div>
-                                            <h2 class="text-bold-700" title="{{ number_format($total_sell) }} تومان">{{ formatPriceUnits($total_sell) }}</h2>
+                                            <h2 class="text-bold-700" title="{{ number_format($total_sell) }} ریال">{{ formatPriceUnits($total_sell) }}</h2>
                                             <p class="mb-0 line-ellipsis">جمع فروش</p>
                                         </div>
                                     </div>
