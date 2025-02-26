@@ -16,9 +16,8 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $tries = 5; // کاهش تلاش‌های مجاز برای افزایش امنیت
-    protected $timeout = 300; // کاهش مدت‌زمان تایم‌اوت به 3 دقیقه برای امنیت بیشتر
-
+    public $tries = 5; // تعداد تلاش‌ها افزایش یابد (مثلاً 5 یا 10)
+    public $timeout = 600;
     /**
      * بررسی می‌کند که عدد یک‌رقمی است یا خیر
      */
