@@ -3,6 +3,7 @@
 namespace Themes\DefaultTheme\src\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\Product;
@@ -94,6 +95,33 @@ class SitemapController extends Controller
                 $sitemap->add(
                     route('front.products.show', ['product' => $product]),
                     $product->updated_at,
+                    '0.9',
+                    'daily'
+                );
+            }
+        }
+
+        return $sitemap->render();
+
+    }
+
+    public function category_products()
+    {
+        $sitemap = app()->make('sitemap');
+        $sitemap->setCache('laravel.sitemap.category_products', 60);
+
+        if (!$sitemap->isCached()) {
+
+            $categories = Category::whereHas('products') // بررسی وجود محصول متصل
+            ->published()
+            ->latest('updated_at')
+            ->get();
+
+
+            foreach ($categories as $category) {
+                $sitemap->add(
+                    route('products.category-products',  $category),
+                    $category->updated_at,
                     '0.9',
                     'daily'
                 );

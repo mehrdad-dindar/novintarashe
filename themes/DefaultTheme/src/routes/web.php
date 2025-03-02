@@ -65,6 +65,7 @@ Route::group(['as' => 'front.'], function () {
     Route::get('sitemap-posts', [SitemapController::class, 'posts']);
     Route::get('sitemap-pages', [SitemapController::class, 'pages']);
     Route::get('sitemap-products', [SitemapController::class, 'products']);
+    Route::get('sitemap-products', [SitemapController::class, 'products']);
 
     // ------------------ contacts
     Route::resource('contact', ContactController::class)->only(['index', 'store']);
