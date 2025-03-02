@@ -39,7 +39,7 @@ class SitemapController extends Controller
             );
         }
 
-        return $sitemap->render();
+        return $sitemap->render('xml');
     }
 
     public function posts()
@@ -59,7 +59,7 @@ class SitemapController extends Controller
             }
         }
 
-        return $sitemap->render();
+        return $sitemap->render('xml');
     }
 
     public function pages()
@@ -79,7 +79,7 @@ class SitemapController extends Controller
             }
         }
 
-        return $sitemap->render();
+        return $sitemap->render('xml');
     }
 
     public function products()
@@ -101,7 +101,7 @@ class SitemapController extends Controller
             }
         }
 
-        return $sitemap->render();
+        return $sitemap->render('xml');
 
     }
 
@@ -128,6 +128,6 @@ class SitemapController extends Controller
             }
         }
 
-        return $sitemap->render();
+        return $sitemap->render('xml');
     }
 }
