@@ -130,7 +130,7 @@ class SitemapController extends Controller
 
             foreach ($categories as $category) {
                 $sitemap->add(
-                    route('products.category-products',  $category),
+                    route('front.products.category-products',  $category),
                     $category->updated_at,
                     '0.9',
                     'daily'
