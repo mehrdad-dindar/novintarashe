@@ -14,26 +14,35 @@ class SitemapController extends Controller
     public function index()
     {
         $sitemap = app()->make('sitemap');
-        $sitemap->setCache('laravel.sitemap', 60);
+        $sitemap->setCache('laravel.sitemap', 60); // کش به مدت 60 دقیقه
 
         if (!$sitemap->isCached()) {
 
             $sitemap->add(
-                url()->to('/sitemap-posts'),
-                '2017-08-25T20:10:00+02:00',
-                '0.9',
-                'daily'
-            );
-            $sitemap->add(
-                url()->to('/sitemap-pages'),
-                '2017-08-25T20:10:00+02:00',
+                url('/sitemap-posts'),
+                now()->toAtomString(), // تاریخ جاری
                 '0.9',
                 'daily'
             );
 
             $sitemap->add(
-                url()->to('/sitemap-products'),
-                '2017-08-25T20:10:00+02:00',
+                url('/sitemap-pages'),
+                now()->toAtomString(),
+                '0.9',
+                'daily'
+            );
+
+            $sitemap->add(
+                url('/sitemap-products'),
+                now()->toAtomString(),
+                '0.9',
+                'daily'
+            );
+
+            // اضافه کردن دسته‌بندی‌های محصولات
+            $sitemap->add(
+                url('/sitemap-category-products'),
+                now()->toAtomString(),
                 '0.9',
                 'daily'
             );
@@ -41,6 +50,7 @@ class SitemapController extends Controller
 
         return $sitemap->render('xml');
     }
+
 
     public function posts()
     {
