@@ -38,7 +38,7 @@
             <a class="product-meta" href="{{ $product->category ? $product->category->link : '#' }}">{{ $product->category ? $product->category->title :  trans('front::messages.partials.no-category') }}</a>
             <div class="price-index-h">
                 <div class="product-prices-div">
-                    <span class="product-price">{{ $product->discountPrice() }}</span>
+                    <span class="product-price">{{ $product->getLowestPrice() }}</span>
 
                     @if($product->getLowestDiscount())
                         <del class="product-price-del">{{ $product->getLowestDiscount() }}</del>
