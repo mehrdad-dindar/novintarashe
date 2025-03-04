@@ -311,7 +311,6 @@ class Product extends Model
         return $numeric ? null : 'ناموجود';
     }
 
-
     public function getLowestDiscount($numeric = false)
     {
         $price = $this->lowestPrice;
