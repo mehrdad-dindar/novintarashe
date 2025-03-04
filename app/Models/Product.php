@@ -108,23 +108,25 @@ class Product extends Model
 
     public function lowestPrice()
     {
-        $showPrice=$this->showPriceUserType();
+        $showPrice = $this->showPriceUserType();
 
-        if ($showPrice==null){
+        if ($showPrice == null) {
             return $this->hasOne(Price::class)
                 ->where('stock', '>', 0)
                 ->orderBy('discount_price');
         }
+
         return $this->hasOne(Price::class)
             ->where('stock', '>', 0)
             ->where('title', $showPrice)
             ->orderBy('discount_price');
-
     }
+
 
     public function showPriceUserType()
     {
         $showPrice = option('show_price_all_user', 'fldTipFee1');
+
         if (Auth::check()) {
             if (Auth::user()->type == "user") {
                 $showPrice = option('show_price_normal_user', 'fldTipFee1');
@@ -296,18 +298,19 @@ class Product extends Model
 
     public function getLowestPrice($numeric = false)
     {
-        $price = $this->lowestPrice;
+        $price = $this->lowestPrice()->first(); // مقدار را دریافت کنیم
 
         if ($this->isDownload()) {
             return $numeric ? null : 'محصول دانلودی';
         }
 
         if ($price && $price->stock) {
-            return $numeric ? $price->discountPrice() : '' . number_format($price->discountPrice()) .' '. currencyTitle();
+            return $numeric ? $price->discountPrice() : number_format($price->discountPrice()) . ' ' . currencyTitle();
         }
 
         return $numeric ? null : 'ناموجود';
     }
+
 
     public function getLowestDiscount($numeric = false)
     {

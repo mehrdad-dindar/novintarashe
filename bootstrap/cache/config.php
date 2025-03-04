@@ -3,8 +3,8 @@
   array (
     'name' => 'laravel-shop',
     'env' => 'local',
-    'debug' => true,
-    'url' => 'https://novintarashe.ir',
+    'debug' => false,
+    'url' => 'http://127.0.0.1:9091',
     'asset_url' => NULL,
     'timezone' => 'Asia/Tehran',
     'locale' => 'fa',
@@ -31,7 +31,7 @@
     ),
     'fallback_locale' => 'fa',
     'faker_locale' => 'fa_IR',
-    'key' => 'base64:cp+wtZB3PuxAHc6v5nMs8nucWhPWzJdCjdccL0CGYBE=',
+    'key' => 'base64:/VwBgVZddvBeNkfkPAR3ZNRvQZ6DWS4hff7apy6XYe4=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
     array (
@@ -165,12 +165,12 @@
         array (
           'include' => 
           array (
-            0 => 'C:\\laragon\\www\\novintarashe\\public/uploads',
+            0 => 'C:\\laragon\\www\\novintarasheh\\public/uploads',
           ),
           'exclude' => 
           array (
-            0 => 'C:\\laragon\\www\\novintarashe\\vendor',
-            1 => 'C:\\laragon\\www\\novintarashe\\node_modules',
+            0 => 'C:\\laragon\\www\\novintarasheh\\vendor',
+            1 => 'C:\\laragon\\www\\novintarasheh\\node_modules',
           ),
           'follow_links' => false,
           'ignore_unreadable_directories' => false,
@@ -190,7 +190,7 @@
           0 => 'backup',
         ),
       ),
-      'temporary_directory' => 'C:\\laragon\\www\\novintarashe\\storage\\app/backup-temp',
+      'temporary_directory' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/backup-temp',
     ),
     'notifications' => 
     array (
@@ -264,7 +264,7 @@
   ),
   'barcode' => 
   array (
-    'store_path' => 'C:\\laragon\\www\\novintarashe\\public\\/uploads/barcodes/',
+    'store_path' => 'C:\\laragon\\www\\novintarasheh\\public\\/uploads/barcodes/',
   ),
   'broadcasting' => 
   array (
@@ -279,8 +279,8 @@
         'app_id' => '',
         'options' => 
         array (
-          'cluster' => '',
-          'host' => 'api-.pusher.com',
+          'cluster' => NULL,
+          'host' => 'api-mt1.pusher.com',
           'port' => 443,
           'scheme' => 'https',
           'encrypted' => true,
@@ -298,7 +298,7 @@
         'app_id' => '',
         'options' => 
         array (
-          'cluster' => '',
+          'cluster' => NULL,
           'host' => 'pusher.t-nateghi.ir',
           'port' => 6001,
           'encrypted' => true,
@@ -355,7 +355,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\laragon\\www\\novintarashe\\storage\\framework/cache/data',
+        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -545,7 +545,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'nszwtvba_novin2024',
+        'database' => 'novintarashe',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -555,7 +555,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'nszwtvba_novin2024',
+        'database' => 'novintarashe',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -581,7 +581,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'nszwtvba_novin2024',
+        'database' => 'novintarashe',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -596,7 +596,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'nszwtvba_novin2024',
+        'database' => 'novintarashe',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -643,7 +643,7 @@
     array (
       'enabled' => true,
       'driver' => 'file',
-      'path' => 'C:\\laragon\\www\\novintarashe\\storage\\debugbar',
+      'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\debugbar',
       'connection' => NULL,
       'provider' => '',
       'hostname' => '127.0.0.1',
@@ -810,7 +810,7 @@
     ),
     'temporary_files' => 
     array (
-      'local_path' => 'C:\\Users\\webcom\\AppData\\Local\\Temp',
+      'local_path' => 'C:\\Users\\Mahdi\\AppData\\Local\\Temp',
       'remote_disk' => NULL,
       'remote_prefix' => NULL,
     ),
@@ -864,29 +864,29 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarashe\\public\\uploads',
+        'root' => 'C:\\laragon\\www\\novintarasheh\\public\\uploads',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarashe\\public\\/',
-        'url' => 'https://novintarashe.ir',
+        'root' => 'C:\\laragon\\www\\novintarasheh\\public\\/',
+        'url' => 'http://127.0.0.1:9091',
         'visibility' => 'public',
       ),
       'backup' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarashe\\storage\\app/backups',
+        'root' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/backups',
       ),
       'downloads' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarashe\\storage\\app/downloads',
+        'root' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/downloads',
       ),
       'ckeditor' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarashe\\public\\uploads/ckeditor',
+        'root' => 'C:\\laragon\\www\\novintarasheh\\public\\uploads/ckeditor',
         'url' => '/uploads/ckeditor',
         'visibility' => 'public',
       ),
@@ -903,18 +903,18 @@
       'themes' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarashe\\themes',
+        'root' => 'C:\\laragon\\www\\novintarasheh\\themes',
       ),
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\novintarashe\\public\\storage' => 'C:\\laragon\\www\\novintarashe\\storage\\app/public',
+      'C:\\laragon\\www\\novintarasheh\\public\\storage' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/public',
     ),
   ),
   'general' => 
   array (
     'api_url' => 'http://laravel-shop.ir/api/v1',
-    'admin_route_prefix' => 'admin2373',
+    'admin_route_prefix' => 'admin',
     'current_theme' => 'DefaultTheme',
     'permissions' => 
     array (
@@ -1387,13 +1387,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\laragon\\www\\novintarashe\\storage\\logs/laravel.log',
+        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\laragon\\www\\novintarashe\\storage\\logs/laravel.log',
+        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -1443,7 +1443,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\laragon\\www\\novintarashe\\storage\\logs/laravel.log',
+        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -1451,7 +1451,7 @@
   array (
     'max_file_size' => 52428800,
     'pattern' => '*.log',
-    'storage_path' => 'C:\\laragon\\www\\novintarashe\\storage\\logs',
+    'storage_path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs',
   ),
   'mail' => 
   array (
@@ -1507,7 +1507,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\novintarashe\\resources\\views/vendor/mail',
+        0 => 'C:\\laragon\\www\\novintarasheh\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -1883,7 +1883,7 @@
         'driver' => 'database',
         'table' => 'jobs',
         'queue' => 'default',
-        'retry_after' => 90,
+        'retry_after' => 900,
       ),
       'beanstalkd' => 
       array (
@@ -1928,7 +1928,7 @@
       2 => '127.0.0.1',
       3 => '127.0.0.1:8000',
       4 => '::1',
-      5 => 'novintarashe.ir',
+      5 => '127.0.0.1',
     ),
     'guard' => 
     array (
@@ -2040,7 +2040,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\laragon\\www\\novintarashe\\storage\\framework/sessions',
+    'files' => 'C:\\laragon\\www\\novintarasheh\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -2059,7 +2059,7 @@
   'sitemap' => 
   array (
     'use_cache' => false,
-    'cache_key' => 'laravel-sitemap.https://novintarashe.ir',
+    'cache_key' => 'laravel-sitemap.http://127.0.0.1:9091',
     'cache_duration' => 3600,
     'escaping' => true,
     'use_limit_size' => false,
@@ -2098,9 +2098,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\novintarashe\\resources\\views',
+      0 => 'C:\\laragon\\www\\novintarasheh\\resources\\views',
     ),
-    'compiled' => 'C:\\laragon\\www\\novintarashe\\storage\\framework\\views',
+    'compiled' => 'C:\\laragon\\www\\novintarasheh\\storage\\framework\\views',
   ),
   'webpush' => 
   array (
@@ -2177,8 +2177,8 @@
     'route' => NULL,
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\novintarashe\\public\\upload',
-      1 => 'C:\\laragon\\www\\novintarashe\\public\\images',
+      0 => 'C:\\laragon\\www\\novintarasheh\\public\\upload',
+      1 => 'C:\\laragon\\www\\novintarasheh\\public\\images',
     ),
     'templates' => 
     array (
@@ -2470,10 +2470,10 @@
         ),
         1 => 
         array (
-          'title' => 'نمایش نمودار قیمت در صفحه محصول',
+          'title' => 'نمایش نمودار قیمت محصول',
           'key' => 'dt_show_price_change_chart',
           'input-type' => 'select',
-          'class' => 'col-md-4 col-6',
+          'class' => 'col-md-3 col-6',
           'options' => 
           array (
             0 => 
@@ -2491,10 +2491,57 @@
         ),
         2 => 
         array (
+          'title' => 'نمایش اشتراک گذاری محصول',
+          'key' => 'show_product_share_links',
+          'input-type' => 'select',
+          'class' => 'col-md-3 col-6',
+          'options' => 
+          array (
+            0 => 
+            array (
+              'value' => '1',
+              'title' => 'بله',
+            ),
+            1 => 
+            array (
+              'value' => '0',
+              'title' => 'خیر',
+            ),
+          ),
+          'attributes' => 'required',
+        ),
+        3 => 
+        array (
           'title' => 'متن توضیحات نظرات محصول',
           'key' => 'dt_product_reviews_description',
           'input-type' => 'inline-editor',
-          'class' => 'col-md-8',
+          'class' => 'col-md-7',
+        ),
+        4 => 
+        array (
+          'input-type' => 'linebreak',
+          'html' => '<hr>',
+        ),
+        5 => 
+        array (
+          'title' => 'بازیابی رمز ورود',
+          'key' => 'forgot_password_link',
+          'input-type' => 'select',
+          'class' => 'col-md-3 col-6',
+          'options' => 
+          array (
+            0 => 
+            array (
+              'value' => 'on',
+              'title' => 'فعال',
+            ),
+            1 => 
+            array (
+              'value' => 'off',
+              'title' => 'غیرفعال',
+            ),
+          ),
+          'attributes' => 'required',
         ),
       ),
       'rules' => 
@@ -2504,7 +2551,7 @@
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\novintarashe\\public\\themes/defaultTheme' => 'C:\\laragon\\www\\novintarashe\\themes/DefaultTheme/src/resources/assets',
+      'C:\\laragon\\www\\novintarasheh\\public\\themes/defaultTheme' => 'C:\\laragon\\www\\novintarasheh\\themes/DefaultTheme/src/resources/assets',
     ),
     'home-widgets' => 
     array (

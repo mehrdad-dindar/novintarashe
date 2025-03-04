@@ -6,6 +6,7 @@
 /storage/debugbar
 /storage/installed
 /bootstrap/cache
+bootstrap/cache
 .env
 .env.backup
 .phpunit.result.cache
@@ -17,3 +18,7 @@ yarn-error.log
 
 .idea/
 .vscode/
+bootstrap/cache/config.php
+bootstrap/cache/packages.php
+bootstrap/cache/services.ph;
+
