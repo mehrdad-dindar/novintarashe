@@ -16,7 +16,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 10; // تعداد تلاش‌ها افزایش یابد (مثلاً 5 یا 10)
+    public $tries = 7;
     public $timeout = 600;
     /**
      * بررسی می‌کند که عدد یک‌رقمی است یا خیر
