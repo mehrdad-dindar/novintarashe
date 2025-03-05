@@ -53,7 +53,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
 
         do {
             try {
-                $response = $client->request('GET', "http://109.122.229.114:5000/api/products", [
+                $response = $client->request('GET', "http://128.65.177.78:5000/api/products", [
                     'query' => [
                         'page' => $page,
                         'per_page' => $perPage

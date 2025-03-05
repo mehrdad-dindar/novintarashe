@@ -28,7 +28,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
         try {
 
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'http://109.122.229.114:5000/api/updated/products');
+            $response = $client->request('GET', 'http://128.65.177.78:5000/api/updated/products');
             $response = $response->getBody()->getContents();
             $response = json_decode($response, true);
 
