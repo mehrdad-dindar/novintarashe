@@ -94,7 +94,7 @@
                                                                     </div>
                                                                     <div class="col-8 col-sm-9 col-md-3">
                                                                         <label for="">مبلغ فی</label>
-                                                                        <strong class="cart-product-price"><span class="currency-suffix">{{ trans('front::messages.currency.prefix') }}</span>{{ number_format($price_to_stock->finalPrice( $price_to_stock->discountPrice() ,  1 , $product->pivot->price_id) ) }} <span class="currency-suffix">{{ currencyTitle() }}</span></strong>
+                                                                        <strong class="cart-product-price"><span class="currency-suffix">{{ trans('front::messages.currency.prefix') }}</span>{{ number_format($price_to_stock->finalPrice( $price_to_stock->discountPrice() , $product->pivot->quantity  , $product->pivot->price_id) /  $product->pivot->quantity ) }} <span class="currency-suffix">{{ currencyTitle() }}</span></strong>
 
                                                                         @if($price_to_stock->discount || (isset($discountMajor) && $discountMajor != null))
                                                                             <del class="text-danger old-cart-product-price"><span class="currency-suffix">{{ trans('front::messages.currency.prefix') }}</span>{{ number_format($price_to_stock->tomanPrice()) }} <span class="currency-suffix">{{ currencyTitle() }}</span></del>
@@ -109,6 +109,7 @@
                                                                             </button>
                                                                         </div>
                                                                     </div>
+
                                                                     <div class="col-8 col-sm-9 col-md-3">
                                                                         <label>جمع کل</label>
                                                                         <strong class="cart-product-price"><span class="currency-suffix">{{ trans('front::messages.currency.prefix') }}</span>{{ number_format($price_to_stock->finalPrice( $price_to_stock->discountPrice() ,  $product->pivot->quantity , $product->pivot->price_id) ) }} <span class="currency-suffix">{{ currencyTitle() }}</span></strong>

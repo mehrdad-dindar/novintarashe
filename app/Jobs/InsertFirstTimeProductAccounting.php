@@ -16,7 +16,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 7;
+    public $tries = 10;
     public $timeout = 600;
     /**
      * بررسی می‌کند که عدد یک‌رقمی است یا خیر
@@ -69,6 +69,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                 option_update('last_time_insertFirstTime_product', now());
 
                 foreach ($responseBody['products'] as $article) {
+                    dd($article);
                     if (!Product::where('fldId', $article['A_Code'])->exists()) {
 
                         $fldId = $article['A_Code'];

@@ -3,7 +3,7 @@
   array (
     'name' => 'laravel-shop',
     'env' => 'local',
-    'debug' => false,
+    'debug' => true,
     'url' => 'http://127.0.0.1:9091',
     'asset_url' => NULL,
     'timezone' => 'Asia/Tehran',
@@ -2013,7 +2013,7 @@
         ),
       ),
     ),
-    'updater_token' => NULL,
+    'updater_token' => '',
   ),
   'services' => 
   array (
