@@ -6,7 +6,6 @@ use App\Models\Banner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Jobs\InsertFirstTimeProductAccounting as JobsInsertFirstTimeProductAccounting;
 class BannerController extends Controller
 {
     public function __construct()
@@ -17,7 +16,6 @@ class BannerController extends Controller
     public function index()
     {
         $banners = Banner::detectLang()->orderBy('ordering')->get();
-        JobsInsertFirstTimeProductAccounting::dispatch()->onQueue('insert_first_time_product_accounting');
         return view('back.banners.index', compact('banners'));
     }
 
