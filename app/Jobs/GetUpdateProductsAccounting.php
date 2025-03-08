@@ -90,7 +90,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                         if(!$Mcategory){
                             $Mcategory = Category::where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
                         }
-                        
+
                         $product_exist->fldId = $fldId;
                         $product_exist->fldC_Kala = $fldC_Kala;
                         $product_exist->vahed_kol = $vahed_kol;
@@ -116,7 +116,6 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
                 }
                 Product::clearCache();
-
 
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             return false;
