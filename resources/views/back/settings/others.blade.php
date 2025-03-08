@@ -301,9 +301,9 @@
 
                                             <div class="col-md-8">
                                                 <div class='row mt-1'>
-                                                    <div class="mr-2 d-flex flex-sm-row flex-column justify-content-end mt-1" data-toggle="modal" data-target="#get-all-product-modal">
+                                                    {{-- <div class="mr-2 d-flex flex-sm-row flex-column justify-content-end mt-1" data-toggle="modal" data-target="#get-all-product-modal">
                                                         <button type="button" class="btn btn-primary glow">دریافت همه محصولات</button>
-                                                    </div>
+                                                    </div> --}}
                                                     <div class="mr-2 d-flex flex-sm-row flex-column justify-content-end mt-1" data-toggle="modal" data-target="#get-new-product-modal">
                                                         <button type="button" class="btn btn-primary glow">دریافت محصولات جدید</button>
                                                     </div>
