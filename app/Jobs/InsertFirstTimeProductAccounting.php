@@ -69,7 +69,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                 option_update('last_time_insertFirstTime_product', now());
 
                 foreach ($responseBody['products'] as $article) {
-                    dd($article);
+                
                     if (!Product::where('fldId', $article['A_Code'])->exists()) {
 
                         $fldId = $article['A_Code'];
