@@ -126,11 +126,22 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-            return redirect('/', 301);
+        if (
+            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
+            $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
+        ) {
+
+            if ($request->expectsJson()) {
+                return $this->apiResponse(
+                    [
+                        'success' => false,
+                        'message' => 'Page not found'
+                    ],
+                    404
+                );
+            }
         }
 
         return parent::render($request, $exception);
     }
-
 }
