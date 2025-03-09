@@ -18,9 +18,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
     public $tries = 3;
     public function handle()
     {
@@ -33,49 +31,55 @@ class GetUpdateProductsAccounting implements ShouldQueue
             $response = json_decode($response, true);
 
 
-                foreach ($response as $article) {
+            foreach ($response as $article) {
 
-                    $product_exist = Product::where('fldId', $article['A_Code'])->with('prices')->first();
-                    if ($product_exist) {
+                $product_exist = Product::where('fldId', $article['A_Code'])->with('prices')->first();
+                if ($product_exist) {
 
-                        $fldId = $article['A_Code'];
-                        $fldC_Kala = $article['A_Code'];
-                        $vahed_kol = '';
-                        $Vahed = $article['vahed'];
-                        $price = $article['Sel_Price'];
-                        $offPrice = $article['PriceTakhfif'] > 0 ? $article['PriceTakhfif'] : $article['Sel_Price'];
-                        $morePriceArray = [
-                            "fldTipFee1" => $article['Sel_Price'] ?: 0,
-                            "fldTipFee2" => $offPrice ?: 0,
-                            "fldTipFee3" => $article['Sel_Price3'] ?: 0,
-                            "fldTipFee4" => $article['Sel_Price4'] ?: 0,
-                            "fldTipFee5" => $article['Sel_Price5'] ?: 0,
-                            "fldTipFee6" => $article['Sel_Price6'] ?: 0,
-                            "fldTipFee7" => $article['Sel_Price7'] ?: 0,
-                            "fldTipFee8" => $article['Sel_Price8'] ?: 0,
-                            "fldTipFee9" => $article['Sel_Price9'] ?: 0,
-                            "fldTipFee10" => $article['Sel_Price10'] ?: 0,
-                        ];
+                    $fldId = $article['A_Code'];
+                    $fldC_Kala = $article['A_Code'];
+                    $vahed_kol = '';
+                    $Vahed = $article['vahed'];
+                    $price = $article['Sel_Price'];
+                    $offPrice = $article['PriceTakhfif'] > 0 ? $article['PriceTakhfif'] : $article['Sel_Price'];
+                    $morePriceArray = [
+                        "fldTipFee1" => $article['Sel_Price'] ?: 0,
+                        "fldTipFee2" => $offPrice ?: 0,
+                        "fldTipFee3" => $article['Sel_Price3'] ?: 0,
+                        "fldTipFee4" => $article['Sel_Price4'] ?: 0,
+                        "fldTipFee5" => $article['Sel_Price5'] ?: 0,
+                        "fldTipFee6" => $article['Sel_Price6'] ?: 0,
+                        "fldTipFee7" => $article['Sel_Price7'] ?: 0,
+                        "fldTipFee8" => $article['Sel_Price8'] ?: 0,
+                        "fldTipFee9" => $article['Sel_Price9'] ?: 0,
+                        "fldTipFee10" => $article['Sel_Price10'] ?: 0,
+                    ];
 
-                        $morePrice = json_encode($morePriceArray);
-                        $count = $article['Exist'];
+                    $morePrice = json_encode($morePriceArray);
+                    $count = $article['Exist'];
 
-                        $fldTedadKarton = $article['Karton'];
-                        $status = $article['IsActive'] == "true" ? 1 : 0;
+                    $fldTedadKarton = $article['Karton'];
+                    $status = $article['IsActive'] == "true" ? 1 : 0;
 
-                        for ($i = 1; $i <= 10; $i++) {
-                            $titleFldTipFee = "fldTipFee" . $i;
-                            $fldTipFee = $morePriceArray[$titleFldTipFee];
+                    for ($i = 1; $i <= 10; $i++) {
+                        $titleFldTipFee = "fldTipFee" . $i;
+                        $fldTipFee = $morePriceArray[$titleFldTipFee];
 
-                            $discount = 0;
-                            $discount_price = $fldTipFee;
-                            if ($titleFldTipFee == "fldTipFee2") {
-                                $discount = (($price - $offPrice) / $price) * 100;
-                                $discount_price = $offPrice;
-                                $fldTipFee = $price;
-                            }
+                        $discount = 0;
+                        $discount_price = $fldTipFee;
+                        if ($titleFldTipFee == "fldTipFee2") {
+                            $discount = (($price - $offPrice) / $price) * 100;
+                            $discount_price = $offPrice;
+                            $fldTipFee = $price;
+                        }
 
-                            Price::withTrashed()->where(['product_id' => $product_exist->id, 'title' => $titleFldTipFee])->update([
+                        $excludedTitles = ['fldTipFee1', 'fldTipFee4', 'fldTipFee7']; // تیپ‌هایی که نباید تغییر کنند
+
+                        if (!in_array($titleFldTipFee, $excludedTitles)) { // اگر داخل لیست نبود، بروزرسانی انجام بده
+                            Price::withTrashed()->where([
+                                'product_id' => $product_exist->id,
+                                'title' => $titleFldTipFee
+                            ])->update([
                                 "price" => $fldTipFee,
                                 "discount" => $discount,
                                 "discount_price" => $discount_price,
@@ -85,38 +89,35 @@ class GetUpdateProductsAccounting implements ShouldQueue
                                 "deleted_at" => null,
                             ]);
                         }
-
-                        $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->first();
-                        if(!$Mcategory){
-                            $Mcategory = Category::where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
-                        }
-
-                        $product_exist->fldId = $fldId;
-                        $product_exist->fldC_Kala = $fldC_Kala;
-                        $product_exist->vahed_kol = $vahed_kol;
-                        $product_exist->vahed = $Vahed;
-                        $product_exist->unit = $Vahed ?: $vahed_kol;
-                        $product_exist->morePrice = $morePrice;
-                        $product_exist->fldTedadKarton = $fldTedadKarton;
-                        $product_exist->published = $status;
-                        $product_exist->type = "physical";
-                        $product_exist->category_id = $Mcategory->id;
-                        $product_exist->save();
-
-
-                        if (!empty($article['Main_Category']) && !empty($article['Sub_Category'])) {
-                            $Scategory = Category::where(['fldC_S_GroohKala' => $article['Sub_Category']['S_groupcode'], 'fldC_M_GroohKala' => $article['Main_Category']['M_groupcode']])->first();
-                            $product_exist->categories()->sync([$Mcategory->id, $Scategory->id]);
-                        } else {
-                            $product_exist->categories()->sync([$Mcategory->id]);
-                        }
-
                     }
 
+                    $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->first();
+                    if (!$Mcategory) {
+                        $Mcategory = Category::where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
+                    }
 
+                    $product_exist->fldId = $fldId;
+                    $product_exist->fldC_Kala = $fldC_Kala;
+                    $product_exist->vahed_kol = $vahed_kol;
+                    $product_exist->vahed = $Vahed;
+                    $product_exist->unit = $Vahed ?: $vahed_kol;
+                    $product_exist->morePrice = $morePrice;
+                    $product_exist->fldTedadKarton = $fldTedadKarton;
+                    $product_exist->published = $status;
+                    $product_exist->type = "physical";
+                    $product_exist->category_id = $Mcategory->id;
+                    $product_exist->save();
+
+
+                    if (!empty($article['Main_Category']) && !empty($article['Sub_Category'])) {
+                        $Scategory = Category::where(['fldC_S_GroohKala' => $article['Sub_Category']['S_groupcode'], 'fldC_M_GroohKala' => $article['Main_Category']['M_groupcode']])->first();
+                        $product_exist->categories()->sync([$Mcategory->id, $Scategory->id]);
+                    } else {
+                        $product_exist->categories()->sync([$Mcategory->id]);
+                    }
                 }
-                Product::clearCache();
-
+            }
+            Product::clearCache();
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             return false;
         }
