@@ -125,12 +125,11 @@ class Handler extends ExceptionHandler
                 );
             }
         }
-dd('d');
+
         if (
             $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
             $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
         ) {
-
             if ($request->expectsJson()) {
                 return $this->apiResponse(
                     [
@@ -139,6 +138,8 @@ dd('d');
                     ],
                     404
                 );
+            } else {
+                return redirect('/', 301);
             }
         }
 
