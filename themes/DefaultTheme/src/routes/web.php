@@ -145,10 +145,12 @@ Route::group(['as' => 'front.'], function () {
 
 
 // get auth user in 404 page
+// Route::fallback(function () {
+//     return response()->view('errors.404', [], 404);
+// });
+
+
 Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
+    return redirect('/', 301);
 });
-
-
-
 

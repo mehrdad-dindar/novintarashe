@@ -125,7 +125,7 @@ class Handler extends ExceptionHandler
                 );
             }
         }
-
+dd('d');
         if (
             $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
             $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
