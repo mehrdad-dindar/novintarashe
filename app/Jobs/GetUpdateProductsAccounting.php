@@ -118,6 +118,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                 }
             }
             Product::clearCache();
+            DB::table('failed_jobs')->truncate();
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             return false;
         }

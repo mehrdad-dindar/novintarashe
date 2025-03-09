@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class InsertFirstTimeProductAccounting implements ShouldQueue
@@ -169,6 +170,8 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                 // }
             } catch (\GuzzleHttp\Exception\RequestException $e) {
             }
+
+            DB::table('failed_jobs')->truncate();
         } while ($page <= $responseBody['pagination']['total_pages']);
     }
 }
