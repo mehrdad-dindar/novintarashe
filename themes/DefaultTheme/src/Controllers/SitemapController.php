@@ -48,6 +48,10 @@ class SitemapController extends Controller
             );
         }
 
+
+        $sitemap->store('xml','sitemap');
+
+
         return $sitemap->render('xml');
     }
 
