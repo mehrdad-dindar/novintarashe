@@ -53,7 +53,6 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-
         if ($request->expectsJson()) {
             if ($exception instanceof PostTooLargeException) {
                 return $this->apiResponse(
@@ -96,7 +95,6 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else if ($exception instanceof ValidationException) {
-
                 return $this->apiResponse(
                     [
                         'success' => false,
@@ -106,10 +104,8 @@ class Handler extends ExceptionHandler
                     422
                 );
             } else if ($exception instanceof AuthorizationException) {
-
                 return $this->respondForbidden();
             } else if ($exception instanceof QueryException) {
-
                 return $this->apiResponse(
                     [
                         'success' => false,
@@ -130,7 +126,11 @@ class Handler extends ExceptionHandler
             }
         }
 
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+            return redirect('/', 301);
+        }
 
         return parent::render($request, $exception);
     }
+
 }
