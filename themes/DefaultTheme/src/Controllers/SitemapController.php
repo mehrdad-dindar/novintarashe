@@ -23,8 +23,8 @@ class SitemapController extends Controller
 
             // **افزودن لینک‌های ثابت**
             $sitemap->add(URL::to('/'), now()->toAtomString(), '1.0', 'daily');
-            $sitemap->add(URL::to('/about-us'), now()->toAtomString(), '0.8', 'weekly');
-            $sitemap->add(URL::to('/contact-us'), now()->toAtomString(), '0.8', 'weekly');
+            //$sitemap->add(URL::to('/about'), now()->toAtomString(), '0.8', 'weekly');
+            $sitemap->add(URL::to('/contact'), now()->toAtomString(), '0.8', 'weekly');
 
             // **افزودن همه پست‌ها**
             $posts = Post::published()->latest('updated_at')->get();
