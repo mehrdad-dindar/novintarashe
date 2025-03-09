@@ -21,4 +21,5 @@ yarn-error.log
 bootstrap/cache/config.php
 bootstrap/cache/packages.php
 bootstrap/cache/services.ph;
+public/sitemap.xml
 
