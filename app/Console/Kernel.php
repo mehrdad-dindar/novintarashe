@@ -46,6 +46,8 @@ class Kernel extends ConsoleKernel
         })->everyMinute();
 
         $schedule->job(new CalculateViewers)->dailyAt('00:00');
+
+        $schedule->command('queue:flush')->daily();
     }
 
     /**
