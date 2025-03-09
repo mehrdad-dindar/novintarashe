@@ -102,7 +102,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                         // $fldPorForoosh = $article->fldPorForoosh;
 
                         $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->first();
-                        if(!$Mcategory){
+                        if (!$Mcategory) {
                             $Mcategory = Category::where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
                         }
                         $product = new Product();
@@ -134,25 +134,32 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                             $title = "fldTipFee" . $i;
                             $fldTipFee = $morePriceArray[$title];
 
-                            $discount = 0;
-                            $discount_price = $fldTipFee;
-                            if ($title == "fldTipFee2") {
-                                $discount = (($price - $offPrice) / $price) * 100;
-                                $discount_price = $offPrice;
-                            }
+
                             //$discount=0;
                             //$discount_price=$fldTipFee;
-                            $product->prices()->create(
-                                [
-                                    "title" => $title,
-                                    "price" => $fldTipFee,
-                                    "discount" => $discount,
-                                    "discount_price" => $discount_price,
-                                    "stock" => $count,
-                                    "stock_carton" => $fldTedadKarton,
-                                    "accounting" => 1,
-                                ]
-                            );
+                            $existingPrice = $product->prices()->where('title', $title)->first();
+
+                            if (!$existingPrice) {
+
+                                $discount = 0;
+                                $discount_price = $fldTipFee;
+                                if ($title == "fldTipFee2") {
+                                    $discount = (($price - $offPrice) / $price) * 100;
+                                    $discount_price = $offPrice;
+                                }
+
+                                $product->prices()->create(
+                                    [
+                                        "title" => $title,
+                                        "price" => $fldTipFee,
+                                        "discount" => $discount,
+                                        "discount_price" => $discount_price,
+                                        "stock" => $count,
+                                        "stock_carton" => $fldTedadKarton,
+                                        "accounting" => 1,
+                                    ]
+                                );
+                            }
                         }
                         //$product->$fldPorForoosh=$fldPorForoosh;
                     }
@@ -163,6 +170,5 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
             } catch (\GuzzleHttp\Exception\RequestException $e) {
             }
         } while ($page <= $responseBody['pagination']['total_pages']);
-
     }
 }
