@@ -92,7 +92,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                         }
                     }
 
-                    $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->first();
+                    $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
                     if (!$Mcategory) {
                         $Mcategory = Category::where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
                     }
