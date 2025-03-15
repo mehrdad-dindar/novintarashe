@@ -137,18 +137,16 @@ class Handler extends ExceptionHandler
             $path = $request->path();
 
             // اگر مسیر با / تمام شود، حذف و ریدایرکت 301 کن
-            if (Str::endsWith($path, '/')) {
-                $newPath = rtrim($path, '/');
+            if (Str::endsWith($request->getRequestUri(), '/')) {
+                $newPath = rtrim($request->getRequestUri(), '/');
 
-                // جلوگیری از اضافه شدن public/ در URL
-                $newUrl = request()->getSchemeAndHttpHost() . '/' . $newPath;
-
-                return redirect($newUrl, 301);
+                return redirect()->to($newPath, 301);
             }
 
             // اگر باز هم 404 بود، به صفحه اصلی هدایت شود
             return redirect(route('front.index'), 301);
         }
+
 
         return parent::render($request, $exception);
     }
