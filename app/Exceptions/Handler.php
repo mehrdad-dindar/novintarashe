@@ -128,21 +128,27 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
-        $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+        if (
+            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
+            $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
+        ) {
 
-        // گرفتن مسیر درخواست
-        $path = $request->path();
+            // گرفتن مسیر درخواست
+            $path = $request->path();
 
-        // اگر مسیر با / تمام شود، حذف و ریدایرکت 301 کن
-        if (Str::endsWith($path, '/')) {
-            $newPath = rtrim($path, '/');
-            return redirect(url($newPath), 301);
+            // اگر مسیر با / تمام شود، حذف و ریدایرکت 301 کن
+            if (Str::endsWith($path, '/')) {
+                $newPath = rtrim($path, '/');
+
+                // جلوگیری از اضافه شدن public/ در URL
+                $newUrl = request()->getSchemeAndHttpHost() . '/' . $newPath;
+
+                return redirect($newUrl, 301);
+            }
+
+            // اگر باز هم 404 بود، به صفحه اصلی هدایت شود
+            return redirect(route('front.index'), 301);
         }
-
-        // اگر باز هم 404 بود، صفحه اصلی را نمایش بده
-        return redirect(route('front.index'), 301);
-    }
 
         return parent::render($request, $exception);
     }
