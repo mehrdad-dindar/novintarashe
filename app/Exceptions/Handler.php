@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
+use Illuminate\Support\Str;
 
 class Handler extends ExceptionHandler
 {
@@ -127,29 +128,21 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if (
-            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
-            $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
-        ) {
-            if ($request->expectsJson()) {
-                return $this->apiResponse(
-                    [
-                        'success' => false,
-                        'message' => 'Page not found'
-                    ],
-                    404
-                );
-            } else {
-                Log::info($request->path());
-                // اگر مسیر دقیقاً برابر با "public" یا "public/" باشد، ریدایرکت کن به صفحه اصلی
-                if ($request->path() === 'public' || $request->path() === 'public/') {
-                    return redirect(url('/'), 301);
-                }
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException ||
+        $exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
 
-                return redirect(url('/'), 301);
-            }
+        // گرفتن مسیر درخواست
+        $path = $request->path();
+
+        // اگر مسیر با / تمام شود، حذف و ریدایرکت 301 کن
+        if (Str::endsWith($path, '/')) {
+            $newPath = rtrim($path, '/');
+            return redirect(url($newPath), 301);
         }
 
+        // اگر باز هم 404 بود، صفحه اصلی را نمایش بده
+        return redirect(route('front.index'), 301);
+    }
 
         return parent::render($request, $exception);
     }
