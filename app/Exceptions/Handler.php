@@ -139,22 +139,13 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else {
-                return redirect(url('https://novintarashe.ir/'), 301);
+                return redirect(url('/'), 301);
             }
         }
 
-        if (
-            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException &&
-            $request->isMethod('get') &&
-            substr($request->getPathInfo(), -1) === '/'
-        ) {
-            // حذف "/" از انتهای URL
-            $newUrl = rtrim($request->url(), '/');
-
-            // ریدایرکت 301 به نسخه صحیح بدون "/"
-            return redirect($newUrl, 301);
+        if ($request->is('public') || $request->is('public/')) {
+            return redirect(url('/'), 301);
         }
-        
 
         return parent::render($request, $exception);
     }
