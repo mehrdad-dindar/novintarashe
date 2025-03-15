@@ -143,6 +143,19 @@ class Handler extends ExceptionHandler
             }
         }
 
+        if (
+            $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException &&
+            $request->isMethod('get') &&
+            substr($request->getPathInfo(), -1) === '/'
+        ) {
+            // حذف "/" از انتهای URL
+            $newUrl = rtrim($request->url(), '/');
+
+            // ریدایرکت 301 به نسخه صحیح بدون "/"
+            return redirect($newUrl, 301);
+        }
+        
+
         return parent::render($request, $exception);
     }
 }
