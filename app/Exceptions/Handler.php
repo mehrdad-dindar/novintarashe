@@ -139,14 +139,15 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else {
-
-                if ($request->is('public') || $request->is('public/')) {
+                // اگر مسیر دارای "/public/" باشد، به صفحه اصلی ریدایرکت شود
+                if (str_contains($request->getRequestUri(), '/public/')) {
                     return redirect(url('/'), 301);
                 }
 
                 return redirect(url('/'), 301);
             }
         }
+
 
 
         return parent::render($request, $exception);
