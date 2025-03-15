@@ -78,7 +78,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
                         $excludedTitles = ['fldTipFee1', 'fldTipFee4', 'fldTipFee7']; // تیپ‌هایی که نباید تغییر کنند
 
-                        $updateData = [
+                        $updatePriceData = [
                             "stock" => $count,
                             "stock_carton" => $fldTedadKarton,
                             "accounting" => 1,
@@ -87,17 +87,17 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
                         if (!in_array($titleFldTipFee, $excludedTitles)) {
                             // اگر داخل لیست excludedTitles نبود، قیمت و تخفیف‌ها را هم اضافه کن
-                            $updateData["price"] = $fldTipFee;
-                            $updateData["discount"] = $discount;
-                            $updateData["discount_price"] = $discount_price;
+                            $updatePriceData["price"] = $fldTipFee;
+                            $updatePriceData["discount"] = $discount;
+                            $updatePriceData["discount_price"] = $discount_price;
                         }
 
                         Price::withTrashed()->where([
                             'product_id' => $product_exist->id,
                             'title' => $titleFldTipFee
-                        ])->update($updateData);
+                        ])->update($updatePriceData);
 
-                      
+
                     }
 
                     $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
