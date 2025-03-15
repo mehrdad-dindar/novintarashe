@@ -139,7 +139,7 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else {
-                return redirect('/', 301);
+                return redirect(url('/'), 301);
             }
         }
 
