@@ -74,22 +74,30 @@ class GetUpdateProductsAccounting implements ShouldQueue
                             $fldTipFee = $price;
                         }
 
+
+
                         $excludedTitles = ['fldTipFee1', 'fldTipFee4', 'fldTipFee7']; // تیپ‌هایی که نباید تغییر کنند
 
-                        if (!in_array($titleFldTipFee, $excludedTitles)) { // اگر داخل لیست نبود، بروزرسانی انجام بده
-                            Price::withTrashed()->where([
-                                'product_id' => $product_exist->id,
-                                'title' => $titleFldTipFee
-                            ])->update([
-                                "price" => $fldTipFee,
-                                "discount" => $discount,
-                                "discount_price" => $discount_price,
-                                "stock" => $count,
-                                "stock_carton" => $fldTedadKarton,
-                                "accounting" => 1,
-                                "deleted_at" => null,
-                            ]);
+                        $updateData = [
+                            "stock" => $count,
+                            "stock_carton" => $fldTedadKarton,
+                            "accounting" => 1,
+                            "deleted_at" => null,
+                        ];
+
+                        if (!in_array($titleFldTipFee, $excludedTitles)) {
+                            // اگر داخل لیست excludedTitles نبود، قیمت و تخفیف‌ها را هم اضافه کن
+                            $updateData["price"] = $fldTipFee;
+                            $updateData["discount"] = $discount;
+                            $updateData["discount_price"] = $discount_price;
                         }
+
+                        Price::withTrashed()->where([
+                            'product_id' => $product_exist->id,
+                            'title' => $titleFldTipFee
+                        ])->update($updateData);
+
+                      
                     }
 
                     $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
