@@ -139,7 +139,7 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else {
-                return redirect(route('front.index'), 301);
+                return redirect(url('https://novintarashe.ir/'), 301);
             }
         }
 
