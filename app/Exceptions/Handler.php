@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -139,6 +140,7 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else {
+                Log::info($request->path());
                 // اگر مسیر دقیقاً برابر با "public" یا "public/" باشد، ریدایرکت کن به صفحه اصلی
                 if ($request->path() === 'public' || $request->path() === 'public/') {
                     return redirect(url('/'), 301);
