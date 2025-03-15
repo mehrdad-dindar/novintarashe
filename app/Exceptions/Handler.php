@@ -139,13 +139,15 @@ class Handler extends ExceptionHandler
                     404
                 );
             } else {
+
+                if ($request->is('public') || $request->is('public/')) {
+                    return redirect(url('/'), 301);
+                }
+
                 return redirect(url('/'), 301);
             }
         }
 
-        if ($request->is('public') || $request->is('public/')) {
-            return redirect(url('/'), 301);
-        }
 
         return parent::render($request, $exception);
     }
