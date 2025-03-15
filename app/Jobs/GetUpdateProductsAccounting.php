@@ -57,7 +57,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                     ];
 
                     $morePrice = json_encode($morePriceArray);
-                    $count = $article['Exist'];
+                    $count = intval($article['Exist']);
 
                     $fldTedadKarton = $article['Karton'];
                     $status = $article['IsActive'] == "true" ? 1 : 0;

@@ -95,7 +95,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
 
                         $morePrice = json_encode($morePriceArray);
                         // $count = explode('/', $article->fldMande);
-                        $count = $article['Exist'];
+                        $count = intval($article['Exist']);
 
                         $fldTedadKarton = $article['Karton'];
                         $status = $article['IsActive'] == "true" ? 1 : 0;
@@ -135,7 +135,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                             $title = "fldTipFee" . $i;
                             $fldTipFee = $morePriceArray[$title];
 
-
+                            
                             //$discount=0;
                             //$discount_price=$fldTipFee;
                             $existingPrice = $product->prices()->where('title', $title)->first();
