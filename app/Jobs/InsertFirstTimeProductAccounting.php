@@ -135,7 +135,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                             $title = "fldTipFee" . $i;
                             $fldTipFee = $morePriceArray[$title];
 
-                            
+
                             //$discount=0;
                             //$discount_price=$fldTipFee;
                             $existingPrice = $product->prices()->where('title', $title)->first();

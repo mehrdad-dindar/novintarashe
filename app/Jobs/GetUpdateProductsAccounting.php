@@ -96,8 +96,6 @@ class GetUpdateProductsAccounting implements ShouldQueue
                             'product_id' => $product_exist->id,
                             'title' => $titleFldTipFee
                         ])->update($updatePriceData);
-
-
                     }
 
                     $Mcategory = Category::where('fldC_S_GroohKala', $article['Sub_Category']['S_groupcode'])->where('fldC_M_GroohKala', $article['Main_Category']['M_groupcode'])->first();
@@ -124,7 +122,31 @@ class GetUpdateProductsAccounting implements ShouldQueue
                     } else {
                         $product_exist->categories()->sync([$Mcategory->id]);
                     }
+
+
+
+                    $titles = ['fldTipFee1', 'fldTipFee2', 'fldTipFee3', 'fldTipFee4', 'fldTipFee5', 'fldTipFee6', 'fldTipFee7', 'fldTipFee8', 'fldTipFee9', 'fldTipFee10'];
+
+                    foreach ($titles as $title) {
+                        $duplicatePrices = Price::withTrashed()
+                            ->where('product_id', $product_exist->id)
+                            ->where('title', $title)
+                            ->orderByDesc('id') // جدیدترین بیاد اول
+                            ->get();
+
+                        if ($duplicatePrices->count() > 1) {
+                            // قدیمی‌ترها رو حذف کن، فقط جدیدترین بمونه
+                            $duplicatePrices->skip(1)->each(function ($price) {
+                                $price->forceDelete(); // یا ->delete() اگه soft delete می‌خوای
+                            });
+                        }
+                    }
+
+
+                    
                 }
+
+
             }
             Product::clearCache();
             DB::table('failed_jobs')->truncate();
