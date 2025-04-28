@@ -74,7 +74,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                     if (!Product::where('fldId', $article['A_Code'])->exists()) {
 
                         $fldId = $article['A_Code'];
-                        $fldC_Kala = $article['A_Code'];
+                        $fldC_Kala = $article['A_Code_C'];
                         $title = $article['A_Name'];
                         $vahed_kol = '';
                         $Vahed = $article['vahed'];
