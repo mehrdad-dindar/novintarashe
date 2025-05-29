@@ -63,7 +63,7 @@ class SendOrderToAccounting implements ShouldQueue
 
             try {
                 // $response = $client->request('POST', 'http://2.187.99.27:5000/api/customer/register', $requestGmailData);
-                $response = $client->request('POST', 'http://128.65.177.78:5000/api/customer/register', $requestGmailData);
+                $response = $client->request('POST', 'http://109.122.229.114:5000/api/customer/register', $requestGmailData);
                 $response = $response->getBody()->getContents();
                 $response = json_decode($response);
             } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -125,7 +125,7 @@ class SendOrderToAccounting implements ShouldQueue
 
                 try {
                     // $response = $client->request('POST', 'http://2.187.99.27:5000/api/orders/save', $requestGmailData);
-                    $response = $client->request('POST', 'http://128.65.177.78:5000/api/orders/save', $requestGmailData);
+                    $response = $client->request('POST', 'http://109.122.229.114:5000/api/orders/save', $requestGmailData);
                     $response = $response->getBody()->getContents();
                     $response = json_decode($response);
                 } catch (\GuzzleHttp\Exception\RequestException $e) {

@@ -16,7 +16,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use App\Jobs\InsertFirstTimeProductAccounting as JobsInsertFirstTimeProductAccounting;
 
 class SettingController extends Controller
 {
@@ -288,6 +287,7 @@ class SettingController extends Controller
 
     public function GetAllProductAccounting()
     {
+
         // if (!checkApiAccounting()){
         //     return response('error');
         // }
@@ -315,10 +315,7 @@ class SettingController extends Controller
         // if (!checkApiAccounting()){
         //     return response('error');
         // }
-        GetCategoriesAccounting::dispatch()->onQueue('get_category_accounting');
-
-        JobsInsertFirstTimeProductAccounting::dispatch()->onQueue('insert_first_time_product_accounting');
-
+        GetNewProductsAccounting::dispatch()->onQueue('get_new_product_accounting');
         return response('success');
     }
     public function GetUpdateAccounting()
