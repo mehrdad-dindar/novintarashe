@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 class GetCategoriesAccounting implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $tries = 3;
     public function handle()
     {
         // if (!checkApiAccounting()) {
@@ -33,7 +33,7 @@ class GetCategoriesAccounting implements ShouldQueue
 
 
         try {
-            $response = $client->request('GET', 'http://109.122.229.114:5000/api/categories');
+            $response = $client->request('GET', 'http://128.65.177.78:5000/api/categories');
             $response = $response->getBody()->getContents();
             $response = json_decode($response, true);
 
@@ -49,7 +49,6 @@ class GetCategoriesAccounting implements ShouldQueue
                 $groupId = $mGroup['M_groupcode'];
                 $mGroupTitle = trim($mGroup['M_groupname']);
                 $mGroupSlug = sluggable_helper_function($mGroupTitle);
-                $image = '';
                 $published = 1;
                 // if ($mGroup->show=="true"){
                 //     $published=1;
@@ -66,13 +65,11 @@ class GetCategoriesAccounting implements ShouldQueue
                     $category->groupId = $groupId;
                     $category->published = $published;
                     $category->type = "productcat";
-                    $category->image = $image;
                     $category->save();
                 } else {
                     $mGroupCategory->title = $mGroupTitle;
                     $mGroupCategory->groupId = $groupId;
                     $mGroupCategory->published = $published;
-                    $mGroupCategory->image = $image;
                     $mGroupCategory->save();
                 }
 
@@ -84,7 +81,6 @@ class GetCategoriesAccounting implements ShouldQueue
                         $fldC_S_GroohKala = $sGroup['S_groupcode'];
                         $sGroupTitle = trim($sGroup['S_groupname']);
                         $sGroupSlug = sluggable_helper_function($sGroupTitle);
-                        $image = '';
                         $published = 1;
                         // if ($sGroup->fldShow=="true"){
                         //     $published=1;
@@ -100,7 +96,6 @@ class GetCategoriesAccounting implements ShouldQueue
                             $category->fldC_S_GroohKala = $fldC_S_GroohKala;
                             $category->published = $published;
                             $category->type = "productcat";
-                            $category->image = $image;
 
                             // Log::info($fldC_M_GroohKala);
 
@@ -114,7 +109,6 @@ class GetCategoriesAccounting implements ShouldQueue
                             $sGroupCategory->fldC_S_GroohKala = $fldC_S_GroohKala;
                             $sGroupCategory->published = $published;
                             $sGroupCategory->type = "productcat";
-                            $sGroupCategory->image = $image;
 
                             $category_id = Category::where(['groupId' => $fldC_M_GroohKala])->first()->id;
                             $sGroupCategory->category_id = $category_id;
