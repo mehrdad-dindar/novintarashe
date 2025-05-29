@@ -1671,8 +1671,7 @@ footer.main-footer .socials .footer-social ul li a:hover {
     margin: 15px 0 0;
     white-space: nowrap;
     list-style: none;
-    display: flex
-;
+    display: flex;
     justify-content: space-between;
     background: #fff;
     direction: ltr;
@@ -1692,4 +1691,55 @@ footer.main-footer .socials .footer-social ul li a:hover {
 }
 .share-product .custom-mdi::before {
     font-size: 28px;
+}
+.filed-link {
+    position: relative;
+    border: 1px solid rgba(119, 132, 157, 0.24);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.filed-link.copy-text {
+    position: relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+.filed-link input {
+    border: none;
+    line-height: 48px;
+    width: 100%;
+    padding-right: 60px;
+}
+.filed-link.dir-ltr input {
+    padding-right: 0;
+    padding-left: 12px;
+    direction: ltr;
+}
+input#shareLink {
+    padding-right: 48px;
+    text-align: left;
+    direction: rtl;
+    font-size: 13px;
+}
+.copy-text-btn {
+    box-shadow: 0 2px 10px rgb(119 132 157 / 24%);
+    -webkit-box-shadow: rgb(119 132 157 / 24%) 0 2px 10px;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #acb3bf;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.filed-link.dir-ltr .copy-text-btn {
+    left: auto;
+    right: 10px;
+    transform: translateY(-50%);
 }
