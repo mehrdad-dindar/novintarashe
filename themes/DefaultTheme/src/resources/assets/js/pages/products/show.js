@@ -561,4 +561,23 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('.copy-text-btn').on('click', function () {
+    var copyText = document.getElementById('shareLink');
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+
+    $('.copy-text-btn')
+        .tooltip('hide')
+        .attr('data-original-title', 'کپی شد')
+        .tooltip('show');
+
+    setTimeout(function () {
+        $('.copy-text-btn')
+            .tooltip('hide')
+            .attr('data-original-title', 'کپی لینک')
+            .tooltip('show');
+    }, 1000);
+});
 });
