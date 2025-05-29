@@ -391,4 +391,11 @@ class ProductController extends Controller
             abort(404);
         }
     }
+
+    public function shortLink($id)
+    {
+        $product = Product::findOrfail($id);
+
+        return redirect()->route('front.products.show', ['product' => $product]);
+    }
 }
