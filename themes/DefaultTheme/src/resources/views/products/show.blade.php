@@ -93,6 +93,16 @@
                                     </li>
                                 @endif
 
+                                 @if (option('show_product_share_links', 1) == 1)
+                                        <li>
+                                            <button class="btn-option btn-option-alarm" data-toggle="modal"
+                                                    data-target="#shareproduct">
+                                                <i class="mdi mdi-share-variant"></i>
+                                                <span class="tooltip-short">اشتراک گذاری</span>
+                                            </button>
+                                        </li>
+                                    @endif
+
                                 @can('products.update')
                                     <li>
                                         <a href="{{ route('admin.products.edit', ['product' => $product]) }}"
