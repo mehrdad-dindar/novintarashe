@@ -227,7 +227,7 @@ $('.chart-prices-label label').on('click', function () {
                         data[key - 1].discount_price == data[key - 1].price) &&
                     (data[parseInt(key) + 1] == undefined ||
                         data[parseInt(key) + 1].discount_price ==
-                            data[parseInt(key) + 1].price)
+                        data[parseInt(key) + 1].price)
                 ) {
                     realPrices.push(null);
                 } else {
@@ -291,7 +291,7 @@ function renderPriceChart(discountPrices, realPrices, discounts, categories) {
         },
 
         tooltip: {
-            custom: function ({series, seriesIndex, dataPointIndex, w}) {
+            custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                 if (!series[0][dataPointIndex]) {
                     return '';
                 }
@@ -299,9 +299,8 @@ function renderPriceChart(discountPrices, realPrices, discounts, categories) {
                 if (discounts[dataPointIndex]) {
                     var discountTemplate = `<div><del>${number_format(
                         series[1][dataPointIndex]
-                    )}</del> <span class="chart-tooltip-discount">${
-                        discounts[dataPointIndex]
-                    }%</span></div>`;
+                    )}</del> <span class="chart-tooltip-discount">${discounts[dataPointIndex]
+                        }%</span></div>`;
                 } else {
                     var discountTemplate = ``;
                 }
@@ -311,8 +310,8 @@ function renderPriceChart(discountPrices, realPrices, discounts, categories) {
                     <div class="chart-tooltip-prices">
                         ${discountTemplate}
                         <div class="mt-1"><strong>${number_format(
-                            series[0][dataPointIndex]
-                        )}</strong> <small> ریال </small></div>
+                    series[0][dataPointIndex]
+                )}</strong> <small> ریال </small></div>
                     </div>
                 </div>`;
             }
@@ -520,7 +519,7 @@ $(document).ready(function () {
                     $('#add-product-review-form').find(`input[name="suggest"][value="${review.suggest}"]`).prop('checked', true);
 
                     review.points.forEach(function (item) {
-                        if(item.type == 'positive') {
+                        if (item.type == 'positive') {
                             $('#advantage-input').val(item.text);
                             $('#advantages .js-icon-form-add').trigger('click');
                         } else {
@@ -563,21 +562,21 @@ $(document).ready(function () {
     });
 
     $('.copy-text-btn').on('click', function () {
-    var copyText = document.getElementById('shareLink');
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(copyText.value);
+        var copyText = document.getElementById('shareLink');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
 
-    $('.copy-text-btn')
-        .tooltip('hide')
-        .attr('data-original-title', 'کپی شد')
-        .tooltip('show');
-
-    setTimeout(function () {
         $('.copy-text-btn')
             .tooltip('hide')
-            .attr('data-original-title', 'کپی لینک')
+            .attr('data-original-title', 'کپی شد')
             .tooltip('show');
-    }, 1000);
-});
+
+        setTimeout(function () {
+            $('.copy-text-btn')
+                .tooltip('hide')
+                .attr('data-original-title', 'کپی لینک')
+                .tooltip('show');
+        }, 1000);
+    });
 });
