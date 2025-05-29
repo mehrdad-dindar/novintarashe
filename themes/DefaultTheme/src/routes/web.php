@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Themes\DefaultTheme\src\Controllers\MainController;
 use Themes\DefaultTheme\src\Controllers\PostController;
@@ -143,7 +144,18 @@ Route::group(['as' => 'front.'], function () {
 });
 
 
-
+Route::get('/cache-clear', function () {
+    try {
+        Artisan::call('optimize:clear');
+        Artisan::call('config:clear');
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        return response()->json(['success' => true]);
+    } catch (\Throwable $th) {
+        return response()->json(['success' => false]);
+    }
+})->name('cache.clear');
 
 // get auth user in 404 page
 // Route::fallback(function () {
