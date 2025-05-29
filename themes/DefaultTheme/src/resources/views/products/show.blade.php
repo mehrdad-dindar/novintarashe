@@ -98,7 +98,6 @@
                                             <button class="btn-option btn-option-alarm" data-toggle="modal"
                                                     data-target="#shareproduct">
                                                 <i class="mdi mdi-share-variant"></i>
-                                                <span class="tooltip-short">اشتراک گذاری</span>
                                             </button>
                                         </li>
                                     @endif
@@ -449,6 +448,54 @@
                             @endforeach
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+       @if (option('show_product_share_links', 1) == 1)
+        <!-- Modal -->
+        <div class="modal fade" id="shareproduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">اشتراک گذاری</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+
+
+                        <div><p>با استفاده از روش‌های زیر می‌توانید این صفحه را با دوستان خود به اشتراک بگذارید.</p></div>
+                        <ul class="share-product">
+
+                            <a target="_blank" class="telegram" href="https://t.me/share/url?url={{ route('front.products.shortLink', ['id' => $product->id]) }}">
+                                <li  class="custom-mdi mdi mdi-telegram"></li>
+                            </a>
+
+                            <a target="_blank" class="whatsapp" href="https://api.whatsapp.com/send?text={{ route('front.products.shortLink', ['id' => $product->id]) }}">
+                                <li  class="custom-mdi mdi mdi-whatsapp"></li>
+                            </a>
+                            <a target="_blank" class="twiiter" href="https://twitter.com/intent/tweet?url={{ route('front.products.shortLink', ['id' => $product->id]) }}">
+                                <li  class="custom-mdi mdi mdi-twitter"></li>
+                            </a>
+                            <a target="_blank" class="linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url= {{route('front.products.shortLink', ['id' => $product->id]) }}">
+                                <li  class="custom-mdi mdi mdi-linkedin"></li>
+                            </a>
+                        </ul>
+                        <hr>
+                        <div class="filed-link dir-ltr copy-text">
+
+                            <input id="shareLink" type="text" disabled value="{{ route('front.products.shortLink', ['id' => $product->id]) }}" readonly="">
+
+                            <div class="copy-text-btn" data-toggle="tooltip" data-placement="right" title="" data-original-title="کپی لینک">
+                                <i class="mdi mdi-content-copy"></i>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
