@@ -118,14 +118,23 @@ $('#discount-create-form').submit(function (e) {
             _token: token
         },
             success: function (data) {
-                toastr.success('', 'کد تخفیف با موفقیت ثبت شد', {
-                    positionClass: 'toast-bottom-left',
-                    containerId: 'toast-bottom-left'
-                });
 
-                setTimeout(function () {
-                   location.reload();
-                }, 1000);
+                if(data.status=="success"){
+                    toastr.success('', 'کد تخفیف با موفقیت ثبت شد', {
+                        positionClass: 'toast-bottom-left',
+                        containerId: 'toast-bottom-left'
+                    });
+
+                    setTimeout(function () {
+                       location.reload();
+                    }, 1000);
+                }else{
+                    toastr.error('', 'کد تخفیف صحیح نمی باشد', {
+                        positionClass: 'toast-bottom-left',
+                        containerId: 'toast-bottom-left'
+                    });
+                }
+
             },
 
             beforeSend: function (xhr) {

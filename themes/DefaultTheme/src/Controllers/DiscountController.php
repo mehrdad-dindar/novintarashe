@@ -20,12 +20,17 @@ class DiscountController extends Controller
         }
 
         $request->validate([
-            'code' => 'required|exists:discounts,code'
+            'code' => 'required'
         ]);
+
+        $discount = Discount::where('code', $request->code)->first();
+        if(!$discount){
+            return response('error');
+        }
 
         if ($cart->discount) {
             throw ValidationException::withMessages([
-                'code' => trans('front::messages.controller.discount-code') 
+                'code' => trans('front::messages.controller.discount-code')
             ]);
         }
 
