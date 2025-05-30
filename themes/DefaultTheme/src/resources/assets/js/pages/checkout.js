@@ -118,8 +118,7 @@ $('#discount-create-form').submit(function (e) {
             _token: token
         },
             success: function (data) {
-
-                if(data.status=="success"){
+                if(data=="success"){
                     toastr.success('', 'کد تخفیف با موفقیت ثبت شد', {
                         positionClass: 'toast-bottom-left',
                         containerId: 'toast-bottom-left'
