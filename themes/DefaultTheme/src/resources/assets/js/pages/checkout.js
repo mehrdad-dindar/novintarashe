@@ -125,6 +125,7 @@ $('#discount-create-form').submit(function (e) {
 
             beforeSend: function (xhr) {
                 block(form);
+                xhr.setRequestHeader("X-CSRF-TOKEN", $('meta[name="csrf-token"]').attr('content'));
             },
             complete: function () {
                 unblock(form);
