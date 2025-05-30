@@ -118,8 +118,8 @@ $('#discount-create-form').submit(function (e) {
             _token: token
         },
             success: function (data) {
-                if(data=="success"){
-                    toastr.success('', 'کد تخفیف با موفقیت ثبت شد', {
+                if(data.status=="success"){
+                    toastr.success('', data.message, {
                         positionClass: 'toast-bottom-left',
                         containerId: 'toast-bottom-left'
                     });
@@ -128,7 +128,7 @@ $('#discount-create-form').submit(function (e) {
                        location.reload();
                     }, 1000);
                 }else{
-                    toastr.error('', 'کد تخفیف صحیح نمی باشد', {
+                    toastr.error('',data.message, {
                         positionClass: 'toast-bottom-left',
                         containerId: 'toast-bottom-left'
                     });

@@ -59,6 +59,7 @@ class DiscountController extends Controller
             'status'=>'success',
             'message'=>"کد تخفیف با موفقیت ثبت شد"
         ]);
+        
     }
 
     public function destroy(Request $request)
