@@ -20,12 +20,20 @@ class DiscountController extends Controller
         }
 
         $request->validate([
-            'code' => 'required|exists:discounts,code'
+            'code' => 'required'
         ]);
+
+        $discount = Discount::where('code', $request->code)->first();
+        if(!$discount){
+            return response([
+                'status'=>'error',
+                'message'=>"کد تخفیف صحیح نمی باشد"
+            ]);
+        }
 
         if ($cart->discount) {
             throw ValidationException::withMessages([
-                'code' => trans('front::messages.controller.discount-code') 
+                'code' => trans('front::messages.controller.discount-code')
             ]);
         }
 
@@ -34,16 +42,24 @@ class DiscountController extends Controller
         $can_use_discount = $cart->canUseDiscount($request->code);
 
         if (!$can_use_discount['status']) {
-            throw ValidationException::withMessages([
-                'code' => [$can_use_discount['message']]
+            return response([
+                'status'=>'error',
+                'message'=>$can_use_discount['message']
             ]);
+            // throw ValidationException::withMessages([
+            //     'code' => [$can_use_discount['message']]
+            // ]);
         }
 
         $cart->update([
             'discount_id' => $discount->id
         ]);
 
-        return response('success');
+        return response([
+            'status'=>'success',
+            'message'=>"کد تخفیف با موفقیت ثبت شد"
+        ]);
+        
     }
 
     public function destroy(Request $request)

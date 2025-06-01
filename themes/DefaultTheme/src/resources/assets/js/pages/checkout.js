@@ -104,26 +104,40 @@ $(document).ready(function () {
 $('#discount-create-form').submit(function (e) {
     e.preventDefault();
 
-    var formData = new FormData(this);
+       let code = $('input[name="code"]').val();
+    let token = $('input[name="_token"]').val();
+
     var form = $(this);
 
     if ($(this).valid()) {
         $.ajax({
             url: $(this).attr('action'),
             type: 'POST',
-            data: formData,
+             data: {
+            code: code,
+            _token: token
+        },
             success: function (data) {
-                toastr.success('', 'کد تخفیف با موفقیت ثبت شد', {
-                    positionClass: 'toast-bottom-left',
-                    containerId: 'toast-bottom-left'
-                });
+                if(data.status=="success"){
+                    toastr.success('', data.message, {
+                        positionClass: 'toast-bottom-left',
+                        containerId: 'toast-bottom-left'
+                    });
 
-                setTimeout(function () {
-                    location.reload();
-                }, 1000);
+                    setTimeout(function () {
+                       location.reload();
+                    }, 1000);
+                }else{
+                    toastr.error('',data.message, {
+                        positionClass: 'toast-bottom-left',
+                        containerId: 'toast-bottom-left'
+                    });
+                }
+
             },
 
             beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRF-TOKEN", $('meta[name="csrf-token"]').attr('content'));
                 block(form);
             },
             complete: function () {
@@ -131,11 +145,10 @@ $('#discount-create-form').submit(function (e) {
             },
 
             cache: false,
-            contentType: false,
-            processData: false
         });
     }
 });
+
 
 function check_wallet() {
     if (
