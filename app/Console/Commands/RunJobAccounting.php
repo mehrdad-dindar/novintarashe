@@ -24,7 +24,7 @@ class RunJobAccounting extends Command
      */
     public function handle()
     {
-        Artisan::call('queue:work --queue=get_category_accounting --stop-when-empty');
+        //Artisan::call('queue:work --queue=get_category_accounting --stop-when-empty');
         Artisan::call('queue:work --queue=send-order-accounting --stop-when-empty');
         //Artisan::call('queue:work --queue=insert_first_time_product_accounting --stop-when-empty');
         //Artisan::call('queue:work --queue=get_new_product_accounting --stop-when-empty');
