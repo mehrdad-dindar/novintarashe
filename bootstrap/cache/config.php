@@ -3,8 +3,8 @@
   array (
     'name' => 'laravel-shop',
     'env' => 'local',
-    'debug' => true,
-    'url' => 'http://127.0.0.1:9091',
+    'debug' => false,
+    'url' => 'https://novintarashe.ir',
     'asset_url' => NULL,
     'timezone' => 'Asia/Tehran',
     'locale' => 'fa',
@@ -31,7 +31,7 @@
     ),
     'fallback_locale' => 'fa',
     'faker_locale' => 'fa_IR',
-    'key' => 'base64:/VwBgVZddvBeNkfkPAR3ZNRvQZ6DWS4hff7apy6XYe4=',
+    'key' => 'base64:Qn+M0YpGgHr/edwsGjx1flzoq53Ra1aaod8RuayyQrU=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
     array (
@@ -165,12 +165,12 @@
         array (
           'include' => 
           array (
-            0 => 'C:\\laragon\\www\\novintarasheh\\public/uploads',
+            0 => '/Users/mehrdad/Documents/projects/novin/public/uploads',
           ),
           'exclude' => 
           array (
-            0 => 'C:\\laragon\\www\\novintarasheh\\vendor',
-            1 => 'C:\\laragon\\www\\novintarasheh\\node_modules',
+            0 => '/Users/mehrdad/Documents/projects/novin/vendor',
+            1 => '/Users/mehrdad/Documents/projects/novin/node_modules',
           ),
           'follow_links' => false,
           'ignore_unreadable_directories' => false,
@@ -190,7 +190,7 @@
           0 => 'backup',
         ),
       ),
-      'temporary_directory' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/backup-temp',
+      'temporary_directory' => '/Users/mehrdad/Documents/projects/novin/storage/app/backup-temp',
     ),
     'notifications' => 
     array (
@@ -264,7 +264,7 @@
   ),
   'barcode' => 
   array (
-    'store_path' => 'C:\\laragon\\www\\novintarasheh\\public\\/uploads/barcodes/',
+    'store_path' => '/Users/mehrdad/Documents/projects/novin/public/uploads/barcodes/',
   ),
   'broadcasting' => 
   array (
@@ -279,8 +279,8 @@
         'app_id' => '',
         'options' => 
         array (
-          'cluster' => NULL,
-          'host' => 'api-mt1.pusher.com',
+          'cluster' => '',
+          'host' => 'api-.pusher.com',
           'port' => 443,
           'scheme' => 'https',
           'encrypted' => true,
@@ -298,7 +298,7 @@
         'app_id' => '',
         'options' => 
         array (
-          'cluster' => NULL,
+          'cluster' => '',
           'host' => 'pusher.t-nateghi.ir',
           'port' => 6001,
           'encrypted' => true,
@@ -355,7 +355,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\framework/cache/data',
+        'path' => '/Users/mehrdad/Documents/projects/novin/storage/framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -545,7 +545,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'novintarashe',
+        'database' => 'novintarashe_store',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -555,7 +555,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'novintarashe',
+        'database' => 'novintarashe_store',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -581,7 +581,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'novintarashe',
+        'database' => 'novintarashe_store',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -596,7 +596,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'novintarashe',
+        'database' => 'novintarashe_store',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -643,7 +643,7 @@
     array (
       'enabled' => true,
       'driver' => 'file',
-      'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\debugbar',
+      'path' => '/Users/mehrdad/Documents/projects/novin/storage/debugbar',
       'connection' => NULL,
       'provider' => '',
       'hostname' => '127.0.0.1',
@@ -810,7 +810,7 @@
     ),
     'temporary_files' => 
     array (
-      'local_path' => 'C:\\Users\\Mahdi\\AppData\\Local\\Temp',
+      'local_path' => '/var/tmp/',
       'remote_disk' => NULL,
       'remote_prefix' => NULL,
     ),
@@ -864,29 +864,29 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarasheh\\public\\uploads',
+        'root' => '/Users/mehrdad/Documents/projects/novin/public/uploads',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarasheh\\public\\/',
-        'url' => 'http://127.0.0.1:9091',
+        'root' => '/Users/mehrdad/Documents/projects/novin/public/',
+        'url' => 'https://novintarashe.ir',
         'visibility' => 'public',
       ),
       'backup' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/backups',
+        'root' => '/Users/mehrdad/Documents/projects/novin/storage/app/backups',
       ),
       'downloads' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/downloads',
+        'root' => '/Users/mehrdad/Documents/projects/novin/storage/app/downloads',
       ),
       'ckeditor' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarasheh\\public\\uploads/ckeditor',
+        'root' => '/Users/mehrdad/Documents/projects/novin/public/uploads/ckeditor',
         'url' => '/uploads/ckeditor',
         'visibility' => 'public',
       ),
@@ -903,18 +903,18 @@
       'themes' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\novintarasheh\\themes',
+        'root' => '/Users/mehrdad/Documents/projects/novin/themes',
       ),
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\novintarasheh\\public\\storage' => 'C:\\laragon\\www\\novintarasheh\\storage\\app/public',
+      '/Users/mehrdad/Documents/projects/novin/public/storage' => '/Users/mehrdad/Documents/projects/novin/storage/app/public',
     ),
   ),
   'general' => 
   array (
     'api_url' => 'http://laravel-shop.ir/api/v1',
-    'admin_route_prefix' => 'admin',
+    'admin_route_prefix' => 'admin123',
     'current_theme' => 'DefaultTheme',
     'permissions' => 
     array (
@@ -1387,13 +1387,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs/laravel.log',
+        'path' => '/Users/mehrdad/Documents/projects/novin/storage/logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs/laravel.log',
+        'path' => '/Users/mehrdad/Documents/projects/novin/storage/logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -1443,7 +1443,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs/laravel.log',
+        'path' => '/Users/mehrdad/Documents/projects/novin/storage/logs/laravel.log',
       ),
     ),
   ),
@@ -1451,7 +1451,7 @@
   array (
     'max_file_size' => 52428800,
     'pattern' => '*.log',
-    'storage_path' => 'C:\\laragon\\www\\novintarasheh\\storage\\logs',
+    'storage_path' => '/Users/mehrdad/Documents/projects/novin/storage/logs',
   ),
   'mail' => 
   array (
@@ -1507,7 +1507,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\novintarasheh\\resources\\views/vendor/mail',
+        0 => '/Users/mehrdad/Documents/projects/novin/resources/views/vendor/mail',
       ),
     ),
   ),
@@ -1928,7 +1928,7 @@
       2 => '127.0.0.1',
       3 => '127.0.0.1:8000',
       4 => '::1',
-      5 => '127.0.0.1',
+      5 => 'novintarashe.ir',
     ),
     'guard' => 
     array (
@@ -2013,7 +2013,7 @@
         ),
       ),
     ),
-    'updater_token' => '',
+    'updater_token' => NULL,
   ),
   'services' => 
   array (
@@ -2040,7 +2040,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\laragon\\www\\novintarasheh\\storage\\framework/sessions',
+    'files' => '/Users/mehrdad/Documents/projects/novin/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -2059,7 +2059,7 @@
   'sitemap' => 
   array (
     'use_cache' => false,
-    'cache_key' => 'laravel-sitemap.http://127.0.0.1:9091',
+    'cache_key' => 'laravel-sitemap.https://novintarashe.ir',
     'cache_duration' => 3600,
     'escaping' => true,
     'use_limit_size' => false,
@@ -2098,17 +2098,17 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\novintarasheh\\resources\\views',
+      0 => '/Users/mehrdad/Documents/projects/novin/resources/views',
     ),
-    'compiled' => 'C:\\laragon\\www\\novintarasheh\\storage\\framework\\views',
+    'compiled' => '/Users/mehrdad/Documents/projects/novin/storage/framework/views',
   ),
   'webpush' => 
   array (
     'vapid' => 
     array (
       'subject' => NULL,
-      'public_key' => NULL,
-      'private_key' => NULL,
+      'public_key' => 'BH8DvJIp02XaKQbCgnCJGytWN8_WRGTB78VcpKW2eh8Qp6dAyqzf012aUYj9nmbj9G8Eo0sGmwexK-QmO5JGalE',
+      'private_key' => 'MX_fXcJEoYC6msJZU510P-ZkuoHq9dC1x97ehsbpOGA',
       'pem_file' => NULL,
     ),
     'model' => 'NotificationChannels\\WebPush\\PushSubscription',
@@ -2177,8 +2177,8 @@
     'route' => NULL,
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\novintarasheh\\public\\upload',
-      1 => 'C:\\laragon\\www\\novintarasheh\\public\\images',
+      0 => '/Users/mehrdad/Documents/projects/novin/public/upload',
+      1 => '/Users/mehrdad/Documents/projects/novin/public/images',
     ),
     'templates' => 
     array (
@@ -2551,7 +2551,7 @@
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\novintarasheh\\public\\themes/defaultTheme' => 'C:\\laragon\\www\\novintarasheh\\themes/DefaultTheme/src/resources/assets',
+      '/Users/mehrdad/Documents/projects/novin/public/themes/defaultTheme' => '/Users/mehrdad/Documents/projects/novin/themes/DefaultTheme/src/resources/assets',
     ),
     'home-widgets' => 
     array (
