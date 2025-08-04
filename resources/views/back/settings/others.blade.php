@@ -203,6 +203,14 @@
 
                                             </div>
 
+                                            <div class="col-md-6">
+
+                                                <label class="">توضیحات کد معرفی</label>
+                                                <div class="input-group mb-75">
+                                                    <textarea name="user_referral_description" class="form-control" id="" cols="30" rows="3">{{ option('user_referral_description', "با دعوت از دوستان تان به <b>10</b> درصد کد تخفیف بگیرید.") }}</textarea>
+                                                </div>
+                                            </div>
+
                                             <div class="col-12">
                                                 <hr>
                                             </div>
