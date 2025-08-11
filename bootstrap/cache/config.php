@@ -633,7 +633,7 @@
   ),
   'debugbar' => 
   array (
-    'enabled' => false,
+    'enabled' => true,
     'except' => 
     array (
       0 => 'telescope*',
@@ -1757,13 +1757,13 @@
         'apiPurchaseUrl' => 'https://api.zarinpal.com/pg/v4/payment/request.json',
         'apiPaymentUrl' => 'https://www.zarinpal.com/pg/StartPay/',
         'apiVerificationUrl' => 'https://api.zarinpal.com/pg/v4/payment/verify.json',
-        'sandboxApiPurchaseUrl' => 'https://sandbox.zarinpal.com/pg/services/WebGate/wsdl',
+        'sandboxApiPurchaseUrl' => 'https://sandbox.zarinpal.com/pg/v4/payment/request.json',
         'sandboxApiPaymentUrl' => 'https://sandbox.zarinpal.com/pg/StartPay/',
-        'sandboxApiVerificationUrl' => 'https://sandbox.zarinpal.com/pg/services/WebGate/wsdl',
+        'sandboxApiVerificationUrl' => 'https://sandbox.zarinpal.com/pg/v4/payment/verify.json',
         'zaringateApiPurchaseUrl' => 'https://ir.zarinpal.com/pg/services/WebGate/wsdl',
         'zaringateApiPaymentUrl' => 'https://www.zarinpal.com/pg/StartPay/:authority/ZarinGate',
         'zaringateApiVerificationUrl' => 'https://ir.zarinpal.com/pg/services/WebGate/wsdl',
-        'mode' => 'normal',
+        'mode' => 'sandbox',
         'merchantId' => '',
         'callbackUrl' => 'http://yoursite.com/path/to',
         'description' => 'payment using zarinpal',
@@ -2013,7 +2013,7 @@
         ),
       ),
     ),
-    'updater_token' => NULL,
+    'updater_token' => '',
   ),
   'services' => 
   array (
