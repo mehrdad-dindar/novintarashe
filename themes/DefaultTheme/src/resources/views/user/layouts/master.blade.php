@@ -57,7 +57,7 @@
                         @if (option('user_refrral_enable', false) == true)
                             <div class="dt-sl dt-sn mb-3 py-4 px-3">
                                 <div class="profile-sidebar-header dt-sl">
-                                    <p>با دعوت از دوستان تان به {{ option('info_site_title') }} <b>10</b> درصد کد تخفیف بگیرید.</p>
+                                    <p>{!! option('user_referral_description') !!}</p>
                                     <span>کد معرفی شما:</span><strong class="text-info"> {{ $user->referral_code }}</strong>
                                 </div>
                             </div>
