@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProvinceController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\InstallmentPaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +44,10 @@ Route::group(['prefix' => 'v1'], function () {
         // ------------------ user
         Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
 
+        // ------------------ Installment Payment
+        Route::post('installment/create', [InstallmentPaymentController::class, 'createInstallmentRequest']);
+        Route::get('installment/info', [InstallmentPaymentController::class, 'getInstallmentInfo']);
+
         // ------------------ Favorites
         Route::get('favorites', [FavoriteController::class, 'index']);
         Route::post('favorites', [FavoriteController::class, 'store']);
@@ -60,6 +65,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'app'], function () {
         Route::get('settings', [AppController::class, 'settings']);
     });
+
+    // ------------------ Installment Payment Callback
+    Route::any('installment/verify', [InstallmentPaymentController::class, 'verifyInstallment'])->name('api.v1.installment.verify');
 
     // ------------------ Categories
     Route::get('categories', [CategoryController::class, 'index']);

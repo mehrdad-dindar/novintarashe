@@ -196,6 +196,54 @@
                                         <hr>
 
                                         @php
+                                            $gateway = $gateways->where('key', 'gsmpay')->first();
+                                        @endphp
+
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <fieldset class="checkbox">
+                                                    <div class="vs-checkbox-con vs-checkbox-primary">
+                                                        <input data-class="gsmpay" type="checkbox"
+                                                            name="gateways[{{ $gateway->id }}][is_active]"
+                                                            {{ $gateway->is_active ? 'checked' : '' }}>
+                                                        <span class="vs-checkbox">
+                                                            <span class="vs-checkbox--check">
+                                                                <i class="vs-icon feather icon-check"></i>
+                                                            </span>
+                                                        </span>
+                                                        <span class="">درگاه جی اس ام پی</span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-2 form-group">
+                                                <label>ترتیب نمایش</label>
+                                                <div class="input-group mb-75">
+                                                    <input type="number" name="gateways[{{ $gateway->id }}][ordering]"
+                                                        class="form-control ltr gsmpay"
+                                                        value="{{ $gateway->ordering }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label>عنوان</label>
+                                                <div class="input-group mb-75">
+                                                    <input type="text" name="gateways[{{ $gateway->id }}][name]"
+                                                        class="form-control gsmpay" value="{{ $gateway->name }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label>کد پذیرنده</label>
+                                                <div class="input-group mb-75">
+                                                    <input type="text"
+                                                        name="gateways[{{ $gateway->id }}][configs][merchant_code]"
+                                                        class="form-control ltr gsmpay"
+                                                        value="{{ $gateway->config('merchant_code') }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        @php
                                             $gateway = $gateways->where('key', 'payping')->first();
                                         @endphp
 
