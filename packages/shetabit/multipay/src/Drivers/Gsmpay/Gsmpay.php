@@ -47,6 +47,10 @@ class Gsmpay extends Driver
         if ($response->successful()) {
             $data = $response->json();
 
+                if (isset($data['data']['redirect_url'])) {
+                    session()->put('redirect_url', $data['data']['redirect_url']);
+                }
+
             if (isset($data['data']['token'])) {
                 $this->invoice->transactionId($data['data']['token']);
                 return $data['data']['token'];
@@ -67,11 +71,12 @@ class Gsmpay extends Driver
      */
     public function pay(): RedirectionForm
     {
-        $redirectUrl = $this->baseUrl . '/v1/cpg/payment/' . $this->invoice->getTransactionId();
+        if (session()->has('redirect_url'))
+            $redirectUrl = session('redirect_url');
 
         return $this->redirectWithForm($redirectUrl, [
             'token' => $this->invoice->getTransactionId(),
-        ]);
+        ],'GET');
     }
 
     /**
