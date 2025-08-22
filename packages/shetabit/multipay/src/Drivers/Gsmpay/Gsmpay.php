@@ -47,9 +47,9 @@ class Gsmpay extends Driver
         if ($response->successful()) {
             $data = $response->json();
 
-                if (isset($data['data']['redirect_url'])) {
-                    session()->put('redirect_url', $data['data']['redirect_url']);
-                }
+            if (isset($data['data']['redirect_url'])) {
+                session()->put('redirect_url', $data['data']['redirect_url']);
+            }
 
             if (isset($data['data']['token'])) {
                 $this->invoice->transactionId($data['data']['token']);
@@ -105,12 +105,18 @@ class Gsmpay extends Driver
             $data = $response->json();
 
             if (isset($data['data']['is_paid']) && $data['data']['is_paid'] === true) {
-                return new Receipt(
-                    $token,
-                    $data['data']['reference_id'] ?? $token,
-                    $this->invoice->getAmount(),
-                    $data['data']['card_number'] ?? null
-                );
+                $referenceId = $data['data']['token'];
+
+                $receipt =  $this->createReceipt($referenceId);
+
+                $receipt->detail([
+                    'token' => $data['data']['token'],
+                    'invoice_amount' => $data['data']['invoice_amount'] ?? null,
+                    'is_paid' => true,
+                ]);
+
+                return $receipt;
+
             }
         }
 
@@ -140,5 +146,10 @@ class Gsmpay extends Driver
         ];
 
         return $errorMessages[$errorType] ?? 'خطای نامشخص';
+    }
+
+    private function createReceipt($referenceId): \Shetabit\Multipay\Receipt
+    {
+        return new Receipt('gsmpay', $referenceId);
     }
 }
