@@ -211,4 +211,27 @@ class Category extends Model
     {
         return $this->published;
     }
+
+    public function suggestedCategories()
+    {
+        return $this->hasMany(RelatedCategory::class, 'source_category_id');
+    }
+
+    public function sourceCategories()
+    {
+        return $this->hasMany(RelatedCategory::class, 'suggested_category_id');
+    }
+
+    public function hasActiveRelatedSuggestions()
+    {
+        return $this->suggestedCategories()->active()->exists();
+    }
+
+    public function getSuggestedCategoryIds()
+    {
+        return $this->suggestedCategories()
+            ->active()
+            ->pluck('suggested_category_id')
+            ->toArray();
+    }
 }
