@@ -321,6 +321,11 @@ return [
             'mobile' => '',
             'email' => '',
             'description' => 'payment using Aqayepardakht',
+        ],
+        'gsmpay' => [
+            'merchant_code' => '',
+            'callbackUrl' => '',
+            'description' => 'payment using GSM Pay Credit Payment Gateway',
         ]
     ],
 
@@ -365,6 +370,7 @@ return [
         'rayanpay' => \Shetabit\Multipay\Drivers\Rayanpay\Rayanpay::class,
         'sizpay' => \Shetabit\Multipay\Drivers\Sizpay\Sizpay::class,
         'vandar' => \Shetabit\Multipay\Drivers\Vandar\Vandar::class,
-        'aqayepardakht' => \Shetabit\Multipay\Drivers\Aqayepardakht\Aqayepardakht::class
+        'aqayepardakht' => \Shetabit\Multipay\Drivers\Aqayepardakht\Aqayepardakht::class,
+        'gsmpay' => \Shetabit\Multipay\Drivers\Gsmpay\Gsmpay::class
     ]
 ];

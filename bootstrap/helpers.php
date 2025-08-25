@@ -703,6 +703,10 @@ function get_gateway_configs($gateway)
                 $configs['merchantId'] = $gateway->config('merchantId');
                 break;
             }
+        case "gsmpay": {
+                $configs['merchant_code'] = $gateway->config('merchant_code');
+                break;
+            }
     }
 
     return $configs;

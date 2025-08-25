@@ -120,7 +120,6 @@ class SettingController extends Controller
     public function showGateways()
     {
         $this->authorize('settings.gateway');
-
         foreach (config('general.supported_gateways') as $key => $name) {
             Gateway::firstOrCreate(
                 [
@@ -133,7 +132,6 @@ class SettingController extends Controller
         }
 
         $gateways = Gateway::get();
-
         return view('back.settings.gateways', compact('gateways'));
     }
 
