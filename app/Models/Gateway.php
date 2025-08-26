@@ -17,7 +17,11 @@ class Gateway extends Model
     public function scopeActive($query)
     {
         $supported_gateways = array_keys(config('general.supported_gateways'));
-        array_push($supported_gateways,'wallet');
+
+        if (!in_array('wallet', $supported_gateways)) {
+            array_push($supported_gateways, 'wallet');
+        }
+
         return $query->whereIn('key', $supported_gateways)
             ->where('is_active', true);
     }
