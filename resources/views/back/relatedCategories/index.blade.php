@@ -9,12 +9,10 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <div class="breadcrumb-wrapper col-12">
-                                <ol class="breadcrumb no-border">
-                                    <li class="breadcrumb-item">مدیریت</li>
-                                    <li class="breadcrumb-item active">پیشنهادهای مرتبط با دسته‌ها</li>
-                                </ol>
-                            </div>
+                            <ol class="breadcrumb no-border">
+                                <li class="breadcrumb-item">مدیریت</li>
+                                <li class="breadcrumb-item active">پیشنهادهای مرتبط با دسته‌ها</li>
+                            </ol>
                         </div>
                     </div>
                 </div>
@@ -24,93 +22,69 @@
                 @if($categories->count())
                     <section class="card">
                         <div class="card-header">
-                            <h4 class="card-title">لیست دسته‌های مرتبط</h4>
+                            <h4 class="card-title">تنظیم پیشنهادهای مرتبط با دسته‌ها</h4>
                         </div>
                         <div class="card-content">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped mb-0">
-                                        <thead>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th style="width: 10%">فعال</th>
+                                        <th style="width: 30%">دسته محصول</th>
+                                        <th style="width: 50%">دسته‌های پیشنهادی</th>
+                                        <th style="width: 10%">عملیات</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($categories as $category)
                                         <tr>
-                                            <th>وضعیت</th>
-                                            <th>دسته محصول</th>
-                                            <th>دسته‌های پیشنهادی</th>
-                                            <th class="text-center">عملیات</th>
+                                            <td>
+                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                    <input type="checkbox" class="toggle-active"
+                                                           data-id="{{ $category->id }}"
+                                                        {{ $category->hasActiveRelatedSuggestions() ? 'checked' : '' }}>
+                                                    <span class="vs-checkbox">
+                                                        <span class="vs-checkbox--check"><i class="feather icon-check"></i></span>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <strong>({{ $category->id }})</strong> {{ $category->title }}
+                                            </td>
+                                            <td>
+                                                <select class="form-control select2-suggested"
+                                                        data-category-id="{{ $category->id }}"
+                                                        multiple="multiple"
+                                                        style="width: 100%;">
+                                                    @foreach($categories as $related)
+                                                        @if($related->id === $category->id) @continue @endif
+                                                        <option value="{{ $related->id }}"
+                                                            {{ in_array($related->id, $category->getSuggestedCategoryIds()) ? 'selected' : '' }}>
+                                                            {{ $related->title }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-primary save-btn"
+                                                        data-category-id="{{ $category->id }}"
+                                                        data-loading="<span class='spinner-border spinner-border-sm'></span> درحال ذخیره سازی                 ...">
+                                                    ذخیره
+                                                </button>
+                                            </td>
                                         </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach ($categories as $category)
-                                            <tr id="related_category_row_{{ $category->id }}">
-                                                <form
-                                                    id="form-related-category-{{ $category->id }}"
-                                                    action="{{ route('admin.related-categories.update', $category->id) }}"
-                                                    method="POST"
-                                                    class="related-category-form"
-                                                >
-                                                    @csrf
-                                                    @method('PUT')
-
-                                                    <td>
-                                                        <div class="vs-checkbox-con vs-checkbox-primary">
-                                                            <input
-                                                                type="checkbox"
-                                                                name="active"
-                                                                value="1"
-                                                                {{ old("active.$category->id", $category->hasActiveRelatedSuggestions()) ? 'checked' : '' }}
-                                                            >
-                                                            <span class="vs-checkbox">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{ "(".$category->id.") ".$category->title }}</td>
-                                                    <td>
-                                                        <select
-                                                            class="form-control select2-related w-100"
-                                                            name="suggested_category_ids[]"
-                                                            multiple="multiple"
-                                                        >
-                                                            @foreach($categories as $related)
-                                                                @if($related->id === $category->id) @continue @endif
-                                                                <option
-                                                                    value="{{ $related->id }}"
-                                                                    {{ in_array($related->id, old("suggested_category_ids.$category->id", $category->getSuggestedCategoryIds())) ? 'selected' : '' }}
-                                                                >
-                                                                    {{ $related->title }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button
-                                                            type="submit"
-                                                            class="btn btn-success waves-effect waves-light submit-btn">
-                                                            ثبت
-                                                        </button>
-                                                    </td>
-                                                </form>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </section>
-                @else
-                    <section class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">لیست دسته‌های مرتبط</h4>
-                        </div>
-                        <div class="card-body">
-                            <p>چیزی برای نمایش وجود ندارد!</p>
-                        </div>
-                    </section>
-                @endif
 
-                {{ $categories->links() }}
+                    {{ $categories->links() }}
+                @else
+                    <div class="alert alert-info">هیچ دسته‌بندی موجود نیست.</div>
+                @endif
             </div>
         </div>
     </div>
@@ -122,6 +96,10 @@
         .select2-container {
             width: 100% !important;
         }
+        .save-btn[disabled] {
+            opacity: 0.65;
+            pointer-events: none;
+        }
     </style>
 @endpush
 
@@ -131,30 +109,44 @@
 
     <script>
         $(document).ready(function () {
-            $('.select2-related').select2({
+            // فعال‌سازی Select2 برای تمام سلکت‌ها
+            $('.select2-suggested').select2({
                 placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
-                allowClear: true
+                allowClear: true,
+                width: '100%'
             });
 
-            $('.related-category-form').on('submit', function (e) {
-                e.preventDefault();
+            // عملیات ذخیره با Ajax
+            $('.save-btn').on('click', function () {
+                const button = $(this);
+                const categoryId = button.data('category-id');
+                const isActive = $(`.toggle-active[data-id="${categoryId}"]`).is(':checked');
+                const suggestedIds = $(`.select2-suggested[data-category-id="${categoryId}"]`).val() || [];
 
-                const form = $(this);
-                toastr.warning( 'در حال ذخیره اطلاعات ...');
+                // وضعیت دکمه
+                const originalText = button.text();
+                button.html(button.data('loading')).prop('disabled', true);
 
                 $.ajax({
-                    url: form.attr('action'),
+                    url: "{{ route('admin.related-categories.update', '') }}/" + categoryId,
                     method: 'POST',
-                    data: form.serialize(),
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        _method: 'PUT',
+                        active: isActive ? 1 : 0,
+                        suggested_category_ids: suggestedIds
+                    },
                     success: function (response) {
-                        toastr.success(response.message || 'اطلاعات با موفقیت ذخیره شد.');
+                        toastr.success(response.message || 'تنظیمات ذخیره شد.');
+                        button.text(originalText).prop('disabled', false);
                     },
                     error: function (xhr) {
-                        let msg = 'خطا در ذخیره اطلاعات.';
+                        let msg = 'خطا در ذخیره.';
                         if (xhr.responseJSON?.errors) {
                             msg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
                         }
                         toastr.error(msg, 'خطا', { timeOut: 5000, closeButton: true });
+                        button.text(originalText).prop('disabled', false);
                     }
                 });
             });
