@@ -120,7 +120,7 @@ class ThemeServiceProvider extends ServiceProvider
                 if (!empty($purchased_category_ids)) {
                     $suggested_category_ids = Cache::remember('related_categories_map', 3600, function () {
                         return RelatedCategory::active()
-                            ->pluck('suggested_category_id', 'source_category_id')
+                            ->get(['source_category_id', 'suggested_category_id'])
                             ->groupBy('source_category_id')
                             ->map->pluck('suggested_category_id')
                             ->toArray();
