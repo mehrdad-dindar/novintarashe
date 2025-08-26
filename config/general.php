@@ -285,22 +285,109 @@ return [
     ],
 
     'supported_gateways' => [
-        'behpardakht' => 'به پرداخت ملت',
-        'payir'       => 'pay.ir',
-        'zarinpal'    => 'زرین پال',
-        'payping'     => 'پی پینگ',
-        'saman'       => 'سامان',
-        'sepehr'      => 'بانک صادرات',
-        'idpay'       => 'idpay',
-        'sadad'       => 'بانک ملی',
-        'zibal'       => 'زیبال',
-        'gsmpay'      => 'GSM Pay اقساطی',
-        'check1'       => 'پرداخت چک یک ماه',
-        'check2'       => 'پرداخت چک دو ماه',
-        'check3'       => 'پرداخت چک سه ماه',
-        'check4'       => 'پرداخت چک چهارماه',
-        'check5'       => 'پرداخت چک پنج ماه',
-        'check6'       => 'پرداخت چک شش ماه',
+        'behpardakht' => [
+            'label' => 'درگاه بانک ملت',
+            'fields' => [
+                'username'   => 'نام کاربری',
+                'password'   => 'رمز عبور',
+                'terminalId' => 'کد پذیرنده',
+            ],
+        ],
+        'payir' => [
+            'label' => 'درگاه pay.ir',
+            'fields' => [
+                'merchantId' => 'api کد',
+            ],
+        ],
+        'zarinpal' => [
+            'label' => 'درگاه زرین پال',
+            'fields' => [
+                'merchantId' => 'کد درگاه پرداخت',
+            ],
+        ],
+        'payping' => [
+            'label' => 'درگاه پی پینگ',
+            'fields' => [
+                'merchantId' => 'کد درگاه پرداخت',
+            ],
+        ],
+        'saman'       => [
+            'label' => 'درگاه سامان',
+            'fields' => [
+                'merchantId' => 'کد پذیرنده'
+            ]
+        ],
+        'sepehr'      => [
+            'label' => 'درگاه سپهر (بانک صادرات)',
+            'fields' => [
+                'terminalId' => 'کد پذیرنده',
+            ],
+        ],
+        'idpay' => [
+            'label' => 'درگاه idpay',
+            'fields' => [
+                'merchantId' => 'کد درگاه پرداخت',
+            ],
+        ],
+        'sadad'       => [
+            'label' => 'درگاه بانک ملی',
+            'fields' => [
+                'terminalId' => 'شماره پذیرنده',
+                'merchantId' => 'کد پذیرنده',
+                'key' => 'کلید تراکنش',
+            ]
+        ],
+        'zibal'       => [
+            'label' => 'درگاه زیبال',
+            'fields' => [
+                'merchantId' => 'کد پذیرنده'
+            ]
+        ],
+        'gsmpay' => [
+            'label' => 'درگاه جی اس ام پی',
+            'fields' => [
+                'merchant_code' => 'کد پذیرنده',
+            ],
+        ],
+        'wallet'      => [
+            'label' => 'کیف پول'
+        ],
+        'check1'       => [
+            'label' => 'پرداخت چک یک ماه',
+            'fields' => [
+                'percent' => 'درصد چک'
+            ]
+        ],
+        'check2'       => [
+            'label' => 'پرداخت چک دو ماه',
+            'fields' => [
+                'percent' => 'درصد چک'
+            ]
+        ],
+        'check3'       => [
+            'label' => 'پرداخت چک سه ماه',
+            'fields' => [
+                'percent' => 'درصد چک'
+            ]
+        ],
+        'check4'       => [
+            'label' => 'پرداخت چک چهارماه',
+            'fields' => [
+                'percent' => 'درصد چک'
+            ]
+        ],
+        'check5'       => [
+            'label' => 'پرداخت چک پنج ماه',
+            'fields' => [
+                'percent' => 'درصد چک'
+            ]
+        ],
+        'check6'       => [
+            'label' => 'پرداخت چک شش ماه',
+            'fields' => [
+                'percent' => 'درصد چک'
+            ]
+        ],
     ],
 
     'video-helpes' => [
