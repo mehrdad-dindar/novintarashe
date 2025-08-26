@@ -152,7 +152,7 @@
 
             </div>
 
-            @if($random_products->count())
+            @if($recommended_products->count())
                 <section class="slider-section dt-sl mt-5 mb-5">
                     <div class="row mb-3">
                         <div class="col-12">
@@ -164,7 +164,7 @@
                         <!-- Start Product-Slider -->
                         <div class="col-12 px-res-0">
                             <div class="product-carousel carousel-md owl-carousel owl-theme">
-                                @foreach ($random_products as $product)
+                                @foreach ($recommended_products as $product)
                                     @include('front::partials.product-block')
                                 @endforeach
                             </div>
