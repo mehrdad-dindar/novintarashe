@@ -1,4 +1,4 @@
-@foreach ($categories as $category)
+@forelse ($categories as $category)
     <tr>
         <td>
             <div class="vs-checkbox-con vs-checkbox-primary">
@@ -36,4 +36,12 @@
             </button>
         </td>
     </tr>
-@endforeach
+        <tr></tr>
+@empty
+    <tr>
+        <td class="text-center" colspan="4">
+            متاسفانه موردی یافت نشد !
+        </td>
+    </tr>
+    <tr></tr>
+@endforelse
