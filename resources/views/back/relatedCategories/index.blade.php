@@ -21,9 +21,15 @@
             <div class="content-body">
                 @if($categories->count())
                     <section class="card">
-                        <div class="card-header">
+{{--                        <div class="card-header">--}}
+{{--                            <h4 class="card-title">تنظیم پیشنهادهای مرتبط با دسته‌ها</h4>--}}
+{{--                        </div>--}}
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title">تنظیم پیشنهادهای مرتبط با دسته‌ها</h4>
+                            <input type="text" id="search-category" class="form-control"
+                                   style="width: 250px;" placeholder="جستجو دسته...">
                         </div>
+
                         <div class="card-content">
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover mb-0">
@@ -35,53 +41,16 @@
                                         <th style="width: 10%">عملیات</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    @foreach ($categories as $category)
-                                        <tr>
-                                            <td>
-                                                <div class="vs-checkbox-con vs-checkbox-primary">
-                                                    <input type="checkbox" class="toggle-active"
-                                                           data-id="{{ $category->id }}"
-                                                        {{ $category->hasActiveRelatedSuggestions() ? 'checked' : '' }}>
-                                                    <span class="vs-checkbox">
-                                                        <span class="vs-checkbox--check"><i class="feather icon-check"></i></span>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <strong>({{ $category->id }})</strong> {{ $category->title }}
-                                            </td>
-                                            <td>
-                                                <select class="form-control select2-suggested"
-                                                        data-category-id="{{ $category->id }}"
-                                                        multiple="multiple"
-                                                        style="width: 100%;">
-                                                    @foreach($categories as $related)
-                                                        @if($related->id === $category->id) @continue @endif
-                                                        <option value="{{ $related->id }}"
-                                                            {{ in_array($related->id, $category->getSuggestedCategoryIds()) ? 'selected' : '' }}>
-                                                            {{ $related->title }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td class="text-center">
-                                                <button type="button"
-                                                        class="btn btn-sm btn-primary save-btn"
-                                                        data-category-id="{{ $category->id }}"
-                                                        data-loading="<span class='spinner-border spinner-border-sm'></span> درحال ذخیره سازی                 ...">
-                                                    ذخیره
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                    <tbody id="category-table-body">
+                                        @include('back.relatedCategories.partials.table')
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </section>
-
-                    {{ $categories->links() }}
+                    <div id="pagination-links">
+                        {{ $categories->links() }}
+                    </div>
                 @else
                     <div class="alert alert-info">هیچ دسته‌بندی موجود نیست.</div>
                 @endif
@@ -152,4 +121,46 @@
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function () {
+            function loadCategories(query = '') {
+                $.ajax({
+                    url: "{{ route('admin.related-categories.search') }}",
+                    data: { q: query },
+                    success: function (response) {
+                        $('#category-table-body').html(response.html);
+                        $('#pagination-links').html(response.pagination);
+
+                        // دوباره Select2 و رویدادها رو فعال کن
+                        $('.select2-suggested').select2({
+                            placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
+                            allowClear: true,
+                            width: '100%'
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        toastr.error('خطا در دریافت اطلاعات');
+                    }
+                });
+            }
+
+            // realtime search
+            $('#search-category').on('keyup', function () {
+                const query = $(this).val();
+                loadCategories(query);
+            });
+
+            // pagination Ajax
+            $(document).on('click', '#pagination-links a', function (e) {
+                e.preventDefault();
+                const page = $(this).attr('href').split('page=')[1];
+                const query = $('#search-category').val();
+                loadCategories(query, page);
+            });
+        });
+    </script>
+
+
 @endpush

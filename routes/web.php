@@ -262,6 +262,8 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin/' . admin_route_prefix(), 'mi
     Route::resource('stock-notifies', StockNotifyController::class)->only(['index', 'show', 'destroy']);
 
     // ------------------ related-categories
+    Route::get('related-categories/search', [RelatedCategoryController::class, 'search'])
+        ->name('related-categories.search');
     Route::resource('related-categories', RelatedCategoryController::class);
 
     // ------------------ comments

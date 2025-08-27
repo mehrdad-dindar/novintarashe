@@ -17,7 +17,7 @@ class RelatedCategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::latest()->paginate(15);
+        $categories = Category::latest()->paginate(30);
 
         return view('back.relatedCategories.index', compact('categories'));
 
@@ -110,4 +110,20 @@ class RelatedCategoryController extends Controller
     {
         //
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        $categories = Category::when($query, function ($q) use ($query) {
+            $q->where('title', 'like', "%{$query}%")
+                ->orWhere('id', $query); // جستجو بر اساس id هم
+        })->latest()->paginate(15);
+
+        return response()->json([
+            'html' => view('back.relatedCategories.partials.table', compact('categories'))->render(),
+            'pagination' => (string) $categories->links()
+        ]);
+    }
+
 }
