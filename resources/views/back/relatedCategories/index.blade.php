@@ -1,0 +1,166 @@
+@extends('back.layouts.master')
+
+@section('content')
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-md-9 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-12">
+                            <ol class="breadcrumb no-border">
+                                <li class="breadcrumb-item">مدیریت</li>
+                                <li class="breadcrumb-item active">پیشنهادهای مرتبط با دسته‌ها</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-body">
+                @if($categories->count())
+                    <section class="card">
+{{--                        <div class="card-header">--}}
+{{--                            <h4 class="card-title">تنظیم پیشنهادهای مرتبط با دسته‌ها</h4>--}}
+{{--                        </div>--}}
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4 class="card-title">تنظیم پیشنهادهای مرتبط با دسته‌ها</h4>
+                            <input type="text" id="search-category" class="form-control"
+                                   style="width: 250px;" placeholder="جستجو دسته...">
+                        </div>
+
+                        <div class="card-content">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th style="width: 10%">فعال</th>
+                                        <th style="width: 30%">دسته محصول</th>
+                                        <th style="width: 50%">دسته‌های پیشنهادی</th>
+                                        <th style="width: 10%">عملیات</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="category-table-body">
+                                        @include('back.relatedCategories.partials.table')
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <div id="pagination-links">
+                        {{ $categories->links() }}
+                    </div>
+                @else
+                    <div class="alert alert-info">هیچ دسته‌بندی موجود نیست.</div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('styles')
+    <link href="{{ asset('back/assets/css/select2/select2.min.css') }}" rel="stylesheet" />
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+        .save-btn[disabled] {
+            opacity: 0.65;
+            pointer-events: none;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('back/app-assets/js/core/libraries/jquery.min.js') }}"></script>
+    <script src="{{ asset('back/app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            // فعال‌سازی Select2 برای تمام سلکت‌ها
+            $('.select2-suggested').select2({
+                placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
+                allowClear: true,
+                width: '100%'
+            });
+
+            // عملیات ذخیره با Ajax
+            $('.save-btn').on('click', function () {
+                const button = $(this);
+                const categoryId = button.data('category-id');
+                const isActive = $(`.toggle-active[data-id="${categoryId}"]`).is(':checked');
+                const suggestedIds = $(`.select2-suggested[data-category-id="${categoryId}"]`).val() || [];
+
+                // وضعیت دکمه
+                const originalText = button.text();
+                button.html(button.data('loading')).prop('disabled', true);
+
+                $.ajax({
+                    url: "{{ route('admin.related-categories.update', '') }}/" + categoryId,
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        _method: 'PUT',
+                        active: isActive ? 1 : 0,
+                        suggested_category_ids: suggestedIds
+                    },
+                    success: function (response) {
+                        toastr.success(response.message || 'تنظیمات ذخیره شد.');
+                        button.text(originalText).prop('disabled', false);
+                    },
+                    error: function (xhr) {
+                        let msg = 'خطا در ذخیره.';
+                        if (xhr.responseJSON?.errors) {
+                            msg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                        }
+                        toastr.error(msg, 'خطا', { timeOut: 5000, closeButton: true });
+                        button.text(originalText).prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            function loadCategories(query = '') {
+                $.ajax({
+                    url: "{{ route('admin.related-categories.search') }}",
+                    data: { q: query },
+                    success: function (response) {
+                        $('#category-table-body').html(response.html);
+                        $('#pagination-links').html(response.pagination);
+
+                        // دوباره Select2 و رویدادها رو فعال کن
+                        $('.select2-suggested').select2({
+                            placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
+                            allowClear: true,
+                            width: '100%'
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        toastr.error('خطا در دریافت اطلاعات');
+                    }
+                });
+            }
+
+            // realtime search
+            $('#search-category').on('keyup', function () {
+                const query = $(this).val();
+                loadCategories(query);
+            });
+
+            // pagination Ajax
+            $(document).on('click', '#pagination-links a', function (e) {
+                e.preventDefault();
+                const page = $(this).attr('href').split('page=')[1];
+                const query = $('#search-category').val();
+                loadCategories(query, page);
+            });
+        });
+    </script>
+
+
+@endpush

@@ -1,17 +1,24 @@
 $(document).ready(function () {
 
-    $(document).on('change', '#gateway-form input[data-class!=""]', function () {
+    // فعال/غیرفعال کردن فیلدها بر اساس چک‌باکس
+    $(document).on('change', '#gateway-form input[type="checkbox"][data-gateway]', function () {
+        let id = $(this).data('gateway');
+        let inputs = $(`#gateway-form [data-parent="${id}"]`);
+
         if ($(this).prop('checked')) {
-            $('.' + $(this).data('class')).prop('disabled', false);
+            inputs.prop('disabled', false);
         } else {
-            $('.' + $(this).data('class')).prop('disabled', true);
+            inputs.prop('disabled', true);
         }
     });
 
-    $('#gateway-form input[data-class!=""]').trigger('change');
+    // تریگر اولیه
+    $('#gateway-form input[type="checkbox"][data-gateway]').trigger('change');
 
-    jQuery('#gateway-form').validate();
+    // اعتبارسنجی jQuery Validate
+    $('#gateway-form').validate();
 
+    // ارسال Ajax
     $('#gateway-form').submit(function (e) {
         e.preventDefault();
 
@@ -23,13 +30,19 @@ $(document).ready(function () {
                 type: 'POST',
                 data: formData,
                 success: function (data) {
-                    if (data == 'success') {
+                    if (data === 'success') {
                         Swal.fire({
-                            type: 'success',
+                            type: 'success', // نگه داشتن ساختار قدیمی
                             title: 'تغییرات با موفقیت ذخیره شد',
                             confirmButtonClass: 'btn btn-primary',
                             confirmButtonText: 'باشه',
                             buttonsStyling: false,
+                        });
+                    } else {
+                        Swal.fire({
+                            type: 'error',
+                            title: 'خطایی رخ داد',
+                            text: 'لطفا دوباره تلاش کنید',
                         });
                     }
                 },
@@ -40,12 +53,10 @@ $(document).ready(function () {
                 complete: function () {
                     unblock('#main-card');
                 },
-
                 cache: false,
                 contentType: false,
                 processData: false
             });
         }
-
     });
 });

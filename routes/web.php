@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Back\ApikeyController;
+use App\Http\Controllers\Back\RelatedCategoryController;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Back\ProvinceController;
@@ -259,6 +260,11 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin/' . admin_route_prefix(), 'mi
 
     // ------------------ stock-notifies
     Route::resource('stock-notifies', StockNotifyController::class)->only(['index', 'show', 'destroy']);
+
+    // ------------------ related-categories
+    Route::get('related-categories/search', [RelatedCategoryController::class, 'search'])
+        ->name('related-categories.search');
+    Route::resource('related-categories', RelatedCategoryController::class);
 
     // ------------------ comments
     Route::resource('comments', CommentController::class)->only(['show', 'destroy', 'update']);
