@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 use Shetabit\Payment\Facade\Payment;
 use Shetabit\Multipay\Invoice;
 use Themes\DefaultTheme\src\Requests\StoreOrderRequest;
@@ -208,7 +209,7 @@ class OrderController extends Controller
                             'unit_tax_amount' => '0',
                         ];
                     })),
-                function ($driver, $transactionId) use ($order, $gateway) {
+                function ($driver, $transactionId) use ($order, $gateway,$amount) {
                     DB::table('transactions')->insert([
                         'status' => false,
                         'amount' => $order->price,
@@ -226,7 +227,7 @@ class OrderController extends Controller
                     ]);
 
                     session()->put('transactionId', (string)$transactionId);
-                    session()->put('amount', $order->price);
+                    session()->put('amount', $amount);
                 }
             )->pay()->render();
         } catch (Exception $e) {
@@ -273,7 +274,7 @@ class OrderController extends Controller
 
 
             return $this->orderPaid($order);
-        } catch (\Exception $exception) {
+        } catch (\Exception|InvalidPaymentException $exception) {
 
             DB::table('transactions')->where('transID', (string)$transactionId)->update([
                 'message' => $transaction->message . '<br>' . $exception->getMessage(),
