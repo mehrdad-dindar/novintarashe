@@ -134,25 +134,21 @@ class ProductController extends Controller
         return response($results);
     }
 
-    public function show(\Themes\DefaultTheme\Models\Product $product)
+    public function show(Product $product)
     {
         if (!$product->isShowable()) {
             abort(404);
         }
+        // لود محصولات مرتبط از رابطه جدید
+        $related_products = $product->relatedProductsPivot()
+            ->published()
+            ->orderByStock()
+            ->take(6)
+            ->get();
 
-        $product->load([
-            'relatedProducts' => function ($q) {
-                $q->published()
-                    ->orderByStock()
-                    ->orderBy('product_related.created_at', 'desc')
-                    ->take(6);
-            },
-            'comments' => function ($q) {
-                $q->whereNull('comment_id')
-                    ->where('status', 'accepted')
-                    ->latest();
-            },
-        ]);
+        $product->load(['comments' => function ($query) {
+            $query->whereNull('comment_id')->where('status', 'accepted')->latest();
+        }]);
 
         $reviews = $product->reviews()
             ->accepted()
@@ -175,6 +171,7 @@ class ProductController extends Controller
 
         return view('front::products.show', compact(
             'product',
+            'related_products',
             'attributeGroups',
             'similar_products_count',
             'selected_price',

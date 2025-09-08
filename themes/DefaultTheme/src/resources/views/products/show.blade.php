@@ -320,7 +320,7 @@
             </div>
             <!-- End Product -->
 
-            @if($product->relatedProducts->count())
+            @if($related_products->count())
                 <!-- Start Product-Slider -->
                 <section class="slider-section dt-sl">
                     <div class="row mb-3">
@@ -333,7 +333,7 @@
                         <!-- Start Product-Slider -->
                         <div class="col-12">
                             <div class="product-carousel carousel-lg owl-carousel owl-theme">
-                                @foreach ($product->relatedProducts as $related_product)
+                                @foreach ($related_products as $related_product)
                                     @include('front::partials.product-block', ['product' => $related_product])
                                 @endforeach
                             </div>

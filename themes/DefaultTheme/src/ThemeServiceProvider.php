@@ -60,6 +60,9 @@ class ThemeServiceProvider extends ServiceProvider
         // load translations
         $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'front');
 
+        // load Migrations
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
+
         // share with views
         if (!$this->app->runningInConsole()) {
             $this->viewComposer();
