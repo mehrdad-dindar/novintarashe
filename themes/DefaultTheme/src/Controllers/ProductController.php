@@ -134,33 +134,25 @@ class ProductController extends Controller
         return response($results);
     }
 
-    public function show(Product $product)
+    public function show(\Themes\DefaultTheme\Models\Product $product)
     {
         if (!$product->isShowable()) {
             abort(404);
         }
 
-        if ($product->category) {
-            $related_products = Product::published()
-                ->where('id', '!=', $product->id)
-                ->where('category_id', $product->category->id)
-                ->orderByStock()
-                ->latest()
-                ->take(6)
-                ->get();
-        } else {
-            $related_products = Product::published()
-                ->where('id', '!=', $product->id)
-                ->whereNull('category_id')
-                ->orderByStock()
-                ->latest()
-                ->take(6)
-                ->get();
-        }
-
-        $product->load(['comments' => function ($query) {
-            $query->whereNull('comment_id')->where('status', 'accepted')->latest();
-        }]);
+        $product->load([
+            'relatedProducts' => function ($q) {
+                $q->published()
+                    ->orderByStock()
+                    ->orderBy('product_related.created_at', 'desc')
+                    ->take(6);
+            },
+            'comments' => function ($q) {
+                $q->whereNull('comment_id')
+                    ->where('status', 'accepted')
+                    ->latest();
+            },
+        ]);
 
         $reviews = $product->reviews()
             ->accepted()
@@ -169,7 +161,6 @@ class ProductController extends Controller
             ->get();
 
         $selected_price = $product->getPrices()->first();
-
         $attributeGroups = AttributeGroup::detectLang()->orderBy('ordering')->get();
 
         $similar_products_count = Product::whereNotIn('id', [$product->id])
@@ -184,7 +175,6 @@ class ProductController extends Controller
 
         return view('front::products.show', compact(
             'product',
-            'related_products',
             'attributeGroups',
             'similar_products_count',
             'selected_price',
