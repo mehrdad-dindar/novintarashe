@@ -48,8 +48,8 @@
                             </div>
                         </div>
                     </section>
-                    <div id="pagination-links">
-                        {{ $categories->links() }}
+                    <div id="pagination-links" class="card-body pagination-container">
+                        {{ $categories->appends(['q' => request()->get('q')])->links() }}
                     </div>
                 @else
                     <div class="alert alert-info">هیچ دسته‌بندی موجود نیست.</div>
@@ -78,89 +78,110 @@
 
     <script>
         $(document).ready(function () {
-            // فعال‌سازی Select2 برای تمام سلکت‌ها
-            $('.select2-suggested').select2({
-                placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
-                allowClear: true,
-                width: '100%'
+            let $tableBody = $('#category-table-body');
+            const $paginationContainer = $('#pagination-links');
+            const $searchInput = $('#search-category');
+
+            // تابع بارگذاری داده‌ها با query و page
+            function loadCategories(query = '', page = 1) {
+                // نمایش وضعیت بارگذاری
+                $tableBody.html('<tr><td colspan="4" class="text-center">در حال بارگذاری...</td></tr>');
+
+                // ساخت URL با query و page
+                let url = "{{ route('admin.related-categories.search') }}";
+                const params = new URLSearchParams();
+                if (query) params.append('q', query);
+                if (page > 1) params.append('page', page);
+                if (params.toString()) {
+                    url += '?' + params.toString();
+                }
+
+                $.get(url, function (response) {
+                    // جایگزینی جدول
+                    const $newTbody = $(response.html);
+                    if ($newTbody.is('tbody')) {
+                        $tableBody.replaceWith($newTbody);
+                        $tableBody = $('#category-table-body'); // اگر id تغییر کرد، دوباره اشاره کن
+                    } else {
+                        $tableBody.html($newTbody);
+                    }
+
+                    // جایگزینی صفحه‌بندی
+                    $paginationContainer.html(response.pagination);
+
+                    // فعال‌سازی مجدد Select2
+                    reinitSelect2();
+                })
+                    .fail(function (xhr) {
+                        $tableBody.html('<tr><td colspan="4" class="text-center text-danger">خطا در بارگذاری داده‌ها.</td></tr>');
+                        console.error(xhr);
+                    });
+            }
+
+            // فعال‌سازی مجدد Select2
+            function reinitSelect2() {
+                $('.select2-suggested').select2({
+                    placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
+                    allowClear: true,
+                    width: '100%'
+                });
+            }
+
+            // --- جستجوی لحظه‌ای ---
+            let typingTimer;
+            $searchInput.on('keyup', function () {
+                const value = $(this).val().trim();
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => loadCategories(value), 500);
             });
 
-            // عملیات ذخیره با Ajax
-            $('.save-btn').on('click', function () {
-                const button = $(this);
-                const categoryId = button.data('category-id');
-                const isActive = $(`.toggle-active[data-id="${categoryId}"]`).is(':checked');
-                const suggestedIds = $(`.select2-suggested[data-category-id="${categoryId}"]`).val() || [];
+            // --- صفحه‌بندی با event delegation ---
+            $(document).on('click', '#pagination-links a', function (e) {
+                e.preventDefault();
 
-                // وضعیت دکمه
-                const originalText = button.text();
-                button.html(button.data('loading')).prop('disabled', true);
+                const href = $(this).attr('href');
+                const url = new URL(href);
+                const page = url.searchParams.get('page') || 1;
+                const query = $searchInput.val().trim();
+
+                loadCategories(query, page);
+            });
+
+            // --- ذخیره تنظیمات ---
+            $(document).on('click', '.save-btn', function () {
+                const btn = $(this);
+                const catId = btn.data('category-id');
+                const isActive = $(`.toggle-active[data-id="${catId}"]`).is(':checked');
+                const suggestions = $(`.select2-suggested[data-category-id="${catId}"]`).val() || [];
+
+                const originalText = btn.text();
+                btn.html(btn.data('loading')).prop('disabled', true);
 
                 $.ajax({
-                    url: "{{ route('admin.related-categories.update', '') }}/" + categoryId,
+                    url: "{{ route('admin.related-categories.update', '') }}/" + catId,
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
                         _method: 'PUT',
                         active: isActive ? 1 : 0,
-                        suggested_category_ids: suggestedIds
+                        suggested_category_ids: suggestions
                     },
                     success: function (response) {
                         toastr.success(response.message || 'تنظیمات ذخیره شد.');
-                        button.text(originalText).prop('disabled', false);
+                        btn.text(originalText).prop('disabled', false);
                     },
                     error: function (xhr) {
-                        let msg = 'خطا در ذخیره.';
+                        let msg = 'خطا در ذخیره سازی.';
                         if (xhr.responseJSON?.errors) {
                             msg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
                         }
                         toastr.error(msg, 'خطا', { timeOut: 5000, closeButton: true });
-                        button.text(originalText).prop('disabled', false);
+                        btn.text(originalText).prop('disabled', false);
                     }
                 });
             });
+
+            reinitSelect2();
         });
     </script>
-
-    <script>
-        $(document).ready(function () {
-            function loadCategories(query = '') {
-                $.ajax({
-                    url: "{{ route('admin.related-categories.search') }}",
-                    data: { q: query },
-                    success: function (response) {
-                        $('#category-table-body').html(response.html);
-                        $('#pagination-links').html(response.pagination);
-
-                        // دوباره Select2 و رویدادها رو فعال کن
-                        $('.select2-suggested').select2({
-                            placeholder: 'دسته‌های پیشنهادی را انتخاب کنید...',
-                            allowClear: true,
-                            width: '100%'
-                        });
-                    },
-                    error: function (error) {
-                        console.log(error)
-                        toastr.error('خطا در دریافت اطلاعات');
-                    }
-                });
-            }
-
-            // realtime search
-            $('#search-category').on('keyup', function () {
-                const query = $(this).val();
-                loadCategories(query);
-            });
-
-            // pagination Ajax
-            $(document).on('click', '#pagination-links a', function (e) {
-                e.preventDefault();
-                const page = $(this).attr('href').split('page=')[1];
-                const query = $('#search-category').val();
-                loadCategories(query, page);
-            });
-        });
-    </script>
-
-
 @endpush
