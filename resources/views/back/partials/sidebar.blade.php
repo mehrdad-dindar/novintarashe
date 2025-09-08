@@ -99,11 +99,11 @@
                             </li>
                         @endcan
 
-                        @can('products.related-categories')
-                            <li class="{{ active_class('admin.related-categories.index') }}">
-                                <a href="{{ route('admin.related-categories.index') }}"><i class="feather icon-circle"></i><span class="menu-item">پیشنهادهای مرتبط با دسته‌ها</span></a>
-                            </li>
-                        @endcan
+{{--                        @can('products.related-categories')--}}
+{{--                            <li class="{{ active_class('admin.related-categories.index') }}">--}}
+{{--                                <a href="{{ route('admin.related-categories.index') }}"><i class="feather icon-circle"></i><span class="menu-item">پیشنهادهای مرتبط با دسته‌ها</span></a>--}}
+{{--                            </li>--}}
+{{--                        @endcan--}}
 
                         @can('products.prices')
                             <li class="{{ active_class('admin.product.prices.index') }}">
