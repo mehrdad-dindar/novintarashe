@@ -663,19 +663,12 @@ function get_gateway_configs($gateway)
     $configs = [];
 
     switch ($gateway->key) {
+        case "payping":
+        case "idpay":
+        case "saman":
+        case "payir":
+        case "zibal":
         case "zarinpal": {
-                $configs['merchantId'] = $gateway->config('merchantId');
-                break;
-            }
-        case "payping": {
-                $configs['merchantId'] = $gateway->config('merchantId');
-                break;
-            }
-        case "idpay": {
-                $configs['merchantId'] = $gateway->config('merchantId');
-                break;
-            }
-        case "saman": {
                 $configs['merchantId'] = $gateway->config('merchantId');
                 break;
             }
@@ -683,10 +676,6 @@ function get_gateway_configs($gateway)
                 $configs['terminalId'] = $gateway->config('terminalId');
                 $configs['username']   = $gateway->config('username');
                 $configs['password']   = $gateway->config('password');
-                break;
-            }
-        case "payir": {
-                $configs['merchantId'] = $gateway->config('merchantId');
                 break;
             }
         case "sepehr": {
@@ -697,10 +686,6 @@ function get_gateway_configs($gateway)
                 $configs['key']        = $gateway->config('key');
                 $configs['merchantId'] = $gateway->config('merchantId');
                 $configs['terminalId'] = $gateway->config('terminalId');
-                break;
-            }
-        case "zibal": {
-                $configs['merchantId'] = $gateway->config('merchantId');
                 break;
             }
         case "gsmpay": {

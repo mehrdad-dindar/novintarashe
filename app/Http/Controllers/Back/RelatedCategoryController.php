@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\RelatedCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class RelatedCategoryController extends Controller
 {
@@ -17,9 +18,13 @@ class RelatedCategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::latest()->paginate(30);
+        $categories = Category::orderBy('title')->paginate(2);
 
-        return view('back.relatedCategories.index', compact('categories'));
+        $allCategories = Cache::remember('all_categories', 3600, function() {
+            return Category::get(['id', 'title']);
+        });
+
+        return view('back.relatedCategories.index', compact('categories', 'allCategories'));
 
     }
 
@@ -76,17 +81,22 @@ class RelatedCategoryController extends Controller
     public function update(Request $request, $sourceCategoryId)
     {
         $request->validate([
-            'suggested_category_ids' => 'array',
+            'suggested_category_ids' => 'nullable|array',
             'suggested_category_ids.*' => 'exists:categories,id',
-            'active' => 'boolean'
+            'active' => 'required|boolean'
         ]);
 
-        // حذف قدیمی‌ها
-//        RelatedCategory::where('source_category_id', $sourceCategoryId)->delete();
+        // حذف تمام رابطه‌های قبلی
+        RelatedCategory::where('source_category_id', $sourceCategoryId)->delete();
 
-        // ایجاد جدید
-        if ($request->active && $request->suggested_category_ids) {
+        // اگر فعال باشد و دسته‌هایی انتخاب شده باشد، ایجاد کن
+        if ($request->active && !empty($request->suggested_category_ids)) {
             foreach ($request->suggested_category_ids as $suggestedId) {
+                // جلوگیری از خود-ارجاع (اختیاری ولی بهتره)
+                if ($suggestedId == $sourceCategoryId) {
+                    continue;
+                }
+
                 RelatedCategory::create([
                     'source_category_id' => $sourceCategoryId,
                     'suggested_category_id' => $suggestedId,
@@ -94,7 +104,7 @@ class RelatedCategoryController extends Controller
                 ]);
             }
         }
-
+        Cache::forget('related_categories_map');
         return response()->json([
             'message' => 'تنظیمات با موفقیت ذخیره شد.'
         ]);
@@ -115,14 +125,24 @@ class RelatedCategoryController extends Controller
     {
         $query = $request->get('q');
 
-        $categories = Category::when($query, function ($q) use ($query) {
-            $q->where('title', 'like', "%{$query}%")
-                ->orWhere('id', $query); // جستجو بر اساس id هم
-        })->latest()->paginate(15);
+        $categories = Category::with('suggestedCategories')
+        ->when($query, function ($q) use ($query) {
+            $q->where('title', 'LIKE', "%{$query}%");
+            if (is_numeric($query)) {
+                $q->orWhere('id', $query);
+            }
+        })
+            ->orderBy('title')
+            ->paginate(2);
+
+
+        $allCategories = Cache::remember('all_categories', 3600, function () {
+            return Category::orderBy('title')->get(['id', 'title']);
+        });
 
         return response()->json([
-            'html' => view('back.relatedCategories.partials.table', compact('categories'))->render(),
-            'pagination' => (string) $categories->links()
+            'html' => view('back.relatedCategories.partials.table', compact('categories', 'allCategories'))->render(),
+            'pagination' => (string) $categories->appends(['q' => $query])->links()
         ]);
     }
 

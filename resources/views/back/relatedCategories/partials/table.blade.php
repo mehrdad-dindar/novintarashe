@@ -18,11 +18,11 @@
                     data-category-id="{{ $category->id }}"
                     multiple="multiple"
                     style="width: 100%;">
-                @foreach($categories as $related)
+                @foreach($allCategories as $related)
                     @if($related->id === $category->id) @continue @endif
                     <option value="{{ $related->id }}"
                         {{ in_array($related->id, $category->getSuggestedCategoryIds()) ? 'selected' : '' }}>
-                        {{ $related->title }}
+                        {{ $related->full_title }}
                     </option>
                 @endforeach
             </select>

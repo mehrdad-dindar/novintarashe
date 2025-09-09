@@ -199,6 +199,7 @@ class ProductController extends Controller
         $sizetypes = SizeType::detectLang()->get();
         $attributeGroups = AttributeGroup::detectLang()->orderBy('ordering')->get();
         $currencies = Currency::latest()->get();
+        $relatedIds = $product->relatedProductsPivot->pluck('title', 'id')->toArray();
 
         return view('back.products.edit', compact(
             'product',
@@ -206,7 +207,8 @@ class ProductController extends Controller
             'specTypes',
             'sizetypes',
             'attributeGroups',
-            'currencies'
+            'currencies',
+            'relatedIds'
         ));
     }
 
@@ -236,6 +238,10 @@ class ProductController extends Controller
             'rounding_amount' => $request->rounding_amount,
             'rounding_type' => $request->rounding_type,
         ]);
+
+        if ($request->has('related_products')) {
+            $product->relatedProductsPivot()->sync($request->related_products);
+        }
 
         // update product brand
         $this->updateProductBrand($product, $request);
@@ -778,5 +784,36 @@ class ProductController extends Controller
     private function exportPrint($products, Request $request)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->get('q', '');
+
+        $query = Product::query();
+
+        if (!empty($search)) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        $products = $query->select('id', 'title', 'image', 'view', 'category_id')
+            ->latest()
+            ->take(20)
+            ->get();
+        $results = $products->map(function ($product) {
+            return [
+                'id'    => $product->id,
+                'text'  => $product->title,
+                'title'    => $product->title,
+                'category' => optional($product->category)->title,
+                'view'    => number_format($product->view),
+                'image' => $product->image ? asset($product->image) : false,
+                'selected' => $product->relatedProductsPivot()
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+        ]);
     }
 }

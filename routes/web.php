@@ -108,6 +108,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin/' . admin_route_prefix(), 'mi
 
     // ------------------ products
     Route::resource('products', ProductController::class)->except('show');
+    Route::get('products/search', [ProductController::class, 'search'])->name('products.search');
     Route::post('products/api/index', [ProductController::class, 'apiIndex'])->name('products.apiIndex');
     Route::delete('products/api/multipleDestroy', [ProductController::class, 'multipleDestroy'])->name('products.multipleDestroy');
     Route::post('products/image-store', [ProductController::class, 'image_store']);

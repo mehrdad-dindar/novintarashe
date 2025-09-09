@@ -139,24 +139,12 @@ class ProductController extends Controller
         if (!$product->isShowable()) {
             abort(404);
         }
-
-        if ($product->category) {
-            $related_products = Product::published()
-                ->where('id', '!=', $product->id)
-                ->where('category_id', $product->category->id)
-                ->orderByStock()
-                ->latest()
-                ->take(6)
-                ->get();
-        } else {
-            $related_products = Product::published()
-                ->where('id', '!=', $product->id)
-                ->whereNull('category_id')
-                ->orderByStock()
-                ->latest()
-                ->take(6)
-                ->get();
-        }
+        // لود محصولات مرتبط از رابطه جدید
+        $related_products = $product->relatedProductsPivot()
+            ->published()
+            ->orderByStock()
+            ->take(6)
+            ->get();
 
         $product->load(['comments' => function ($query) {
             $query->whereNull('comment_id')->where('status', 'accepted')->latest();
@@ -169,7 +157,6 @@ class ProductController extends Controller
             ->get();
 
         $selected_price = $product->getPrices()->first();
-
         $attributeGroups = AttributeGroup::detectLang()->orderBy('ordering')->get();
 
         $similar_products_count = Product::whereNotIn('id', [$product->id])

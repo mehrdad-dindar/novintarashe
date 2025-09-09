@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use Shetabit\Payment\Facade\Payment;
 use Shetabit\Multipay\Invoice;
 use Themes\DefaultTheme\src\Requests\StoreOrderRequest;
+use Shetabit\Multipay\Exceptions\InvalidPaymentException;
 
 class OrderController extends Controller
 {
@@ -208,10 +209,10 @@ class OrderController extends Controller
                             'unit_tax_amount' => '0',
                         ];
                     })),
-                function ($driver, $transactionId) use ($order, $gateway) {
+                function ($driver, $transactionId) use ($order, $gateway, $amount) {
                     DB::table('transactions')->insert([
                         'status' => false,
-                        'amount' => $order->price,
+                        'amount' => $amount,
                         'factorNumber' => $order->id,
                         'mobile' => auth()->user()->username,
                         'message' => trans('front::messages.controller.port-transaction') . $gateway,
@@ -226,7 +227,7 @@ class OrderController extends Controller
                     ]);
 
                     session()->put('transactionId', (string)$transactionId);
-                    session()->put('amount', $order->price);
+                    // session()->put('amount', $order->price);
                 }
             )->pay()->render();
         } catch (Exception $e) {
@@ -240,7 +241,7 @@ class OrderController extends Controller
     public function verify($gateway)
     {
         $transactionId = session()->get('transactionId');
-        $amount = session()->get('amount');
+        // $amount = session()->get('amount');
 
         $transaction = Transaction::where('status', false)->where('transID', $transactionId)->firstOrFail();
 
@@ -251,8 +252,8 @@ class OrderController extends Controller
         try {
             $receipt = Payment::via($gateway)->config($gateway_configs);
 
-            if ($amount) {
-                $receipt = $receipt->amount(intval($amount));
+            if ($transaction) {
+                $receipt = $receipt->amount(intval($transaction->amount));
             }
 
             $receipt = $receipt->transactionId($transactionId)->verify();
@@ -273,7 +274,7 @@ class OrderController extends Controller
 
 
             return $this->orderPaid($order);
-        } catch (\Exception $exception) {
+        } catch (\Exception|InvalidPaymentException $exception) {
 
             DB::table('transactions')->where('transID', (string)$transactionId)->update([
                 'message' => $transaction->message . '<br>' . $exception->getMessage(),
