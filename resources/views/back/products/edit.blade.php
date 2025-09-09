@@ -63,6 +63,11 @@
                                                 <li class="nav-item">
                                                     <a class="nav-link" id="sizes-tab" data-toggle="tab" aria-controls="tabSize" href="#tabSize" role="tab" aria-selected="false">سایز بندی</a>
                                                 </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="related-products-tab" data-toggle="tab" href="#related-products" role="tab">
+                                                        محصولات مرتبط
+                                                    </a>
+                                                </li>
 
                                             </ul>
                                             <div class="tab-content">
@@ -446,6 +451,20 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="tab-pane fade" id="related-products" role="tabpanel" aria-labelledby="related-products-tab">
+                                                    <div class="form-group">
+                                                        <label for="related_products">انتخاب محصولات مرتبط</label>
+                                                        <select id="related_products" name="related_products[]" class="form-control" multiple>
+                                                            @if(!blank($relatedIds) && is_array($relatedIds))
+                                                                @foreach($relatedIds as $key => $item)
+                                                                    <option value="{{$key}}" selected="selected">
+                                                                        {{$item}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -545,7 +564,75 @@
     ];
 @endphp
 
+@push('styles')
+    <link href="{{ asset('back/assets/css/select2/select2.min.css') }}" rel="stylesheet" />
+    <style>
+        #related_products {
+            width: 100% !important;
+        }
+    </style>
+@endpush
+
 @push('scripts')
+    <script src="{{ asset('back/app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
+    <script>
+        $('#related_products').select2({
+            allowClear: true,
+            dir: "rtl",
+            language: "fa",
+            width:'100%',
+            closeOnSelect: false,
+            multiple:true,
+            ajax: {
+                url: '{{ route("admin.products.search") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // عبارت جستجو
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.results
+                    };
+                },
+                cache: true
+            },
+            templateResult: formatProduct,
+            templateSelection: formatProductSelection,
+            escapeMarkup: function (markup) { return markup; }
+        });
+
+        function formatProduct(product) {
+            if (!product.id) return product.text;
+
+            let image = product.image
+                ? `<img src="${product.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
+                : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
+
+            let category = product.category ? `<small class="text-muted">(${product.category})</small>` : '';
+            let view = `<div class="text-muted font-weight-bold">${product.view}<i class="feather icon-eye mr-1"></i></div>`;
+
+            return $(`
+        <div class="d-flex align-items-center">
+            ${image}
+            <div>
+                <div class="font-weight-bold">${product.title} ${category}</div>
+                ${view}
+            </div>
+        </div>
+    `);
+        }
+
+        function formatProductSelection(product) {
+            if (product.id === '') { // adjust for custom placeholder values
+                return 'Custom styled placeholder text';
+            }
+
+            return product.text;
+        }
+    </script>
     <script>
         /* load saved image gallery */
         var mockImages = [];
