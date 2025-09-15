@@ -140,11 +140,33 @@ class ProductController extends Controller
             abort(404);
         }
         // لود محصولات مرتبط از رابطه جدید
-        $related_products = $product->relatedProductsPivot()
+        $relatedProducts = $product->relatedProductsPivot()
             ->published()
             ->orderByStock()
             ->take(6)
             ->get();
+
+        $categoryIds = $product->relatedCategoriesPivot()->pluck('categories.id')->toArray();
+
+        $categoryProducts = collect();
+        if (!empty($categoryIds)) {
+            $categoryProducts = Product::query()
+                ->published()
+                ->orderByStock()
+                ->whereHas('categories', function ($q) use ($categoryIds) {
+                    $q->whereIn('categories.id', $categoryIds);
+                })
+                ->where('id', '!=', $product->id)
+                ->inRandomOrder()
+                ->take(6)
+                ->get();
+        }
+        $related_products = $relatedProducts
+            ->merge($categoryProducts)
+            ->unique('title')
+            ->shuffle()
+            ->take(6);
+
 
         $product->load(['comments' => function ($query) {
             $query->whereNull('comment_id')->where('status', 'accepted')->latest();

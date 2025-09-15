@@ -169,6 +169,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin/' . admin_route_prefix(), 'mi
 
     // ------------------ categories
     Route::resource('categories', CategoryController::class)->only(['update', 'destroy', 'store', 'edit']);
+    Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
     Route::post('categories/sort', [CategoryController::class, 'sort']);
     Route::post('category/slug', [CategoryController::class, 'generate_slug']);
 

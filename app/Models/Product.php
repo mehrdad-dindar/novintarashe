@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Themes\DefaultTheme\Traits\HasRelatedCategories;
 use Themes\DefaultTheme\Traits\HasRelatedProducts;
 
 class Product extends Model
 {
-    use HasFactory, sluggable, Taggable, ProductScopes, Languageable, HasRelatedProducts;
+    use HasFactory, sluggable, Taggable, ProductScopes, Languageable, HasRelatedProducts, HasRelatedCategories;
 
     protected $guarded = ['id'];
 

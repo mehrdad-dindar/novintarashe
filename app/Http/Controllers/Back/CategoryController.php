@@ -158,4 +158,24 @@ class CategoryController extends Controller
 
         return response()->json(['slug' => $slug]);
     }
+
+    public function search(Request $request)
+    {
+        $term = $request->get('q');
+
+        $categories = Category::query()
+            ->where('title', 'like', "%{$term}%")
+            ->limit(20)
+            ->get();
+
+        $results = $categories->map(function ($cat) {
+            return [
+                'id'    => $cat->id,
+                'text'  => $cat->full_title,
+                'image' => $cat->image ?? '',
+            ];
+        });
+
+        return response()->json(['results' => $results]);
+    }
 }

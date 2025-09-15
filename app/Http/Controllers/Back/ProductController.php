@@ -143,6 +143,11 @@ class ProductController extends Controller
             'lang' => app()->getLocale(),
         ]);
 
+        $product->relatedProductsPivot()->sync($request->related_products ?? []);
+
+        $product->relatedCategoriesPivot()->sync($request->related_categories ?? []);
+
+
         // update product brand
         $this->updateProductBrand($product, $request);
 
@@ -200,6 +205,7 @@ class ProductController extends Controller
         $attributeGroups = AttributeGroup::detectLang()->orderBy('ordering')->get();
         $currencies = Currency::latest()->get();
         $relatedIds = $product->relatedProductsPivot->pluck('title', 'id')->toArray();
+        $relatedCatIds = $product->relatedCategoriesPivot->pluck('full_title', 'id')->toArray();
 
         return view('back.products.edit', compact(
             'product',
@@ -208,7 +214,8 @@ class ProductController extends Controller
             'sizetypes',
             'attributeGroups',
             'currencies',
-            'relatedIds'
+            'relatedIds',
+            'relatedCatIds'
         ));
     }
 
@@ -239,9 +246,9 @@ class ProductController extends Controller
             'rounding_type' => $request->rounding_type,
         ]);
 
-        if ($request->has('related_products')) {
-            $product->relatedProductsPivot()->sync($request->related_products);
-        }
+        $product->relatedProductsPivot()->sync($request->related_products ?? []);
+
+        $product->relatedCategoriesPivot()->sync($request->related_categories ?? []);
 
         // update product brand
         $this->updateProductBrand($product, $request);
@@ -796,7 +803,7 @@ class ProductController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $products = $query->select('id', 'title', 'image', 'view', 'category_id')
+        $products = $query->select(['id', 'title', 'image', 'view', 'category_id'])
             ->latest()
             ->take(20)
             ->get();

@@ -457,14 +457,22 @@
                                                         <select id="related_products" name="related_products[]" class="form-control" multiple>
                                                             @if(!blank($relatedIds) && is_array($relatedIds))
                                                                 @foreach($relatedIds as $key => $item)
-                                                                    <option value="{{$key}}" selected="selected">
-                                                                        {{$item}}</option>
+                                                                    <option value="{{$key}}" selected="selected">{{$item}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="related_categories">انتخاب دسته‌های مرتبط</label>
+                                                        <select id="related_categories" name="related_categories[]" class="form-control" multiple>
+                                                            @if(!blank($relatedCatIds) && is_array($relatedCatIds))
+                                                                @foreach($relatedCatIds as $key => $item)
+                                                                    <option value="{{$key}}" selected="selected">{{$item}}</option>
                                                                 @endforeach
                                                             @endif
                                                         </select>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -586,10 +594,10 @@
             ajax: {
                 url: '{{ route("admin.products.search") }}',
                 dataType: 'json',
-                delay: 250,
+                delay: 2000,
                 data: function (params) {
                     return {
-                        q: params.term // عبارت جستجو
+                        q: params.term
                     };
                 },
                 processResults: function (data) {
@@ -604,33 +612,76 @@
             escapeMarkup: function (markup) { return markup; }
         });
 
-        function formatProduct(product) {
-            if (!product.id) return product.text;
+        $('#related_categories').select2({
+            allowClear: true,
+            dir: "rtl",
+            language: "fa",
+            width:'100%',
+            closeOnSelect: false,
+            multiple:true,
+            ajax: {
+                url: '{{ route("admin.categories.search") }}',
+                dataType: 'json',
+                delay: 2000,
+                data: function (params) {
+                    return {
+                        q: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.results
+                    };
+                },
+                cache: true
+            },
+            templateResult: function(category) {
+                if (!category.id) return category.text;
 
-            let image = product.image
-                ? `<img src="${product.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
+                let image = category.image
+                    ? `<img src="${category.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
+                    : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
+
+                return $(`
+                    <div class="d-flex align-items-center">
+                        ${image}
+                        <div>
+                            <div class="font-weight-bold">${category.text}</div>
+                        </div>
+                    </div>
+                `);
+            },
+            templateSelection: formatProductSelection,
+            escapeMarkup: function (markup) { return markup; }
+        });
+
+        function formatProduct(item) {
+            if (!item.id) return item.text;
+
+            let image = item.image
+                ? `<img src="${item.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
                 : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
 
-            let category = product.category ? `<small class="text-muted">(${product.category})</small>` : '';
-            let view = `<div class="text-muted font-weight-bold">${product.view}<i class="feather icon-eye mr-1"></i></div>`;
+            let category = item.category ? `<small class="text-muted">(${item.category})</small>` : '';
+            let view = `<div class="text-muted font-weight-bold">${item.view}<i class="feather icon-eye mr-1"></i></div>`;
 
             return $(`
         <div class="d-flex align-items-center">
             ${image}
             <div>
-                <div class="font-weight-bold">${product.title} ${category}</div>
+                <div class="font-weight-bold">${item.title} ${category}</div>
                 ${view}
             </div>
         </div>
     `);
         }
 
-        function formatProductSelection(product) {
-            if (product.id === '') { // adjust for custom placeholder values
+        function formatProductSelection(item) {
+            if (item.id === '') { // adjust for custom placeholder values
                 return 'Custom styled placeholder text';
             }
 
-            return product.text;
+            return item.text;
         }
     </script>
     <script>

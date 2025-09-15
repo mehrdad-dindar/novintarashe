@@ -456,6 +456,10 @@
                                                         <label for="related_products">انتخاب محصولات مرتبط</label>
                                                         <select id="related_products" name="related_products[]" class="form-control" multiple></select>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label for="related_categories">انتخاب دسته‌های مرتبط</label>
+                                                        <select id="related_categories" name="related_categories[]" class="form-control" multiple></select>
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -557,7 +561,7 @@
 @push('styles')
     <link href="{{ asset('back/assets/css/select2/select2.min.css') }}" rel="stylesheet" />
     <style>
-        #related_products {
+        #related_products,#related_categories {
             width: 100% !important;
         }
     </style>
@@ -590,6 +594,49 @@
                 cache: true
             },
             templateResult: formatProduct,
+            templateSelection: formatProductSelection,
+            escapeMarkup: function (markup) { return markup; }
+        });
+
+        $('#related_categories').select2({
+            allowClear: true,
+            dir: "rtl",
+            language: "fa",
+            width:'100%',
+            closeOnSelect: false,
+            multiple:true,
+            ajax: {
+                url: '{{ route("admin.categories.search") }}',
+                dataType: 'json',
+                delay: 2000,
+                data: function (params) {
+                    return {
+                        q: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.results
+                    };
+                },
+                cache: true
+            },
+            templateResult: function(category) {
+                if (!category.id) return category.text;
+
+                let image = category.image
+                    ? `<img src="${category.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
+                    : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
+
+                return $(`
+                    <div class="d-flex align-items-center">
+                        ${image}
+                        <div>
+                            <div class="font-weight-bold">${category.text}</div>
+                        </div>
+                    </div>
+                `);
+            },
             templateSelection: formatProductSelection,
             escapeMarkup: function (markup) { return markup; }
         });
