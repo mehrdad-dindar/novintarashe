@@ -38,16 +38,28 @@
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <label>ارائه دهنده پنل پیامک</label>
-                                                <select id="sms-panel-provider" class="form-control" name="sms_panel_provider">
-                                                    <option value="ippanel" {{ option('sms_panel_provider', 'ippanel') == 'ippanel' ? 'selected' : '' }}>ippanel</option>
-                                                    <option value="kavenegar" {{ option('sms_panel_provider', 'ippanel') == 'kavenegar' ? 'selected' : '' }}>کاوه نگار</option>
-                                                    <option value="melipayamak" {{ option('sms_panel_provider', 'ippanel') == 'melipayamak' ? 'selected' : '' }}>ملی پیامک</option>
+                                                <select id="sms-panel-provider" class="form-control"
+                                                        name="sms_panel_provider">
+                                                    <option
+                                                        value="ippanel" {{ option('sms_panel_provider', 'ippanel') === 'ippanel' ? 'selected' : '' }}>
+                                                        ippanel
+                                                    </option>
+                                                    <option
+                                                        value="kavenegar" {{ option('sms_panel_provider', 'ippanel') === 'kavenegar' ? 'selected' : '' }}>
+                                                        کاوه نگار
+                                                    </option>
+                                                    <option
+                                                        value="melipayamak" {{ option('sms_panel_provider', 'ippanel') === 'melipayamak' ? 'selected' : '' }}>
+                                                        ملی پیامک
+                                                    </option>
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>شماره تلفن مدیر برای ارسال اطلاع رسانی ها</label>
                                                 <div class="input-group mb-75">
-                                                    <input type="text" name="admin_mobile_number" class="form-control ltr" value="{{ option('admin_mobile_number') }}">
+                                                    <input type="text" name="admin_mobile_number"
+                                                           class="form-control ltr"
+                                                           value="{{ option('admin_mobile_number') }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -56,7 +68,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="sms_on_user_register" type="checkbox" name="sms_on_user_register" {{ option('sms_on_user_register') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="sms_on_user_register" type="checkbox"
+                                                               name="sms_on_user_register" {{ option('sms_on_user_register') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -69,7 +82,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="sms_to_verify_user" type="checkbox" name="sms_to_verify_user" {{ option('sms_to_verify_user') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="sms_to_verify_user" type="checkbox"
+                                                               name="sms_to_verify_user" {{ option('sms_to_verify_user') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -82,7 +96,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="forgot_password_link" type="checkbox" name="forgot_password_link" {{ option('forgot_password_link') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="forgot_password_link" type="checkbox"
+                                                               name="forgot_password_link" {{ option('forgot_password_link') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -95,7 +110,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="login_with_code" type="checkbox" name="login_with_code" {{ option('login_with_code') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="login_with_code" type="checkbox"
+                                                               name="login_with_code" {{ option('login_with_code') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -108,7 +124,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="sms_on_order_paid" type="checkbox" name="sms_on_order_paid" {{ option('sms_on_order_paid') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="sms_on_order_paid" type="checkbox"
+                                                               name="sms_on_order_paid" {{ option('sms_on_order_paid') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -121,7 +138,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="user_sms_on_order_paid" type="checkbox" name="user_sms_on_order_paid" {{ option('user_sms_on_order_paid') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="user_sms_on_order_paid" type="checkbox"
+                                                               name="user_sms_on_order_paid" {{ option('user_sms_on_order_paid') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -134,7 +152,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="wallet_increase_sms" type="checkbox" name="wallet_increase_sms" {{ option('wallet_increase_sms') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="wallet_increase_sms" type="checkbox"
+                                                               name="wallet_increase_sms" {{ option('wallet_increase_sms') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -147,7 +166,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="wallet_decrease_sms" type="checkbox" name="wallet_decrease_sms" {{ option('wallet_decrease_sms') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="wallet_decrease_sms" type="checkbox"
+                                                               name="wallet_decrease_sms" {{ option('wallet_decrease_sms') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -160,7 +180,8 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="happy_birthday_sms" type="checkbox" name="happy_birthday_sms" {{ option('happy_birthday_sms') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="happy_birthday_sms" type="checkbox"
+                                                               name="happy_birthday_sms" {{ option('happy_birthday_sms') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -174,7 +195,23 @@
                                             <div class="form-group col-md-4">
                                                 <fieldset class="checkbox">
                                                     <div class="vs-checkbox-con vs-checkbox-primary">
-                                                        <input data-class="tracking_code_sms" type="checkbox" name="tracking_code_sms" {{ option('tracking_code_sms') == 'on' ? 'checked' : '' }} >
+                                                        <input data-class="order_confirm_sms" type="checkbox"
+                                                               name="order_confirm_sms" {{ option('order_confirm_sms') === 'on' ? 'checked' : '' }} >
+                                                        <span class="vs-checkbox">
+                                                            <span class="vs-checkbox--check">
+                                                                <i class="vs-icon feather icon-check"></i>
+                                                            </span>
+                                                        </span>
+                                                        <span class="">ارسال پیامک تایید سفارش (منتظر ارسال)</span>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <fieldset class="checkbox">
+                                                    <div class="vs-checkbox-con vs-checkbox-primary">
+                                                        <input data-class="tracking_code_sms" type="checkbox"
+                                                               name="tracking_code_sms" {{ option('tracking_code_sms') === 'on' ? 'checked' : '' }} >
                                                         <span class="vs-checkbox">
                                                             <span class="vs-checkbox--check">
                                                                 <i class="vs-icon feather icon-check"></i>
@@ -192,7 +229,8 @@
 
                                         <div class="row">
                                             <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
-                                                <button type="submit" class="btn btn-primary glow">ذخیره تغییرات</button>
+                                                <button type="submit" class="btn btn-primary glow">ذخیره تغییرات
+                                                </button>
                                             </div>
                                         </div>
                                     </form>

@@ -31,7 +31,7 @@ class OrderController extends Controller
     {
         $sizeTypes = SizeType::latest()->get();
 
-        return view('back.orders.index' , compact('sizeTypes'));
+        return view('back.orders.index', compact('sizeTypes'));
     }
 
     public function apiIndex(Request $request)
@@ -50,14 +50,6 @@ class OrderController extends Controller
         return view('back.orders.show', compact('order'));
     }
 
-    public function create()
-    {
-        $provinces = Province::detectLang()->orderBy('ordering')->get();
-        $carriers  = Carrier::active()->get();
-
-        return view('back.orders.create', compact('provinces', 'carriers'));
-    }
-
     public function store(OrderStoreRequest $request)
     {
         $user = User::firstOrCreate(
@@ -66,7 +58,7 @@ class OrderController extends Controller
             ],
             [
                 'first_name' => $request->first_name,
-                'last_name'  => $request->last_name
+                'last_name' => $request->last_name
             ]
         );
 
@@ -74,16 +66,16 @@ class OrderController extends Controller
 
         foreach ($request->products as $requestProduct) {
             $product = Product::find($requestProduct['id']);
-            $price   = $product->prices()->find($requestProduct['price_id']);
+            $price = $product->prices()->find($requestProduct['price_id']);
 
             $orderItems[] = [
-                'product_id'      => $product->id,
-                'title'           => $product->title,
-                'price'           => $price->discountPrice(),
-                'real_price'      => $price->tomanPrice(),
-                'quantity'        => $requestProduct['quantity'],
-                'discount'        => $price->discount,
-                'price_id'        => $price->id,
+                'product_id' => $product->id,
+                'title' => $product->title,
+                'price' => $price->discountPrice(),
+                'real_price' => $price->tomanPrice(),
+                'quantity' => $requestProduct['quantity'],
+                'discount' => $price->discount,
+                'price_id' => $price->id,
             ];
 
             $order_price += $price->discountPrice() * $requestProduct['quantity'];
@@ -93,25 +85,50 @@ class OrderController extends Controller
         $order_price -= $request->discount_amount;
 
         $order = Order::create([
-            'user_id'           => $user->id,
-            'name'              => $request->first_name . ' ' . $request->last_name,
-            'mobile'            => $request->username,
-            'province_id'       => $request->province_id,
-            'city_id'           => $request->city_id,
-            'postal_code'       => $request->postal_code,
-            'carrier_id'        => $request->carrier_id,
-            'address'           => $request->address,
-            'description'       => $request->description,
-            'shipping_cost'     => $request->shipping_cost ?: 0,
-            'status'            => 'paid',
-            'shipping_status'   => $request->shipping_status,
-            'discount_amount'   => $request->discount_amount,
-            'price'             => $order_price
+            'user_id' => $user->id,
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'mobile' => $request->username,
+            'province_id' => $request->province_id,
+            'city_id' => $request->city_id,
+            'postal_code' => $request->postal_code,
+            'carrier_id' => $request->carrier_id,
+            'address' => $request->address,
+            'description' => $request->description,
+            'shipping_cost' => $request->shipping_cost ?: 0,
+            'status' => 'paid',
+            'shipping_status' => $request->shipping_status,
+            'discount_amount' => $request->discount_amount,
+            'price' => $order_price
         ]);
 
         $order->items()->createMany($orderItems);
 
         event(new OrderCreated($order));
+
+        return response('success');
+    }
+
+    public function create()
+    {
+        $provinces = Province::detectLang()->orderBy('ordering')->get();
+        $carriers = Carrier::active()->get();
+
+        return view('back.orders.create', compact('provinces', 'carriers'));
+    }
+
+    public function multipleDestroy(Request $request)
+    {
+        $this->authorize('orders.delete');
+
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:orders,id',
+        ]);
+
+        foreach ($request->ids as $id) {
+            $order = Order::find($id);
+            $this->destroy($order);
+        }
 
         return response('success');
     }
@@ -127,23 +144,6 @@ class OrderController extends Controller
         toastr()->success('سفارش با موفقیت حذف شد.');
 
         return redirect()->route('admin.orders.index');
-    }
-
-    public function multipleDestroy(Request $request)
-    {
-        $this->authorize('orders.delete');
-
-        $request->validate([
-            'ids'   => 'required|array',
-            'ids.*' => 'exists:orders,id',
-        ]);
-
-        foreach ($request->ids as $id) {
-            $order = Order::find($id);
-            $this->destroy($order);
-        }
-
-        return response('success');
     }
 
     public function printAllShippingForms(Request $request)
@@ -172,79 +172,102 @@ class OrderController extends Controller
     {
         $this->authorize('orders.update');
 
-
-
-        $this->validate($request, [
+        $request->validate([
             'status' => 'required',
         ]);
 
-        if (in_array($order->gateway , ['check1','check2','check3','check4' ,'check5' , 'check6'])){
-            $order->update([
-                'shipping_status' => $request->status ,
-                'shipment_tracking_code' => $request->tracking_code ,
-                'status' => in_array($request->status , ['canceled' , 'pending']) ? $request->status : 'paid'
-            ]);
+        $this->updateOrderStatus($order, $request);
 
-        }else{
-            $order->update([
-                'status' => $request->status == 'canceled' ? 'canceled' : $order->status ,
-                'shipping_status' => $request->status ,
-                'shipment_tracking_code' => $request->tracking_code
-            ]);
+        $this->handleWalletRefundIfNeeded($order, $request->status);
 
-            if ($request->status == 'canceled' && ( $order->paidTransactions->count() > 0 || isset($order->walletHistoryPaidOrder) && $order->walletHistoryPaidOrder != null )){
-                $wallet = $order->user->wallet ;
-
-                $wallet->histories()->create([
-                    'type'        => 'deposit',
-                    'amount'      => $order->price,
-                    'description' => 'لغو سفارش',
-                    'source'      => 'user',
-                    'status'      => 'success',
-                    'order_id'    => $order->id
-                ]);
-
-                $wallet->refereshBalance();
-            }
-
-        }
-
-
-        if (in_array($request->status , ['wating' , 'sent'])){
-            if ($request->status == 'wating'){
-                $type = Sms::TYPES['USER_ORDER_CONFIRM'] ;
-                $data = [
-                    'user_name' => $order->user->full_name,
-                    'order_id' => $order->id
-                ];
-
-            }else{
-                $type = Sms::TYPES['USER_ORDER_SENT'] ;
-                $data = [
-                    'name' => $order->user->fullname,
-                    'order_id' => $order->id,
-                    'gateway'  =>$order->carrier ? $order->carrier->title : 'نامشخص',
-                    'tracking_code' => $order->shipment_tracking_code
-                ];
-            }
-
-            if (option('sms_on_order_paid', 'off') == 'on') {
-                $smsService = new SmsService(
-                    $order->user->username,
-                    $data ,
-                    $type,
-                    $order->user_id
-                );
-
-                $smsService->sendSms();
-            }
-        }
-
-
-
-
+        $this->handleSmsNotifications($order, $request->status);
 
         return response('success');
+    }
+
+    protected function updateOrderStatus(Order $order, Request $request): void
+    {
+        if ($this->isGatewayCheck($order->gateway)) {
+            $order->update([
+                'shipping_status' => $request->status,
+                'shipment_tracking_code' => $request->tracking_code,
+                'status' => in_array($request->status, ['canceled', 'pending'])
+                    ? $request->status
+                    : 'paid',
+            ]);
+        } else {
+            $order->update([
+                'status' => $request->status === 'canceled' ? 'canceled' : $order->status,
+                'shipping_status' => $request->status,
+                'shipment_tracking_code' => $request->tracking_code,
+            ]);
+        }
+    }
+
+    protected function isGatewayCheck(string $gateway): bool
+    {
+        return in_array($gateway, ['check1', 'check2', 'check3', 'check4', 'check5', 'check6']);
+    }
+
+    protected function handleWalletRefundIfNeeded(Order $order, string $status): void
+    {
+        if ($status !== 'canceled') {
+            return;
+        }
+
+        $hasPaidTransaction = $order->paidTransactions->count() > 0;
+        $hasWalletHistory = isset($order->walletHistoryPaidOrder) && $order->walletHistoryPaidOrder !== null;
+
+        if ($hasPaidTransaction || $hasWalletHistory) {
+            $wallet = $order->user->wallet;
+
+            $wallet->histories()->create([
+                'type' => 'deposit',
+                'amount' => $order->price,
+                'description' => 'لغو سفارش',
+                'source' => 'user',
+                'status' => 'success',
+                'order_id' => $order->id,
+            ]);
+
+            $wallet->refreshBalance();
+        }
+    }
+
+    protected function handleSmsNotifications(Order $order, string $status): void
+    {
+        if (!in_array($status, ['wating', 'sent'])) {
+            return;
+        }
+
+        if ($status === 'wating' && option('order_confirm_sms', 'off') === 'on') {
+            $this->sendSms(
+                $order,
+                Sms::TYPES['USER_ORDER_CONFIRM'],
+                [
+                    'name' => $order->user->fullname,
+                    'order_id' => $order->id
+                ]
+            );
+        }
+
+        if ($status === 'sent' && option('tracking_code_sms', 'off') === 'on') {
+            $this->sendSms(
+                $order,
+                Sms::TYPES['USER_ORDER_SENT'],
+                [
+                    'name' => $order->user->fullname,
+                    'order_id' => $order->id,
+                    'gateway' => $order->carrier->title ?? 'نامشخص',
+                    'tracking_code' => $order->shipment_tracking_code,
+                ]
+            );
+        }
+    }
+
+    protected function sendSms(Order $order, array $type, array $data): void
+    {
+        (new SmsService($order->user->username, $data, $type, $order->user_id))->sendSms();
     }
 
     public function notCompleted()
@@ -283,14 +306,21 @@ class OrderController extends Controller
         $orders = Order::filter($request)->get();
 
         switch ($request->export_type) {
-            case 'excel': {
-                    return $this->exportExcel($orders, $request);
-                    break;
-                }
-            default: {
-                    return $this->exportPrint($orders, $request);
-                }
+            case 'excel':
+            {
+                return $this->exportExcel($orders, $request);
+                break;
+            }
+            default:
+            {
+                return $this->exportPrint($orders, $request);
+            }
         }
+    }
+
+    private function exportExcel($orders)
+    {
+        return Excel::download(new OrdersExport($orders), 'orders.xlsx');
     }
 
     public function userInfo(Request $request)
@@ -306,16 +336,17 @@ class OrderController extends Controller
         }
 
         $input = $request->input('input');
-        $term  = $request->input('term');
+        $term = $request->input('term');
 
         switch ($input) {
-            case "username": {
-                    $users = User::with('address')
-                        ->where('username', 'like', "%$term%")
-                        ->latest()->take(10)
-                        ->get();
-                    break;
-                }
+            case "username":
+            {
+                $users = User::with('address')
+                    ->where('username', 'like', "%$term%")
+                    ->latest()->take(10)
+                    ->get();
+                break;
+            }
         }
 
         return response()->json($users);
@@ -342,10 +373,5 @@ class OrderController extends Controller
             ->get();
 
         return ProductResource::collection($products);
-    }
-
-    private function exportExcel($orders)
-    {
-        return Excel::download(new OrdersExport($orders), 'orders.xlsx');
     }
 }
