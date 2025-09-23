@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Back;
 
 use App\Http\Controllers\Controller;
+use App\Models\Referral;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,7 @@ use App\Models\Role;
 use App\Rules\NotSpecialChar;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Morilog\Jalali\Jalalian;
@@ -84,11 +86,12 @@ class UserController extends Controller
             'gateway_with_check' => $request->gateway_with_check ? 'active' : 'inactive',
             'status' => $request->status ? 'active' : 'inactive',
             'notification'=> $request->notification ? $request->notification : 0,
+            'referral_code' => Referral::generateCode()
         ]);
 
         if ($request->hasFile('image')) {
             $file = $request->image;
-            $name = uniqid() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $name = Str::uuid() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
             $request->image->storeAs('users', $name);
 
             $user->image = '/uploads/users/' . $name;
@@ -150,7 +153,7 @@ class UserController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->image;
-            $name = uniqid() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $name = Str::uuid() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
             $request->image->storeAs('users', $name);
 
             $user->image = '/uploads/users/' . $name;

@@ -462,7 +462,7 @@ class OrderController extends Controller
             'user_id'  => $user->id,
         ])->first();
 
-        if (!$referral) {
+        if (!$referral || $referral->gift_given) {
             return;
         }
 
@@ -470,7 +470,7 @@ class OrderController extends Controller
         $wallet = $owner->getWallet();
         $giftCredit = option('owner_refrral_amount', 0);
 
-        DB::transaction(function () use ($wallet, $order, $user, $giftCredit) {
+        DB::transaction(function () use ($wallet, $order, $user, $giftCredit, $referral) {
             $wallet->histories()->create([
                 'type'        => 'deposit',
                 'order_id'    => $order->id,
@@ -480,6 +480,7 @@ class OrderController extends Controller
             ]);
 
             $wallet->increment('balance', $giftCredit);
+            $referral->update(['gift_given' => true]);
         });
         event(new WalletAmountIncreased($wallet));
     }
