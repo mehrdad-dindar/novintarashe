@@ -3,6 +3,16 @@
 @foreach ($plugins as $plugin)
 
     @switch($plugin)
+        @case('select2')
+            @push('plugin-scripts')
+                <script src="{{ asset('back/app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
+            @endpush
+            @push('styles')
+                <link rel="stylesheet" type="text/css" href="{{ asset('back/assets/css/select2/select2.min.css') }}"/>
+            @endpush
+
+        @break
+
         @case('ckeditor')
             @push('plugin-scripts')
                 <script src="{{ asset('back/app-assets/plugins/ckeditor/ckeditor.js') }}"></script>

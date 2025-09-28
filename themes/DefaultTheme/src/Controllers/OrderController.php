@@ -162,7 +162,7 @@ class OrderController extends Controller
             abort(404);
         }
 
-        if ($order->status != 'unpaid') {
+        if ($order->status !== 'unpaid') {
             return redirect()->route('front.orders.show', ['order' => $order])->with('error', trans('front::messages.controller.your-order-canceled'));
         }
 
@@ -179,7 +179,7 @@ class OrderController extends Controller
         $gateway = $request->gateway;
 
 
-        if ($gateway == 'wallet') {
+        if ($gateway === 'wallet') {
             return $this->payUsingWallet($order);
         } elseif (in_array($gateway, ['check1', 'check2', 'check3', 'check4', 'check5', 'check6'])) {
             return $this->payUsingCheck($order, $request);
@@ -190,7 +190,7 @@ class OrderController extends Controller
             $gateway_configs = get_gateway_configs($gateway);
             $currency = Currency::find(option('default_currency_id'));
 
-            $amount = isset($currency) && $currency != null ? intval($order->price) * $currency->amount : intval($order->price);
+            $amount = isset($currency) && $currency != null ? (int)$order->price * $currency->amount : (int)$order->price;
 
             return Payment::via($gateway)->config($gateway_configs)->callbackUrl(route('front.orders.verify', ['gateway' => $gateway]))->purchase(
                 (new Invoice)->amount($amount)
@@ -431,55 +431,57 @@ class OrderController extends Controller
     }
 
     // برای ارسال پورسانت به فرد معرف در صورت استفاده از کد تخفیف
-    private function user_refrral_gift($order)
+    private function user_refrral_gift(Order $order): void
     {
-        if (option('user_refrral_gift_type') == "wallet") {
-            if (option('minimum_amount_gift') <= $order->price) {
-                if (option('minimum_product_gift') <= $order->items->count()) {
-                    if ($order->discount_id) {
-                        $discount = Discount::find($order->discount_id);
-                        if ($discount) {
-                            $user = $discount->users()->first();
-                            if ($user) {
-                                $owner_id = User::find($user->referral_id);
-
-                                $refrral = Referral::where(['owner_id' => $owner_id->id, 'user_id' => $user->id, 'user_discount_id' => $order->discount_id])->first();
-
-                                if ($refrral) {
-
-                                    if ($discount->orders()->paid()->count() <= $discount->quantity) {
-
-                                        $wallet = $owner_id->getWallet();
-
-                                        $gift_credit = $order->totalDiscount();
-                                        DB::transaction(function () use ($wallet, $order, $user, $gift_credit) {
-                                            $wallet->histories()->create([
-                                                'type' => 'deposit',
-                                                'order_id' => $order->id,
-                                                'amount' => $gift_credit,
-                                                'status' => 'success',
-                                                'description' => 'اعتبار هدیه برای معرفی کاربر ' . $user->fullname
-                                            ]);
-
-                                            $wallet->update([
-                                                'balance' => $wallet->balance + $gift_credit
-                                            ]);
-                                        });
-
-                                        event(new WalletAmountIncreased($wallet));
-
-                                    }
-                                }
-                            }
-
-
-                        }
-                    }
-                }
-
-            }
+        // بررسی اینکه نوع هدیه کیف پول است
+        if (option('user_refrral_gift_type') !== 'wallet') {
+            return;
         }
+
+        // بررسی شروط پایه
+        if ($order->price < option('minimum_amount_gift') ||
+            $order->items->count() < option('minimum_product_gift')) {
+            return;
+        }
+
+        // دریافت کاربر سفارش
+        $user = $order->user;
+        if (!$user || !$user->referral_id) {
+            return;
+        }
+
+        // دریافت معرف کاربر
+        $owner = $user->referral;
+        if (!$owner) {
+            return;
+        }
+
+        // بررسی وجود referral
+        $referral = Referral::where([
+            'owner_id' => $owner->id,
+            'user_id'  => $user->id,
+        ])->first();
+
+        if (!$referral || $referral->gift_given) {
+            return;
+        }
+
+        // محاسبه هدیه
+        $wallet = $owner->getWallet();
+        $giftCredit = option('owner_refrral_amount', 0);
+
+        DB::transaction(function () use ($wallet, $order, $user, $giftCredit, $referral) {
+            $wallet->histories()->create([
+                'type'        => 'deposit',
+                'order_id'    => $order->id,
+                'amount'      => $giftCredit,
+                'status'      => 'success',
+                'description' => 'اعتبار هدیه برای معرفی کاربر ' . $user->fullname,
+            ]);
+
+            $wallet->increment('balance', $giftCredit);
+            $referral->update(['gift_given' => true]);
+        });
+        event(new WalletAmountIncreased($wallet));
     }
-
-
 }

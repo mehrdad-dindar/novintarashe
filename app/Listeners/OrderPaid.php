@@ -37,7 +37,7 @@ class OrderPaid
         $admins = User::whereIn('level', ['admin', 'creator'])->get();
         Notification::send($admins, new NotificationsOrderPaid($order));
 
-        if (option('sms_on_order_paid', 'off') == 'on') {
+        if (option('sms_on_order_paid', 'off') === 'on') {
             $smsService = new SmsService(
                 option('admin_mobile_number'),
                 [
@@ -50,7 +50,7 @@ class OrderPaid
             $smsService->sendSms();
         }
 
-        if (option('user_sms_on_order_paid', 'off') == 'on') {
+        if (option('user_sms_on_order_paid', 'off') === 'on') {
             $type = Sms::TYPES['USER_ORDER_PAID'] ;
             $data = [
                 'name' => $order->user->full_name,

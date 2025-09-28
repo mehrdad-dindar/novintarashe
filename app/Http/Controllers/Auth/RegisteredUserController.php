@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class RegisteredUserController extends Controller
@@ -40,31 +41,42 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request)
     {
+        $validated = $request->validated();
 
-        $data             = $request->validated();
+        $referralUser = null;
 
-        $data['password']      = Hash::make($data['password']);
-        $data['referral_code'] = Referral::generateCode();
-        $data['mobile'] = $request->username;
-        $data['national_code'] = $request->national_code;
-
-
-        if ($request->referral_code && option('user_refrral_enable', false) == true) {
-            $data['referral_id'] = User::where('referral_code', $request->referral_code)->first()->id;
+        if ($request->referral_code && option('user_refrral_enable', false)) {
+            $referralUser = User::where('referral_code', $request->referral_code)->first();
         }
 
-//        if ($request->colleague){
-//            $data['type']="colleague";
-//            $data['status']="pending";
-//        }
+        return DB::transaction(function () use ($validated, $request, $referralUser) {
 
-        $user = User::create($data);
+            $user = User::create([
+                'first_name'          => request('first_name'),
+                'last_name'           => request('last_name'),
+                'mobile'        => $request->username,
+                'username'        => $request->username,
+                'national_code' => $request->national_code,
+                'password'      => Hash::make($validated['password']),
+                'referral_code' => Referral::generateCode(),
+                'referral_id'   => $referralUser?->id,
+                // اگر بخوای colleague رو فعال کنی، اینجا اضافه میشه:
+                // 'type'   => $request->colleague ? 'colleague' : 'customer',
+                // 'status' => $request->colleague ? 'pending' : 'active',
+            ]);
 
-        event(new Registered($user));
+            if ($referralUser) {
+                Referral::create([
+                    'owner_id' => $referralUser->id,
+                    'user_id'  => $user->id,
+                ]);
+            }
 
-        Auth::login($user);
+            event(new Registered($user));
+            Auth::login($user);
 
-
-        return response('success');
+            return response('success');
+        });
     }
+
 }

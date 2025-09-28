@@ -14,6 +14,7 @@ class ContactCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public Contact $contact;
 
     /**
      * Create a new notification instance.
@@ -44,8 +45,9 @@ class ContactCreated extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
+        $msg = 'شما یک پیام با موضوع "' . $this->contact->subject . '" دارید.';
         return [
-            'message'       => 'شما یک پیام با موضوع "' . @$this->contact->subject . '" دارید.',
+            'message'       => $msg,
             'contact_id'    => @$this->contact->id
         ];
     }

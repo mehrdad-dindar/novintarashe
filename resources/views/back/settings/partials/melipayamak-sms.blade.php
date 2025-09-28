@@ -120,5 +120,20 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12 form-group mb-0">
+                    <label>کد متن تایید سفارش کاربر</label>
+                    <div class="input-group mb-75">
+                        <input type="text" name="user_order_confirm_pattern_code_melipayamak" class="form-control ltr" value="{{ option('user_order_confirm_pattern_code_melipayamak') }}" required>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label>متن نمونه ایجاد پترن</label>
+                    <textarea readonly class="form-control" rows="4">سفارش شما با شماره {0} تایید شد.&#13;&#10 {{ option('info_site_title') }}</textarea>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

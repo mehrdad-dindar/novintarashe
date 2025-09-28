@@ -120,45 +120,53 @@ class Product extends Model
 
         return $this->hasOne(Price::class)
             ->where('stock', '>', 0)
-            ->where('title', $showPrice)
+            ->where('title', $showPrice->title)
             ->orderBy('discount_price');
     }
 
 
     public function showPriceUserType()
     {
-        $showPrice = option('show_price_all_user', 'fldTipFee1');
+        $user = Auth::user();
+        $priceKey = option('show_price_all_user', 'fldTipFee1');
 
-        if (Auth::check()) {
-            if (Auth::user()->type == "user") {
-                $showPrice = option('show_price_normal_user', 'fldTipFee1');
-            } elseif (Auth::user()->type == "colleague" and Auth::user()->status == "active") {
-                $showPrice = option('show_price_colleague', 'fldTipFee1');
-            } elseif (Auth::user()->type == "vip" and Auth::user()->status == "active") {
-                $showPrice = option('show_price_vip', 'fldTipFee1');
+        if ($user) {
+            switch ($user->type) {
+                case 'user':
+                    if ($user->status === 'active') {
+                        $priceKey = option('show_price_normal_user', 'fldTipFee1');
+                    }
+                    break;
+
+                case 'colleague':
+                    if ($user->status === 'active') {
+                        $priceKey = option('show_price_colleague', 'fldTipFee1');
+                    }
+                    break;
+
+                case 'vip':
+                    if ($user->status === 'active') {
+                        $priceKey = option('show_price_vip', 'fldTipFee1');
+                    }
+                    break;
             }
-        } else {
-            $showPrice = option('show_price_all_user', 'fldTipFee1');
         }
 
-
-        $getPrices = $this->hasMany(Price::class)
-            ->where('title', $showPrice)
+        $price = $this->prices()
+            ->where('title', $priceKey)
             ->orderBy('discount_price')
             ->first();
 
-        if ($getPrices){
-
-            if ($getPrices->price <= 0 or $getPrices->stock<= 0){
-                $showPrice="fldTipFee1";
-            }
-        }else{
-            $showPrice=null;
+        if (!$price || $price->price <= 0 || $price->stock <= 0) {
+            return $this->prices()
+                ->where('title', 'fldTipFee1')
+                ->orderBy('discount_price')
+                ->first();
         }
 
-
-        return $showPrice;
+        return $price;
     }
+
 
     public function getPrices()
     {
@@ -171,7 +179,7 @@ class Product extends Model
         }
         return $this->hasMany(Price::class)
             ->where('stock', '>', 0)
-            ->where('title', $showPrice)
+            ->where('title', $showPrice->title)
             ->orderBy('discount_price');
     }
 

@@ -124,4 +124,15 @@ class IppanelSms extends SmsService implements SmsContract, SmsNotificationContr
         ];
     }
 
+    public function userOrderConfirm(): array
+    {
+        return [
+            'pattern_code' => option('user_order_confirm_pattern_code_ippanel'),
+            'input_data'   => [
+                'user_name' => $this->data['user_name'],
+                'order_id' => $this->data['order_id'],
+            ],
+        ];
+    }
+
 }

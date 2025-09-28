@@ -5,13 +5,13 @@ namespace App\Jobs;
 use App\Models\Category;
 use App\Models\Price;
 use App\Models\Product;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Log;
 
@@ -20,13 +20,13 @@ class GetUpdateProductsAccounting implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct() {}
-    public $tries = 3;
+    public int $tries = 3;
     public function handle()
     {
 
         try {
 
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $response = $client->request('GET', 'http://128.65.177.78:5000/api/updated/products');
             $response = $response->getBody()->getContents();
             $response = json_decode($response, true);
@@ -57,7 +57,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
                     ];
 
                     $morePrice = json_encode($morePriceArray);
-                    $count = intval($article['Exist']);
+                    $count = (int)$article['Exist'];
 
                     $fldTedadKarton = $article['Karton'];
                     $status = $article['IsActive'] == "true" ? 1 : 0;
@@ -143,14 +143,15 @@ class GetUpdateProductsAccounting implements ShouldQueue
                     }
 
 
-                    
+
                 }
 
 
             }
             Product::clearCache();
             DB::table('failed_jobs')->truncate();
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+        } catch (RequestException $e) {
+            Log::error($e->getMessage(), $e->getTrace());
             return false;
         }
     }

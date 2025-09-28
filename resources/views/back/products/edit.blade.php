@@ -27,7 +27,7 @@
             </div>
 
             <div id="main-card" class="content-body">
-                <form class="form" id="product-edit-form" action="{{ route('admin.products.update', ['product' => $product]) }}" data-redirect="{{ route('admin.products.index') }}" method="post">
+                <form class="form" id="product-edit-form" action="{{ route('admin.products.update', ['product' => $product]) }}" data-redirect="{{ url()->previous() }}" method="post">
                     @csrf
                     @method('put')
 
@@ -564,7 +564,18 @@
 
 @endsection
 
-@include('back.partials.plugins', ['plugins' => ['ckeditor', 'jquery-tagsinput', 'jquery.validate', 'jquery-ui', 'jquery-ui-sortable', 'dropzone', 'persian-datepicker']])
+@include('back.partials.plugins',[
+    'plugins' => [
+        'ckeditor',
+        'jquery-tagsinput',
+        'jquery.validate',
+        'jquery-ui',
+        'jquery-ui-sortable',
+        'dropzone',
+        'persian-datepicker',
+        'select2'
+        ]
+    ])
 
 @php
     $help_videos = [
@@ -573,7 +584,6 @@
 @endphp
 
 @push('styles')
-    <link href="{{ asset('back/assets/css/select2/select2.min.css') }}" rel="stylesheet" />
     <style>
         #related_products {
             width: 100% !important;
@@ -582,7 +592,6 @@
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('back/app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
     <script>
         $('#related_products').select2({
             allowClear: true,

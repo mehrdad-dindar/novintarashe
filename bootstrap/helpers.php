@@ -1065,19 +1065,19 @@ function notification_link($notification)
     return null;
 }
 
-function random_code($letter_count = 2, $number_count = 3)
+function random_code($letter_count = 2, $number_count = 3): string
 {
     $numbers = '0123456789';
     $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';
 
     for ($i = 0; $i < $letter_count; $i++) {
-        $index = rand(0, strlen($numbers) - 1);
+        $index = random_int(0, strlen($letters) - 1);
         $randomString .= $letters[$index];
     }
 
     for ($i = 0; $i < $number_count; $i++) {
-        $index = rand(0, strlen($numbers) - 1);
+        $index = random_int(0, strlen($numbers) - 1);
         $randomString .= $numbers[$index];
     }
 
