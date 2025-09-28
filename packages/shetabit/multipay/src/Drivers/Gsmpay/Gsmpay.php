@@ -10,6 +10,7 @@ use Shetabit\Multipay\Invoice;
 use Shetabit\Multipay\Receipt;
 use Shetabit\Multipay\RedirectionForm;
 use Illuminate\Support\Facades\Http;
+use Shetabit\Multipay\Request;
 
 class Gsmpay extends Driver
 {
@@ -71,8 +72,9 @@ class Gsmpay extends Driver
      */
     public function pay(): RedirectionForm
     {
-        if (session()->has('redirect_url'))
+        if (session()->has('redirect_url')) {
             $redirectUrl = session('redirect_url');
+        }
 
         return $this->redirectWithForm($redirectUrl, [
             'token' => $this->invoice->getTransactionId(),
@@ -87,16 +89,13 @@ class Gsmpay extends Driver
      */
     public function verify(): ReceiptInterface
     {
-        $token = request()->input('token');
-        $status = request()->input('status');
-
-        if ($status !== 'success') {
+        if (Request::input('status') !== "success") {
             throw new InvalidPaymentException('پرداخت ناموفق بود');
         }
 
         $response = Http::post($this->baseUrl . '/v1/cpg/payments/verify', [
             'merchant_code' => $this->settings['merchant_code'],
-            'token' => $token,
+            'token' => Request::input('token'),
             'invoice_reference' => $this->invoice->getUuid(),
             'invoice_amount' => $this->invoice->getAmount()
         ]);

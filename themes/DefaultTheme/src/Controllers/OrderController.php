@@ -162,7 +162,7 @@ class OrderController extends Controller
             abort(404);
         }
 
-        if ($order->status != 'unpaid') {
+        if ($order->status !== 'unpaid') {
             return redirect()->route('front.orders.show', ['order' => $order])->with('error', trans('front::messages.controller.your-order-canceled'));
         }
 
@@ -179,7 +179,7 @@ class OrderController extends Controller
         $gateway = $request->gateway;
 
 
-        if ($gateway == 'wallet') {
+        if ($gateway === 'wallet') {
             return $this->payUsingWallet($order);
         } elseif (in_array($gateway, ['check1', 'check2', 'check3', 'check4', 'check5', 'check6'])) {
             return $this->payUsingCheck($order, $request);
