@@ -571,6 +571,7 @@
     <script src="{{ asset('back/app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
     <script>
         $('#related_products').select2({
+            placeholder: "جستجوی محصول",
             allowClear: true,
             dir: "rtl",
             language: "fa",
@@ -580,7 +581,7 @@
             ajax: {
                 url: '{{ route("admin.products.search") }}',
                 dataType: 'json',
-                delay: 250,
+                delay: 1000,
                 data: function (params) {
                     return {
                         q: params.term // عبارت جستجو
@@ -595,10 +596,12 @@
             },
             templateResult: formatProduct,
             templateSelection: formatProductSelection,
+            minimumInputLength: 1,
             escapeMarkup: function (markup) { return markup; }
         });
 
         $('#related_categories').select2({
+            placeholder: "جستجوی دسته بندی",
             allowClear: true,
             dir: "rtl",
             language: "fa",
@@ -608,7 +611,7 @@
             ajax: {
                 url: '{{ route("admin.categories.search") }}',
                 dataType: 'json',
-                delay: 2000,
+                delay: 1000,
                 data: function (params) {
                     return {
                         q: params.term
@@ -638,6 +641,7 @@
                 `);
             },
             templateSelection: formatProductSelection,
+            minimumInputLength: 1,
             escapeMarkup: function (markup) { return markup; }
         });
 
