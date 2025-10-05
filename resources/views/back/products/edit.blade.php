@@ -587,6 +587,12 @@
         #related_products {
             width: 100% !important;
         }
+        .available {
+            color: #22c55e; /* سبز */
+        }
+        .unavailable {
+            color: #ef4444; /* قرمز */
+        }
     </style>
 @endpush
 
@@ -675,14 +681,17 @@
                 : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
 
             let category = item.category ? `<small class="text-muted">(${item.category})</small>` : '';
-            let view = `<div class="text-muted font-weight-bold">${item.view}<i class="feather icon-eye mr-1"></i></div>`;
+            let view = `${item.view}<i class="feather icon-eye m-1"></i>`;
+            let addableToCart =`<i class="feather ${item.addableToCart ? 'icon-check-circle available' : 'icon-x-circle unavailable'} m-1"></i> ${item.addableToCart ? 'موجود' : 'نا موجود'}`;
 
             return $(`
         <div class="d-flex align-items-center">
             ${image}
             <div>
-                <div class="font-weight-bold">${item.title} ${category}</div>
-                ${view}
+              <div class="font-weight-bold">${item.title} ${category}</div>
+              <div class="text-muted font-weight-bold">
+                ${addableToCart} ${view}
+              </div>
             </div>
         </div>
     `);
