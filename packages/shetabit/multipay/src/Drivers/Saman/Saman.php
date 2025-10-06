@@ -31,6 +31,7 @@ class Saman extends Driver
      * Saman constructor.
      * Construct the class with the relevant settings.
      *
+     * @param Invoice $invoice
      * @param $settings
      */
     public function __construct(Invoice $invoice, $settings)
@@ -52,7 +53,7 @@ class Saman extends Driver
         $data = [
             'MID' => $this->settings->merchantId,
             'ResNum' => $this->invoice->getUuid(),
-            'Amount' => $this->invoice->getAmount() * ($this->settings->currency == 'T' ? 10 : 1), // convert to rial
+            'Amount' => $this->invoice->getAmount() * ($this->settings->currency === 'T' ? 10 : 1), // convert to rial
             'CellNumber' => ''
         ];
 
@@ -91,6 +92,8 @@ class Saman extends Driver
 
     /**
      * Pay the Invoice
+     *
+     * @return RedirectionForm
      */
     public function pay(): RedirectionForm
     {
@@ -109,6 +112,7 @@ class Saman extends Driver
     /**
      * Verify payment
      *
+     * @return ReceiptInterface
      *
      * @throws InvalidPaymentException
      * @throws \SoapFault
@@ -153,8 +157,10 @@ class Saman extends Driver
      * Generate the payment's receipt
      *
      * @param $referenceId
+     *
+     * @return Receipt
      */
-    protected function createReceipt($referenceId): \Shetabit\Multipay\Receipt
+    protected function createReceipt($referenceId)
     {
         return new Receipt('saman', $referenceId);
     }
@@ -223,7 +229,7 @@ class Saman extends Driver
         ];
 
         if (array_key_exists($status, $translations)) {
-            throw new InvalidPaymentException($translations[$status], (int)$status);
+            throw new InvalidPaymentException($translations[$status], $status);
         }
         throw new InvalidPaymentException('خطای ناشناخته ای رخ داده است.', $status);
     }

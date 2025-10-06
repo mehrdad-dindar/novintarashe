@@ -572,8 +572,7 @@
         'jquery-ui',
         'jquery-ui-sortable',
         'dropzone',
-        'persian-datepicker',
-        'select2'
+        'persian-datepicker'
         ]
     ])
 
@@ -588,12 +587,19 @@
         #related_products {
             width: 100% !important;
         }
+        .available {
+            color: #22c55e; /* سبز */
+        }
+        .unavailable {
+            color: #ef4444; /* قرمز */
+        }
     </style>
 @endpush
 
 @push('scripts')
     <script>
         $('#related_products').select2({
+            placeholder: "جستجوی محصول",
             allowClear: true,
             dir: "rtl",
             language: "fa",
@@ -603,7 +609,7 @@
             ajax: {
                 url: '{{ route("admin.products.search") }}',
                 dataType: 'json',
-                delay: 2000,
+                delay: 1000,
                 data: function (params) {
                     return {
                         q: params.term
@@ -618,10 +624,12 @@
             },
             templateResult: formatProduct,
             templateSelection: formatProductSelection,
+            minimumInputLength: 1,
             escapeMarkup: function (markup) { return markup; }
         });
 
         $('#related_categories').select2({
+            placeholder: "جستجوی دسته بندی",
             allowClear: true,
             dir: "rtl",
             language: "fa",
@@ -631,7 +639,7 @@
             ajax: {
                 url: '{{ route("admin.categories.search") }}',
                 dataType: 'json',
-                delay: 2000,
+                delay: 1000,
                 data: function (params) {
                     return {
                         q: params.term
@@ -661,6 +669,7 @@
                 `);
             },
             templateSelection: formatProductSelection,
+            minimumInputLength: 1,
             escapeMarkup: function (markup) { return markup; }
         });
 
@@ -672,14 +681,18 @@
                 : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
 
             let category = item.category ? `<small class="text-muted">(${item.category})</small>` : '';
-            let view = `<div class="text-muted font-weight-bold">${item.view}<i class="feather icon-eye mr-1"></i></div>`;
+            let view = `${item.view}<i class="feather icon-eye m-1"></i>`;
+            let stock = item.stock_count ? 'موجود (' + item.stock_count +')' : 'نا موجود';
+            let stock_text =`<i class="feather ${item.stock_count ? 'icon-check-circle available' : 'icon-x-circle unavailable'}"></i> ${stock}`;
 
             return $(`
         <div class="d-flex align-items-center">
             ${image}
             <div>
-                <div class="font-weight-bold">${item.title} ${category}</div>
-                ${view}
+              <div class="font-weight-bold">${item.title} ${category}</div>
+              <div class="text-muted font-weight-bold">
+                ${stock_text} ${view}
+              </div>
             </div>
         </div>
     `);

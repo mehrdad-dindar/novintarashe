@@ -55,15 +55,20 @@ class SendOrderToAccounting implements ShouldQueue
                     'phoneNumber' => $mobile,
                     'fullName' => $user->fullname,
                     'address' => $address,
-                    'createDate' => Carbon::now()->timestamp,
-                    'fldFeeTip' => ''
+                    'nationalCode' => $user->national_code,
+                    'region' => $ostan,
+                    'city' => $city,
+                    "latitude" => "",
+                    "longitude" => "",
+//                    'createDate' => Carbon::now()->timestamp,
+//                    'fldFeeTip' => ''
                 ]
             ];
 
 
             try {
                 // $response = $client->request('POST', 'http://2.187.99.27:5000/api/customer/register', $requestGmailData);
-                $response = $client->request('POST', 'http://128.65.177.78:5000/api/customer/register', $requestGmailData);
+                $response = $client->request('POST', 'http://128.65.177.78:5000/api/register', $requestGmailData);
                 $response = $response->getBody()->getContents();
                 $response = json_decode($response);
             } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -95,23 +100,24 @@ class SendOrderToAccounting implements ShouldQueue
                     'orderVal.OrderTitle.FldTotalFaktor' => $order->price - $order->shipping_cost,
                     'orderVal.OrderTitle.FldTakhfifVizhe' => 0,
                     'orderVal.OrderTitle.FldTozihFaktor' => $FldTozihat,
-                    'orderVal.OrderTitle.FldAddress' => $address,
+//                    'orderVal.OrderTitle.FldAddress' => $address,
                     'orderVal.OrderTitle.FldPayId' => isset($trans) ? $trans->transId : '',
+                    'orderVal.OrderTitle.IsReturn' => false,
                 ];
 
                 foreach ($order->items as $itemRow => $item) {
                     $formParams['orderVal.OrderDetails[' . $itemRow . '].FldC_Kala'] = $item->product->fldC_Kala;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldN_Kala'] = $item->product->title;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldFee'] = $item->price;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldFeeBadAzTakhfif'] = $item->real_price;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldN_Vahed'] = $item->product->vahed ?: 'وجود ندارد';
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldN_Vahed_Kol'] = $item->product->vahed_kol;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTedad'] = $item->quantity;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTedadKol'] = $item->quantity;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTedadDarKarton'] = 0;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTozihat'] = $order->description;
-                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldACode_C'] = $order->id;
                     $formParams['orderVal.OrderDetails[' . $itemRow . '].A_Code'] = $item->product->fldId;
+                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldN_Kala'] = $item->product->title;
+                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTedad'] = $item->quantity;
+                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldFee'] = $item->price;
+                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldN_Vahed'] = $item->product->vahed ?: 'وجود ندارد';
+                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTozihat'] = $order->description;
+//                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldFeeBadAzTakhfif'] = $item->real_price;
+//                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldN_Vahed_Kol'] = $item->product->vahed_kol;
+//                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTedadKol'] = $item->quantity;
+//                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldTedadDarKarton'] = 0;
+//                    $formParams['orderVal.OrderDetails[' . $itemRow . '].FldACode_C'] = $order->id;
                 }
 
                 $requestGmailData = [
@@ -125,7 +131,7 @@ class SendOrderToAccounting implements ShouldQueue
 
                 try {
                     // $response = $client->request('POST', 'http://2.187.99.27:5000/api/orders/save', $requestGmailData);
-                    $response = $client->request('POST', 'http://128.65.177.78:5000/api/orders/save', $requestGmailData);
+                    $response = $client->request('POST', 'http://128.65.177.78:5000/api/save', $requestGmailData);
                     $response = $response->getBody()->getContents();
                     $response = json_decode($response);
                 } catch (\GuzzleHttp\Exception\RequestException $e) {

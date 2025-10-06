@@ -28,8 +28,8 @@ class Gateway extends Model
 
     public function config($key)
     {
-        $config = $this->configs()->where('gateway_configs.key', $key)->first();
-
-        return $config ? $config->value : null;
+        return $this->configs()
+            ->where('gateway_configs.key', $key)
+            ->value('value');
     }
 }

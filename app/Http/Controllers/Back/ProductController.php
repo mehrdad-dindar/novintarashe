@@ -815,7 +815,8 @@ class ProductController extends Controller
                 'category' => optional($product->category)->title,
                 'view'    => number_format($product->view),
                 'image' => $product->image ? asset($product->image) : false,
-                'selected' => $product->relatedProductsPivot()
+                'selected' => $product->relatedProductsPivot(),
+                'stock_count' =>  $product->addableToCart() ? $product->prices()->sum('stock') : 0
             ];
         });
 

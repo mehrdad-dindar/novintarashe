@@ -194,21 +194,23 @@ class OrderController extends Controller
 
             return Payment::via($gateway)->config($gateway_configs)->callbackUrl(route('front.orders.verify', ['gateway' => $gateway]))->purchase(
                 (new Invoice)->amount($amount)
-                    ->detail('mobile',auth()->user()->mobile)
-                    ->detail('first_name',auth()->user()->first_name)
-                    ->detail('last_name',auth()->user()->last_name)
-                    ->detail('national_code',auth()->user()->national_code)
-                    ->detail('items',$order->items->map(function ($item) {
-                        return [
-                            'reference'       => $item->product_id,
-                            'name'            => $item->title,
-                            'is_product'      => true,
-                            'quantity'        => (int) $item->quantity,
-                            'unit_price'      => (string) $item->price,
-                            'unit_discount'   => (string) $item->discount,
-                            'unit_tax_amount' => '0',
-                        ];
-                    })),
+                    ->detail([
+                        'mobile' => auth()->user()->mobile,
+                        'first_name' => auth()->user()->first_name,
+                        'last_name' => auth()->user()->last_name,
+                        'national_code' => auth()->user()->national_code,
+                        'items' => $order->items->map(function ($item) {
+                            return [
+                                'reference' => $item->product_id,
+                                'name' => $item->title,
+                                'is_product' => true,
+                                'quantity' => (int)$item->quantity,
+                                'unit_price' => (string)$item->price,
+                                'unit_discount' => (string)$item->discount,
+                                'unit_tax_amount' => '0',
+                            ];
+                        })
+                    ]),
                 function ($driver, $transactionId) use ($order, $gateway, $amount) {
                     DB::table('transactions')->insert([
                         'status' => false,
