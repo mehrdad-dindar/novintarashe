@@ -654,13 +654,16 @@
 
             let category = product.category ? `<small class="text-muted">(${product.category})</small>` : '';
             let view = `<div class="text-muted font-weight-bold">${product.view}<i class="feather icon-eye mr-1"></i></div>`;
+            let stock = item.stock_count ? 'موجود (' + item.stock_count +')' : 'نا موجود';
+            let stock_text =`<i class="feather ${item.stock_count ? 'icon-check-circle available' : 'icon-x-circle unavailable'}"></i> ${stock}`;
+
 
             return $(`
         <div class="d-flex align-items-center">
             ${image}
             <div>
                 <div class="font-weight-bold">${product.title} ${category}</div>
-                ${view}
+                ${stock_text} ${view}
             </div>
         </div>
     `);

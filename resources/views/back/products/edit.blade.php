@@ -682,7 +682,8 @@
 
             let category = item.category ? `<small class="text-muted">(${item.category})</small>` : '';
             let view = `${item.view}<i class="feather icon-eye m-1"></i>`;
-            let addableToCart =`<i class="feather ${item.addableToCart ? 'icon-check-circle available' : 'icon-x-circle unavailable'} m-1"></i> ${item.addableToCart ? 'موجود' : 'نا موجود'}`;
+            let stock = item.stock_count ? 'موجود (' + item.stock_count +')' : 'نا موجود';
+            let stock_text =`<i class="feather ${item.stock_count ? 'icon-check-circle available' : 'icon-x-circle unavailable'}"></i> ${stock}`;
 
             return $(`
         <div class="d-flex align-items-center">
@@ -690,7 +691,7 @@
             <div>
               <div class="font-weight-bold">${item.title} ${category}</div>
               <div class="text-muted font-weight-bold">
-                ${addableToCart} ${view}
+                ${stock_text} ${view}
               </div>
             </div>
         </div>
