@@ -23,9 +23,11 @@ class EnsureApiHeaderIsSet
         $api_key = $request->header('x-api-key');
 
         if ($api_key) {
-            if (Apikey::where('key', $api_key)->where('is_active', true)->first()) {
+            if (Apikey::where('key', $api_key)->Active()->first()) {
                 return $next($request);
             }
+
+            return $this->respondForbidden('api key is not active');
         }
 
         return $this->respondForbidden('please set x-api-key header correctly');
