@@ -186,52 +186,60 @@ class OrderController extends Controller
         }
 
         try {
-
+            $Invoice = new Invoice();
             $gateway_configs = get_gateway_configs($gateway);
             $currency = Currency::find(option('default_currency_id'));
 
             $amount = isset($currency) && $currency != null ? (int)$order->price * $currency->amount : (int)$order->price;
 
-            return Payment::via($gateway)->config($gateway_configs)->callbackUrl(route('front.orders.verify', ['gateway' => $gateway]))->purchase(
-                (new Invoice)->amount($amount)
-                    ->detail([
-                        'mobile' => auth()->user()->mobile,
-                        'first_name' => auth()->user()->first_name,
-                        'last_name' => auth()->user()->last_name,
-                        'national_code' => auth()->user()->national_code,
-                        'items' => $order->items->map(function ($item) {
-                            return [
-                                'reference' => $item->product_id,
-                                'name' => $item->title,
-                                'is_product' => true,
-                                'quantity' => (int)$item->quantity,
-                                'unit_price' => (string)$item->price,
-                                'unit_discount' => (string)$item->discount,
-                                'unit_tax_amount' => '0',
-                            ];
-                        })
-                    ]),
-                function ($driver, $transactionId) use ($order, $gateway, $amount) {
-                    DB::table('transactions')->insert([
-                        'status' => false,
-                        'amount' => $amount,
-                        'factorNumber' => $order->id,
-                        'mobile' => auth()->user()->username,
-                        'message' => trans('front::messages.controller.port-transaction') . $gateway,
-                        'transID' => (string)$transactionId,
-                        'token' => (string)$transactionId,
-                        'user_id' => auth()->user()->id,
-                        'transactionable_type' => Order::class,
-                        'transactionable_id' => $order->id,
-                        'gateway_id' => Gateway::where('key', $gateway)->first()->id,
-                        "created_at" => Carbon::now(),
-                        "updated_at" => Carbon::now(),
-                    ]);
+            $Invoice->amount((int)$amount);
+            $Invoice->detail([
+                'mobile' => auth()->user()->mobile,
+                'first_name' => auth()->user()->first_name,
+                'last_name' => auth()->user()->last_name,
+                'national_code' => auth()->user()->national_code,
+                'items' => $order->items->map(function ($item) {
+                    return [
+                        'reference' => $item->product_id,
+                        'name' => $item->title,
+                        'is_product' => true,
+                        'quantity' => (int)$item->quantity,
+                        'unit_price' => (string)$item->price,
+                        'unit_discount' => (string)$item->discount,
+                        'unit_tax_amount' => '0',
+                    ];
+                })
+            ]);
 
-                    session()->put('transactionId', (string)$transactionId);
-                    // session()->put('amount', $order->price);
+            $paymentId = md5(uniqid('novin', true));
+            $transaction = $order->user->transactions()->create([
+                'status' => false,
+                'amount' => $Invoice->getAmount(),
+                'factorNumber' => $order->id,
+                'mobile' => auth()->user()->mobile ?? auth()->user()->username,
+                'message' => trans('front::messages.controller.port-transaction') . $gateway,
+                'user_id' => auth()->user()->id,
+                'transactionable_type' => Order::class,
+                'transactionable_id' => $order->id,
+                'gateway_id' => Gateway::where('key', $gateway)->first()->id,
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now(),
+                "description" => $Invoice,
+                'payment_id' => $paymentId,
+                'token' => "-"
+            ]);
+
+            $callbackUrl = route("front.orders.verify", ['gateway' => $gateway, 'order_id' => $order, 'payment_id' => $paymentId]);
+
+            $payment = Payment::via($gateway)->config($gateway_configs)->callbackUrl($callbackUrl)->purchase(
+                $Invoice,
+                function ($driver, $transactionId) use ($transaction) {
+                    $transaction->transID = $transactionId;
+                    $transaction->token = $transactionId;
+                    $transaction->save();
                 }
-            )->pay()->render();
+            );
+            return $payment->pay()->render();
         } catch (Exception $e) {
             return redirect()
                 ->route('front.orders.show', ['order' => $order])
@@ -240,36 +248,55 @@ class OrderController extends Controller
         }
     }
 
-    public function verify($gateway)
+    public function verify($gateway, Request $request)
     {
-        $transactionId = session()->get('transactionId');
-        // $amount = session()->get('amount');
+        $order = Order::find((int)$request->input('order_id'));
+        if ($request->missing('payment_id')) {
+            return redirect()->route('front.orders.show', ['order' => $order])
+                ->with('transaction-error', 'payment_id is missing !')
+                ->with('order_id', $order->id);
+        }
 
-        $transaction = Transaction::where('status', false)->where('transID', $transactionId)->firstOrFail();
+        $transaction = Transaction::where('payment_id', $request->input('payment_id'))->where('status', false)->first();
 
-        $order = $transaction->transactionable;
+        if (blank($transaction)) {
+            return redirect()->route('front.orders.show', ['order' => $order])
+                ->with('transaction-error', 'transaction not found !')
+                ->with('order_id', $order->id);
+        }
 
-        $gateway_configs = get_gateway_configs($gateway);
+        if ($transaction->user_id !== $order->user->id) {
+            return redirect()->route('front.orders.show', ['order' => $order])
+                ->with('transaction-error', 'user id problem')
+                ->with('order_id', $order->id);
+        }
+
+        if ((int)$transaction->factorNumber !== $order->id) {
+            return redirect()->route('front.orders.show', ['order' => $order])
+                ->with('transaction-error', 'order id problem')
+                ->with('order_id', $order->id);
+        }
+
+        if ($transaction->status) {
+            return redirect()->route('front.orders.show', ['order' => $order])
+                ->with('transaction-error', 'transaction status error')
+                ->with('order_id', $order->id);
+        }
 
         try {
-            $receipt = Payment::via($gateway)->config($gateway_configs);
+            $gateway_configs = get_gateway_configs($gateway);
 
-            if ($transaction) {
-                $receipt = $receipt->amount(intval($transaction->amount));
-            }
+            $receipt = Payment::via($gateway)
+                ->config($gateway_configs)
+                ->amount((int)$transaction->amount)
+                ->transactionId($transaction->transaction_id)
+                ->verify();
 
-            $receipt = $receipt->transactionId($transactionId)->verify();
-
-
-            DB::table('transactions')->where('transID', (string)$transactionId)->update([
-                'status' => 1,
-                'amount' => $order->price,
-                'factorNumber' => $order->id,
-                'mobile' => $order->mobile,
-                'traceNumber' => $receipt->getReferenceId(),
-                'message' => $transaction->message . '<br>' . trans('front::messages.controller.successful-payment') . $gateway,
-                'updated_at' => Carbon::now(),
-            ]);
+            $transaction->transaction_result = $receipt;
+            $transaction->status = true;
+            $transaction->traceNumber = $receipt->getReferenceId();
+            $transaction->message .= '<br>' . trans('front::messages.controller.successful-payment') . $gateway;
+            $transaction->save();
 
 
             SendOrderToAccounting::dispatch($order, $order->user)->onQueue('send-order-accounting');
@@ -277,11 +304,8 @@ class OrderController extends Controller
 
             return $this->orderPaid($order);
         } catch (\Exception|InvalidPaymentException $exception) {
-
-            DB::table('transactions')->where('transID', (string)$transactionId)->update([
-                'message' => $transaction->message . '<br>' . $exception->getMessage(),
-                "updated_at" => Carbon::now(),
-            ]);
+            $transaction->message .= '<br>' . trans('front::messages.controller.transaction-error') . $exception->getMessage();
+            $transaction->save();
 
             return redirect()->route('front.orders.show', ['order' => $order])->with('transaction-error', $exception->getMessage());
         }

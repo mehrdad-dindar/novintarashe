@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -187,7 +188,7 @@ class User extends Authenticatable
         return $this->wallet()->firstOrCreate(
             [],
             [
-                'balance'   => 0,
+                'balance' => 0,
                 'is_active' => true
             ]
         );
@@ -211,28 +212,32 @@ class User extends Authenticatable
 
         if ($level = $request->input('query.level')) {
             switch ($level) {
-                case "admin": {
-                        $query->where('level', 'admin');
-                        break;
-                    }
-                case "user": {
-                        $query->where('level', 'user');
-                        break;
-                    }
+                case "admin":
+                {
+                    $query->where('level', 'admin');
+                    break;
+                }
+                case "user":
+                {
+                    $query->where('level', 'user');
+                    break;
+                }
             }
         }
 
         if ($request->sort && $request->input('sort.field')) {
             switch ($request->sort['field']) {
-                case 'fullname': {
-                        $query->orderBy('first_name', $request->sort['sort'])->orderBy('last_name', $request->sort['sort']);
-                        break;
+                case 'fullname':
+                {
+                    $query->orderBy('first_name', $request->sort['sort'])->orderBy('last_name', $request->sort['sort']);
+                    break;
+                }
+                default:
+                {
+                    if ($this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $request->sort['field'])) {
+                        $query->orderBy($request->sort['field'], $request->sort['sort']);
                     }
-                default: {
-                        if ($this->getConnection()->getSchemaBuilder()->hasColumn($this->getTable(), $request->sort['field'])) {
-                            $query->orderBy($request->sort['field'], $request->sort['sort']);
-                        }
-                    }
+                }
             }
         }
 
@@ -268,5 +273,10 @@ class User extends Authenticatable
     public function messages()
     {
         return $this->belongsToMany(Message::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }
