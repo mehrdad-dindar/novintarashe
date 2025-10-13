@@ -489,6 +489,7 @@ return [
         'your-order-canceled'           => 'سفارش شما لغو شده است یا قبلا پرداخت کرده اید',
         'port-transaction'              => 'تراکنش ایجاد شد برای درگاه',
         'successful-payment'            => 'پرداخت موفق با درگاه',
+        'transaction-error'            => 'خطا در تایید پرداخت',
         'active-port'                   => 'درگاه فعالی برای پرداخت یافت نشد',
         'online-wallet-recharge'        => 'شارژ آنلاین کیف پول برای ثبت سفارش',
         'no-category'                   => 'بدون دسته بندی',

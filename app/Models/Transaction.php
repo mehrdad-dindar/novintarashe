@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Shetabit\Multipay\Invoice;
+use Shetabit\Multipay\Payment;
 
 class Transaction extends Model
 {
@@ -99,5 +101,25 @@ class Transaction extends Model
         }
 
         return $query;
+    }
+
+    public function setDescriptionAttribute($value): void
+    {
+        $this->attributes['description'] = serialize($value);
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return unserialize($this->attributes['description'], ['allowed_classes' => [Invoice::class]]);
+    }
+
+    public function setTransactionResultAttribute($value): void
+    {
+        $this->attributes['transaction_result'] = serialize($value);
+    }
+
+    public function getTransactionResultAttribute()
+    {
+        return unserialize($this->attributes['transaction_result'], ['allowed_classes' => [Payment::class]]);
     }
 }
