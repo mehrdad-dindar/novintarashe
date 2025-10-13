@@ -212,6 +212,7 @@ class OrderController extends Controller
             ]);
 
             $paymentId = md5(uniqid('novin', true));
+            $Invoice->uuid($paymentId);
             $transaction = $order->user->transactions()->create([
                 'status' => false,
                 'amount' => $Invoice->getAmount(),
@@ -304,7 +305,7 @@ class OrderController extends Controller
 
             return $this->orderPaid($order);
         } catch (\Exception|InvalidPaymentException $exception) {
-            $transaction->message .= '<br>' . trans('front::messages.controller.transaction-error') . $exception->getMessage();
+            $transaction->message .= '<br>' . trans('front::messages.controller.transaction-error') ." : ". $exception->getMessage();
             $transaction->save();
 
             return redirect()->route('front.orders.show', ['order' => $order])->with('transaction-error', $exception->getMessage());
