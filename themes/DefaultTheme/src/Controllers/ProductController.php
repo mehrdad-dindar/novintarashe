@@ -143,7 +143,7 @@ class ProductController extends Controller
         $relatedProducts = $product->relatedProductsPivot()
             ->published()
             ->orderByStock()
-            ->take(6)
+            ->take(15)
             ->get();
 
         $categoryIds = $product->relatedCategoriesPivot()->pluck('categories.id')->toArray();
@@ -158,14 +158,14 @@ class ProductController extends Controller
                 })
                 ->where('id', '!=', $product->id)
                 ->inRandomOrder()
-                ->take(6)
+                ->take(20)
                 ->get();
         }
         $related_products = $relatedProducts
             ->merge($categoryProducts)
             ->unique('title')
             ->shuffle()
-            ->take(6);
+            ->take(15);
 
 
         $product->load(['comments' => function ($query) {
