@@ -145,7 +145,9 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                                 $discount = 0;
                                 $discount_price = $fldTipFee;
                                 if ($title == "fldTipFee2") {
-                                    $discount = (($price - $offPrice) / $price) * 100;
+                                    if ($price != 0) {
+                                        $discount = (($price - $offPrice) / $price) * 100;
+                                    }
                                     $discount_price = $offPrice;
                                 }
 
@@ -169,6 +171,7 @@ class InsertFirstTimeProductAccounting implements ShouldQueue
                 $page++;
                 // }
             } catch (\GuzzleHttp\Exception\RequestException $e) {
+                \Log::error($e->getMessage(), $e->getTrace());
             }
 
             DB::table('failed_jobs')->truncate();

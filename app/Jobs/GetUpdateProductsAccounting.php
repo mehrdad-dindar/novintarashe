@@ -69,7 +69,9 @@ class GetUpdateProductsAccounting implements ShouldQueue
                         $discount = 0;
                         $discount_price = $fldTipFee;
                         if ($titleFldTipFee == "fldTipFee2") {
-                            $discount = (($price - $offPrice) / $price) * 100;
+                            if ($price != 0) {
+                                $discount = (($price - $offPrice) / $price) * 100;
+                            }
                             $discount_price = $offPrice;
                             $fldTipFee = $price;
                         }
@@ -151,7 +153,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
             Product::clearCache();
             DB::table('failed_jobs')->truncate();
         } catch (RequestException $e) {
-            Log::error($e->getMessage(), $e->getTrace());
+            \Log::error($e->getMessage(), $e->getTrace());
             return false;
         }
     }
