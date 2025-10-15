@@ -320,7 +320,7 @@ return [
         'sep'       => [
             'label' => 'درگاه سامان کیش',
             'fields' => [
-                'merchantId' => 'کد پذیرنده'
+                'terminalId' => 'کد پذیرنده'
             ]
         ],
         'sepehr'      => [
