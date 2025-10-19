@@ -213,7 +213,7 @@ class OrderController extends Controller
 
             $transaction = $order->user->transactions()->create([
                 'status' => false,
-                'amount' => $invoice->getAmount(),
+                'amount' => $order->price,
                 'factorNumber' => $order->id,
                 'mobile' => auth()->user()->mobile ?? auth()->user()->username,
                 'message' => trans('front::messages.controller.port-transaction') . $gateway,
@@ -284,10 +284,13 @@ class OrderController extends Controller
 
         try {
             $gateway_configs = get_gateway_configs($gateway);
+            $currency = Currency::find(option('default_currency_id'));
+
+            $amount = isset($currency) && $currency != null ? (int)$transaction->amount * $currency->amount : (int)$transaction->amount;
 
             $receipt = Payment::via($gateway)
                 ->config($gateway_configs)
-                ->amount((int)$transaction->amount)
+                ->amount((int)$amount)
                 ->transactionId($transaction->transaction_id)
                 ->verify();
 
