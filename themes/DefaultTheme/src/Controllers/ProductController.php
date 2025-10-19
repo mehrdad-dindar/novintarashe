@@ -97,7 +97,7 @@ class ProductController extends Controller
     public function discount()
     {
         $products = Product::detectLang()
-        ->published()
+            ->published()
             ->available()
             ->discount()
             ->latest()
@@ -109,7 +109,7 @@ class ProductController extends Controller
     public function ajax_search(Request $request)
     {
         $products = Product::detectLang()
-        ->published()
+            ->published()
             ->where(function ($query) use ($request) {
                 $query->where('title', 'like', '%' . $request->q . '%')
                     ->orWhere('title_en', 'like', '%' . $request->q . '%');
@@ -142,8 +142,8 @@ class ProductController extends Controller
         // لود محصولات مرتبط از رابطه جدید
         $relatedProducts = $product->relatedProductsPivot()
             ->published()
-            ->orderByStock()
-            ->take(15)
+//            ->orderByStock()
+//            ->take(15)
             ->get();
 
         $categoryIds = $product->relatedCategoriesPivot()->pluck('categories.id')->toArray();
@@ -158,14 +158,14 @@ class ProductController extends Controller
                 })
                 ->where('id', '!=', $product->id)
                 ->inRandomOrder()
-                ->take(20)
+//                ->take(20)
                 ->get();
         }
         $related_products = $relatedProducts
             ->merge($categoryProducts)
             ->unique('title')
             ->shuffle()
-            ->take(15);
+            /*->take(15)*/;
 
 
         $product->load(['comments' => function ($query) {
