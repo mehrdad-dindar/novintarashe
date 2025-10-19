@@ -796,6 +796,7 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $search = $request->get('q', '');
+        $page = $request->get('page', 1);
 
         $query = Product::query();
 
@@ -803,25 +804,28 @@ class ProductController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $products = $query->select(['id', 'title', 'image', 'view', 'category_id'])
+        // استفاده از paginate به جای take
+        $products = $query
+            ->select(['id', 'title', 'image', 'view', 'category_id'])
             ->latest()
-            ->take(20)
-            ->get();
-        $results = $products->map(function ($product) {
+            ->paginate(20, ['*'], 'page', $page);
+
+        $results = $products->getCollection()->map(function ($product) {
             return [
-                'id'    => $product->id,
-                'text'  => $product->title,
+                'id'       => $product->id,
+                'text'     => $product->title,
                 'title'    => $product->title,
                 'category' => optional($product->category)->title,
-                'view'    => number_format($product->view),
-                'image' => $product->image ? asset($product->image) : false,
+                'view'     => number_format($product->view),
+                'image'    => $product->image ? asset($product->image) : null,
                 'selected' => $product->relatedProductsPivot(),
-                'stock_count' =>  $product->addableToCart() ? $product->prices()->sum('stock') : 0
+                'stock_count' => $product->addableToCart() ? $product->prices()->sum('stock') : 0
             ];
         });
 
         return response()->json([
-            'results' => $results,
+            'results'    => $results,
+            'more' => (bool)$products->nextPageUrl()
         ]);
     }
 }

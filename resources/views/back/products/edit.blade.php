@@ -612,12 +612,16 @@
                 delay: 1000,
                 data: function (params) {
                     return {
-                        q: params.term
+                        q: params.term,
+                        page: params.page || 1
                     };
                 },
                 processResults: function (data) {
                     return {
-                        results: data.results
+                        results: data.results,
+                        pagination: {
+                            more: !!data.more
+                        }
                     };
                 },
                 cache: true
@@ -642,12 +646,16 @@
                 delay: 1000,
                 data: function (params) {
                     return {
-                        q: params.term
+                        q: params.term,
+                        page: params.page || 1
                     };
                 },
                 processResults: function (data) {
                     return {
-                        results: data.results
+                        results: data.results,
+                        pagination: {
+                            more: !!data.more
+                        }
                     };
                 },
                 cache: true
