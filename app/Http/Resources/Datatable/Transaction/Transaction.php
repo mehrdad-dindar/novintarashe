@@ -19,7 +19,7 @@ class Transaction extends JsonResource
             'transaction_id'    => $this->id,
             'fullname'          => $this->user ? htmlspecialchars($this->user->fullname) : '-',
             'created_at'        => jdate($this->created_at)->format('%d %B %Y'),
-            'amount'            => currencyTitle() . number_format($this->amount) . currencyTitle(),
+            'amount'            => number_format($this->amount) ." ". currencyTitle(),
             'status'            => $this->status,
 
             'links' => [

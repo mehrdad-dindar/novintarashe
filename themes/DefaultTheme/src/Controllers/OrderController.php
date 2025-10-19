@@ -186,14 +186,14 @@ class OrderController extends Controller
         }
 
         try {
-            $Invoice = new Invoice();
+            $invoice = new Invoice;
             $gateway_configs = get_gateway_configs($gateway);
             $currency = Currency::find(option('default_currency_id'));
 
             $amount = isset($currency) && $currency != null ? (int)$order->price * $currency->amount : (int)$order->price;
 
-            $Invoice->amount((int)$amount);
-            $Invoice->detail([
+            $invoice->amount((int)$amount);
+            $invoice->detail([
                 'mobile' => auth()->user()->mobile,
                 'first_name' => auth()->user()->first_name,
                 'last_name' => auth()->user()->last_name,
@@ -205,17 +205,15 @@ class OrderController extends Controller
                         'is_product' => true,
                         'quantity' => (int)$item->quantity,
                         'unit_price' => (string)$item->price,
-                        'unit_discount' => (string)$item->discount,
+                        'unit_discount' => empty($item->discount) ? "0" : (string)$item->discount,
                         'unit_tax_amount' => '0',
                     ];
                 })
             ]);
 
-            $paymentId = md5(uniqid('novin', true));
-            $Invoice->uuid($paymentId);
             $transaction = $order->user->transactions()->create([
                 'status' => false,
-                'amount' => $Invoice->getAmount(),
+                'amount' => $invoice->getAmount(),
                 'factorNumber' => $order->id,
                 'mobile' => auth()->user()->mobile ?? auth()->user()->username,
                 'message' => trans('front::messages.controller.port-transaction') . $gateway,
@@ -225,15 +223,15 @@ class OrderController extends Controller
                 'gateway_id' => Gateway::where('key', $gateway)->first()->id,
                 "created_at" => Carbon::now(),
                 "updated_at" => Carbon::now(),
-                "description" => $Invoice,
-                'payment_id' => $paymentId,
+                "description" => $invoice,
+                'payment_id' => $invoice->getUuid(),
                 'token' => "-"
             ]);
 
-            $callbackUrl = route("front.orders.verify", ['gateway' => $gateway, 'order_id' => $order, 'payment_id' => $paymentId]);
+            $callbackUrl = route("front.orders.verify", ['gateway' => $gateway, 'order_id' => $order, 'payment_id' => $invoice->getUuid()]);
 
             $payment = Payment::via($gateway)->config($gateway_configs)->callbackUrl($callbackUrl)->purchase(
-                $Invoice,
+                $invoice,
                 function ($driver, $transactionId) use ($transaction) {
                     $transaction->transID = $transactionId;
                     $transaction->token = $transactionId;

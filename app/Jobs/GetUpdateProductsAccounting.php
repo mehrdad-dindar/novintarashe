@@ -20,20 +20,22 @@ class GetUpdateProductsAccounting implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
-    private Client $httpClient;
     private string $apiUrl;
 
     public function __construct()
     {
         $this->apiUrl = config('services.accounting_api.products_endpoint', 'http://128.65.177.78:5000/api/updated/products');
-        $this->httpClient = new Client([
-            'timeout' => 30,
-        ]);
     }
 
     public function handle(): void
     {
-        $response = $this->fetchProductsFromApi();
+        $client = new Client([
+            'timeout' => 30,
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ]
+        ]);
+        $response = $this->fetchProductsFromApi($client);
         if (!$response) {
             return;
         }
@@ -45,15 +47,15 @@ class GetUpdateProductsAccounting implements ShouldQueue
         $this->cleanup();
     }
 
-    private function fetchProductsFromApi(): ?array
+    private function fetchProductsFromApi(Client $client): ?array
     {
         try {
-            $response = $this->httpClient->request('GET', $this->apiUrl);
+            $response = $client->request('GET', $this->apiUrl);
             $contents = $response->getBody()->getContents();
             $decoded = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
 
             if (!is_array($decoded)) {
-                throw new \RuntimeException('API response is not a valid array.');
+                return null;
             }
 
             return $decoded;
@@ -64,7 +66,9 @@ class GetUpdateProductsAccounting implements ShouldQueue
         } catch (\JsonException $e) {
             Log::error('API Response JSON decode failed: ' . $e->getMessage());
         } catch (\Exception $e) {
-            Log::error('An unexpected error occurred during API fetch: ' . $e->getMessage());
+            Log::error('An unexpected error occurred during API fetch: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
 
         return null;
@@ -72,7 +76,13 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
     private function updateOrCreateProduct(array $article): void
     {
-        $product = Product::where('fldId', $article['A_Code'])->with('prices')->first();
+        $fldId = $article['A_Code'] ?? null;
+
+        if (!$fldId) {
+            return;
+        }
+
+        $product = Product::where('fldId', $fldId)->with('prices')->first();
 
         if (!$product) {
             return;
@@ -87,16 +97,19 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
     private function updateProductData(Product $product, array $article): void
     {
-        $mainCategory = $this->findCategory($article['Main_Category']['M_groupcode'], $article['Sub_Category']['S_groupcode'] ?? null);
+        $mainCategory = $this->findCategory(
+            $article['Main_Category']['M_groupcode'] ?? null,
+            $article['Sub_Category']['S_groupcode'] ?? null
+        );
 
         $product->update([
             'fldId' => $article['A_Code'],
             'fldC_Kala' => $article['A_Code'],
             'vahed_kol' => '',
-            'vahed' => $article['vahed'],
+            'vahed' => $article['vahed'] ?? '',
             'unit' => $article['vahed'] ?: '',
             'morePrice' => json_encode($this->buildMorePriceArray($article)),
-            'fldTedadKarton' => $article['Karton'],
+            'fldTedadKarton' => $article['Karton'] ?? 0,
             'published' => filter_var($article['IsActive'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
             'type' => 'physical',
             'category_id' => $mainCategory?->id,
@@ -138,7 +151,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
             if ($titleFldTipFee === 'fldTipFee2') {
                 $originalPrice = $article['Sel_Price'] ?? 0;
                 if ($originalPrice != 0) {
-                    $discount = (($originalPrice - $article['PriceTakhfif']) / $originalPrice) * 100;
+                    $discount = (($originalPrice - ($article['PriceTakhfif'] ?? 0)) / $originalPrice) * 100;
                 }
                 $discount_price = $article['PriceTakhfif'] > 0 ? $article['PriceTakhfif'] : $originalPrice;
                 $fldTipFee = $originalPrice;
@@ -157,27 +170,24 @@ class GetUpdateProductsAccounting implements ShouldQueue
                 $priceData["discount_price"] = $discount_price;
             }
 
-            Price::withTrashed()->updateOrCreate(
-                [
-                    'product_id' => $product->id,
-                    'title' => $titleFldTipFee,
-                ],
-                $priceData
-            );
+            Price::withTrashed()->where([
+                'product_id' => $product->id,
+                'title' => $titleFldTipFee,
+                ])->update($priceData);
         }
     }
 
-    private function findCategory(string $mainGroupCode, ?string $subGroupCode = null): ?Category
+    private function findCategory(?string $mainGroupCode, ?string $subGroupCode = null): ?Category
     {
         $category = null;
 
-        if ($subGroupCode) {
+        if ($subGroupCode && $mainGroupCode) {
             $category = Category::where('fldC_S_GroohKala', $subGroupCode)
                 ->where('fldC_M_GroohKala', $mainGroupCode)
                 ->first();
         }
 
-        if (!$category) {
+        if (!$category && $mainGroupCode) {
             $category = Category::where('fldC_M_GroohKala', $mainGroupCode)->first();
         }
 
@@ -187,7 +197,9 @@ class GetUpdateProductsAccounting implements ShouldQueue
     private function syncProductCategories(Product $product, array $article): void
     {
         $categories = [];
-        $mainCategory = $this->findCategory($article['Main_Category']['M_groupcode']);
+        $mainCategory = $this->findCategory(
+            $article['Main_Category']['M_groupcode'] ?? null
+        );
 
         if ($mainCategory) {
             $categories[] = $mainCategory->id;
@@ -210,8 +222,12 @@ class GetUpdateProductsAccounting implements ShouldQueue
     private function removeDuplicatePrices(int $productId): void
     {
         $titles = ['fldTipFee1', 'fldTipFee2', 'fldTipFee3', 'fldTipFee4', 'fldTipFee5', 'fldTipFee6', 'fldTipFee7', 'fldTipFee8', 'fldTipFee9', 'fldTipFee10'];
+        $excludedTitles = ['fldTipFee1', 'fldTipFee4', 'fldTipFee7'];
 
         foreach ($titles as $title) {
+            if (in_array($title, $excludedTitles)) {
+                continue;
+            }
             $duplicates = Price::withTrashed()
                 ->where('product_id', $productId)
                 ->where('title', $title)
@@ -226,7 +242,7 @@ class GetUpdateProductsAccounting implements ShouldQueue
 
     private function cleanup(): void
     {
-        // DB::table('failed_jobs')->truncate(); // حذف این خط توصیه می‌شود
+         DB::table('failed_jobs')->truncate();
         Product::clearCache();
     }
 }
