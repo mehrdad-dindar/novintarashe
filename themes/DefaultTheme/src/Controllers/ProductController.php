@@ -152,7 +152,7 @@ class ProductController extends Controller
         if (!empty($categoryIds)) {
             $categoryProducts = Product::query()
                 ->published()
-                ->orderByStock()
+//                ->orderByStock()
                 ->whereHas('categories', function ($q) use ($categoryIds) {
                     $q->whereIn('categories.id', $categoryIds);
                 })
@@ -165,7 +165,7 @@ class ProductController extends Controller
             ->merge($categoryProducts)
             ->unique('title')
             ->shuffle()
-            /*->take(15)*/;
+            ->take(20);
 
 
         $product->load(['comments' => function ($query) {
