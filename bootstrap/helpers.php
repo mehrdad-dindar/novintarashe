@@ -678,6 +678,7 @@ function get_gateway_configs($gateway)
                 $configs['password']   = $gateway->config('password');
                 break;
             }
+        case "sep":
         case "sepehr": {
                 $configs['terminalId'] = $gateway->config('terminalId');
                 break;

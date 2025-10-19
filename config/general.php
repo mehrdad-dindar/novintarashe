@@ -317,6 +317,12 @@ return [
                 'merchantId' => 'کد پذیرنده'
             ]
         ],
+        'sep'       => [
+            'label' => 'درگاه سامان کیش',
+            'fields' => [
+                'terminalId' => 'کد پذیرنده'
+            ]
+        ],
         'sepehr'      => [
             'label' => 'درگاه سپهر (بانک صادرات)',
             'fields' => [
