@@ -161,21 +161,30 @@ class CategoryController extends Controller
 
     public function search(Request $request)
     {
-        $term = $request->get('q');
+        $search = $request->get('q', '');
+        $page = $request->get('page', 1);
 
-        $categories = Category::query()
-            ->where('title', 'like', "%{$term}%")
-            ->limit(20)
-            ->get();
+        $categories = Category::query();
 
-        $results = $categories->map(function ($cat) {
+        if (!empty($search)) {
+            $categories->where('title', 'like', "%{$search}%");
+        }
+        $categories = $categories
+            ->latest()
+            ->paginate(20, ['*'], 'page', $page);
+
+        $results = $categories->getCollection()->map(function ($category) {
             return [
-                'id'    => $cat->id,
-                'text'  => $cat->full_title,
-                'image' => $cat->image ?? '',
-            ];
+                'id'       => $category->id,
+                'text'     => $category->full_title,
+                'image'    => $category->image ? asset($category->image) : null,
+                ];
         });
 
-        return response()->json(['results' => $results]);
+
+        return response()->json([
+            'results'    => $results,
+            'more' => (bool)$categories->nextPageUrl()
+        ]);
     }
 }

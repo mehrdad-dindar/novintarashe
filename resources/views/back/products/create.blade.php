@@ -25,6 +25,7 @@
                 </div>
 
             </div>
+
             <div id="main-card" class="content-body">
                 <form class="form" id="product-create-form" action="{{ route('admin.products.store') }}" method="post">
                     @csrf
@@ -53,13 +54,13 @@
                                                     <a class="nav-link" id="product-files-tab-nav" data-toggle="tab" aria-controls="product-files-tab" href="#product-files-tab" role="tab" aria-selected="false">فایل</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="productImageTab" data-toggle="tab" aria-controls="tabProductImage" href="#tabProductImage" role="tab" aria-selected="false">تصاویر </a>
+                                                    <a class="nav-link" id="productImageTab" data-toggle="tab" aria-controls="tabProductImage" href="#tabProductImage" role="tab" aria-selected="false">تصاویر</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" id="specification-tab" data-toggle="tab" aria-controls="tabSpecification" href="#tabSpecification" role="tab" aria-selected="false">مشخصات</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="" data-toggle="tab" aria-controls="tabSize" href="#tabSize" role="tab" aria-selected="false">سایز بندی</a>
+                                                    <a class="nav-link" id="sizes-tab" data-toggle="tab" aria-controls="tabSize" href="#tabSize" role="tab" aria-selected="false">سایز بندی</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" id="related-products-tab" data-toggle="tab" href="#related-products" role="tab">
@@ -550,7 +551,17 @@
 
 @endsection
 
-@include('back.partials.plugins', ['plugins' => ['ckeditor', 'jquery-tagsinput', 'jquery.validate', 'jquery-ui', 'jquery-ui-sortable', 'dropzone', 'persian-datepicker']])
+@include('back.partials.plugins', [
+    'plugins' => [
+        'ckeditor',
+        'jquery-tagsinput',
+        'jquery.validate',
+        'jquery-ui',
+        'jquery-ui-sortable',
+        'dropzone',
+        'persian-datepicker'
+        ]
+    ])
 
 @php
     $help_videos = [
@@ -559,16 +570,23 @@
 @endphp
 
 @push('styles')
-    <link href="{{ asset('back/assets/css/select2/select2.min.css') }}" rel="stylesheet" />
     <style>
         #related_products,#related_categories {
             width: 100% !important;
+        }
+        #related_products,#related_categories {
+            width: 100% !important;
+        }
+        .available {
+            color: #22c55e; /* سبز */
+        }
+        .unavailable {
+            color: #ef4444; /* قرمز */
         }
     </style>
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('back/app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
     <script>
         $('#related_products').select2({
             placeholder: "جستجوی محصول",
@@ -584,12 +602,16 @@
                 delay: 1000,
                 data: function (params) {
                     return {
-                        q: params.term // عبارت جستجو
+                        q: params.term,
+                        page: params.page || 1
                     };
                 },
                 processResults: function (data) {
                     return {
-                        results: data.results
+                        results: data.results,
+                        pagination: {
+                            more: !!data.more
+                        }
                     };
                 },
                 cache: true
@@ -614,12 +636,16 @@
                 delay: 1000,
                 data: function (params) {
                     return {
-                        q: params.term
+                        q: params.term,
+                        page: params.page || 1
                     };
                 },
                 processResults: function (data) {
                     return {
-                        results: data.results
+                        results: data.results,
+                        pagination: {
+                            more: !!data.more
+                        }
                     };
                 },
                 cache: true
@@ -645,36 +671,37 @@
             escapeMarkup: function (markup) { return markup; }
         });
 
-        function formatProduct(product) {
-            if (!product.id) return product.text;
+        function formatProduct(item) {
+            if (!item.id) return item.text;
 
-            let image = product.image
-                ? `<img src="${product.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
+            let image = item.image
+                ? `<img src="${item.image}" class="rounded-circle mr-2" style="width:50px; height:50px; object-fit:cover;" />`
                 : `<span class="badge badge-info rounded-circle mr-2 d-flex justify-content-center align-items-center" style="width:50px; height:50px; object-fit:cover;font-size: 2em"><i class="feather icon-image mr-0 w-100 h-100"></i></span>`;
 
-            let category = product.category ? `<small class="text-muted">(${product.category})</small>` : '';
-            let view = `<div class="text-muted font-weight-bold">${product.view}<i class="feather icon-eye mr-1"></i></div>`;
+            let category = item.category ? `<small class="text-muted">(${item.category})</small>` : '';
+            let view = `${item.view}<i class="feather icon-eye m-1"></i>`;
             let stock = item.stock_count ? 'موجود (' + item.stock_count +')' : 'نا موجود';
             let stock_text =`<i class="feather ${item.stock_count ? 'icon-check-circle available' : 'icon-x-circle unavailable'}"></i> ${stock}`;
-
 
             return $(`
         <div class="d-flex align-items-center">
             ${image}
             <div>
-                <div class="font-weight-bold">${product.title} ${category}</div>
+              <div class="font-weight-bold">${item.title} ${category}</div>
+              <div class="text-muted font-weight-bold">
                 ${stock_text} ${view}
+              </div>
             </div>
         </div>
     `);
         }
 
-        function formatProductSelection(product) {
-            if (product.id === '') { // adjust for custom placeholder values
+        function formatProductSelection(item) {
+            if (item.id === '') { // adjust for custom placeholder values
                 return 'Custom styled placeholder text';
             }
 
-            return product.text;
+            return item.text;
         }
     </script>
     <script>
