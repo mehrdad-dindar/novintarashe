@@ -5,8 +5,7 @@
 /storage/*.key
 /storage/debugbar
 /storage/installed
-/bootstrap/cache
-bootstrap/cache
+/bootstrap/cache/*.php
 .env
 .env.backup
 .phpunit.result.cache
@@ -18,9 +17,6 @@ yarn-error.log
 
 .idea/
 .vscode/
-bootstrap/cache/config.php
-bootstrap/cache/packages.php
-bootstrap/cache/services.ph;
 public/sitemap.xml
 
 vendor
