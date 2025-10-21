@@ -63,13 +63,13 @@ class GetCategoriesAccounting implements ShouldQueue
                     $category->title = $mGroupTitle;
                     $category->slug = $this->generate_slug($mGroupTitle);
                     $category->groupId = $groupId;
-                    $category->published = $published;
+//                    $category->published = $published;
                     $category->type = "productcat";
                     $category->save();
                 } else {
                     $mGroupCategory->title = $mGroupTitle;
                     $mGroupCategory->groupId = $groupId;
-                    $mGroupCategory->published = $published;
+//                    $mGroupCategory->published = $published;
                     $mGroupCategory->save();
                 }
 
@@ -94,7 +94,7 @@ class GetCategoriesAccounting implements ShouldQueue
                             $category->slug = $this->generate_slug($sGroupTitle);
                             $category->fldC_M_GroohKala = $fldC_M_GroohKala;
                             $category->fldC_S_GroohKala = $fldC_S_GroohKala;
-                            $category->published = $published;
+//                            $category->published = $published;
                             $category->type = "productcat";
 
                             // Log::info($fldC_M_GroohKala);
@@ -107,7 +107,7 @@ class GetCategoriesAccounting implements ShouldQueue
                             $sGroupCategory->title = $sGroupTitle;
                             $sGroupCategory->fldC_M_GroohKala = $fldC_M_GroohKala;
                             $sGroupCategory->fldC_S_GroohKala = $fldC_S_GroohKala;
-                            $sGroupCategory->published = $published;
+//                            $sGroupCategory->published = $published;
                             $sGroupCategory->type = "productcat";
 
                             $category_id = Category::where(['groupId' => $fldC_M_GroohKala])->first()->id;
