@@ -48,7 +48,7 @@ class WalletController extends Controller
         ]);
 
         $gateway = $request->gateway;
-        $amount  = intval($request->amount);
+        $amount  = (int)$request->amount;
         $wallet  = auth()->user()->getWallet();
 
         $history = $wallet->histories()->create([
@@ -60,68 +60,108 @@ class WalletController extends Controller
         ]);
 
         try {
-
+            $invoice = new Invoice;
             $gateway_configs = get_gateway_configs($gateway);
             $currency = Currency::find(option('default_currency_id'));
 
-            return Payment::via($gateway)->config($gateway_configs)->callbackUrl(route('front.wallet.verify', ['gateway' => $gateway]))->purchase(
-                (new Invoice)->amount(isset($currency) && $currency != null ? $amount*$currency->amount : $amount),
-                function ($driver, $transactionId) use ($history, $gateway, $amount) {
-                    DB::table('transactions')->insert([
-                        'status'               => false,
-                        'amount'               => $amount,
-                        'factorNumber'         => $history->id,
-                        'mobile'               => auth()->user()->username,
-                        'message'              => trans('front::messages.controller.created-for-gateway') . $gateway,
-                        'transID'              => $transactionId,
-                        'token'                => $transactionId,
-                        'user_id'              => auth()->user()->id,
-                        'transactionable_type' => WalletHistory::class,
-                        'transactionable_id'   => $history->id,
-                        'gateway_id'           => Gateway::where('key', $gateway)->first()->id,
-                        "created_at"           => Carbon::now(),
-                        "updated_at"           => Carbon::now(),
-                    ]);
+            $amount = isset($currency) && $currency != null ? $amount * $currency->amount : $amount;
 
-                    session()->put('transactionId', $transactionId);
-                    session()->put('amount', $amount);
+            $invoice->amount((int)$amount);
+            $invoice->detail([
+                'mobile' => auth()->user()->mobile,
+                'first_name' => auth()->user()->first_name,
+                'last_name' => auth()->user()->last_name,
+                'national_code' => auth()->user()->national_code,
+                'items' => [
+                    'reference' => $history->id,
+                    'name' => trans('front::messages.controller.wallet-recharge'),
+                    'is_product' => false,
+                    'quantity' => 1,
+                    'unit_price' => (int)$amount,
+                    'unit_discount' => "0",
+                    'unit_tax_amount' => '0',
+                ]
+            ]);
+
+            $transaction = $wallet->user->transactions()->create([
+                'status' => false,
+                'amount' => (int)$request->amount,
+                'factorNumber' => $history->id,
+                'mobile' => auth()->user()->mobile ?? auth()->user()->username,
+                'message' => trans('front::messages.controller.created-for-gateway') . $gateway,
+                'user_id' => auth()->user()->id,
+                'transactionable_type' => WalletHistory::class,
+                'transactionable_id' => $history->id,
+                'gateway_id' => Gateway::where('key', $gateway)->first()->id,
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now(),
+                "description" => $invoice,
+                'payment_id' => $invoice->getUuid(),
+                'token' => "-"
+            ]);
+
+            $callbackUrl = route('front.wallet.verify', ['gateway' => $gateway, 'history_id' => $history, 'payment_id' => $invoice->getUuid()]);
+
+            $payment = Payment::via($gateway)->config($gateway_configs)->callbackUrl($callbackUrl)->purchase(
+                $invoice,
+                function ($driver, $transactionId) use ($transaction) {
+                    $transaction->transID = $transactionId;
+                    $transaction->token = $transactionId;
+                    $transaction->save();
                 }
-            )->pay()->render();
+            );
+            return $payment->pay()->render();
         } catch (Exception $e) {
-            return redirect()->route('front.wallet.index', ['history' => $history])->with('transaction-error', $e->getMessage());
+            return redirect()
+                ->route('front.wallet.index', ['history' => $history])
+                ->with('transaction-error', $e->getMessage());
         }
     }
 
-    public function verify($gateway)
+    public function verify($gateway, Request $request)
     {
-        $transactionId = session()->get('transactionId');
-        $amount        = session()->get('amount');
 
-        $transaction = Transaction::where('status', false)->where('transID', $transactionId)->firstOrFail();
 
+        if ($request->missing('payment_id')) {
+            return redirect()->route('front.wallet.index')
+                ->with('transaction-error', 'payment_id is missing !');
+        }
+
+        $transaction = Transaction::where('status', false)->where('payment_id', $request->input('payment_id'))->firstOrFail();
+
+        if (blank($transaction)) {
+            return redirect()->route('front.wallet.index')
+                ->with('transaction-error', 'transaction not found !');
+        }
+        $transactionId = $transaction->transId;
         $history = $transaction->transactionable;
 
-        $gateway_configs = get_gateway_configs($gateway);
+        if ($transaction->user_id !== $history->wallet->user->id) {
+            return redirect()->route('front.wallet.index', ['history' => $history])
+                ->with('transaction-error', 'user id problem');
+        }
+
 
         try {
+            $gateway_configs = get_gateway_configs($gateway);
+            $currency = Currency::find(option('default_currency_id'));
+
             $receipt = Payment::via($gateway)->config($gateway_configs);
 
-            if ($amount) {
-                $receipt = $receipt->amount(intval($amount));
-            }
+            $amount = isset($currency) && $currency != null ? (int)$transaction->amount * $currency->amount : (int)$transaction->amount;
+
+            $receipt = $receipt->amount((int)$amount);
+
 
             $receipt = $receipt->transactionId($transactionId)->verify();
 
-            DB::table('transactions')->where('transID', $transactionId)->update([
-                'status'               => 1,
-                'traceNumber'          => $receipt->getReferenceId(),
-                'message'              => $transaction->message . '<br>' . trans('front::messages.controller.successful-gateway') . $gateway,
-                'updated_at'           => Carbon::now(),
-            ]);
+            $transaction->status = true;
+            $transaction->traceNumber = $receipt->getReferenceId();
+            $transaction->message = $transaction->message . '<br>' . trans('front::messages.controller.successful-gateway') . $gateway;
+            $transaction->save();
 
-            $history->update([
-                'status' => 'success',
-            ]);
+            $history->status = 'success';
+            $history->save();
 
             event(new WalletAmountIncreased($history->wallet));
 
