@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div class="section-title text-sm-title title-wide mb-1 no-after-title-wide dt-sl mb-2 px-res-1">
                         <h2>{{ trans('front::messages.wallet.wallet-history') }}</h2>
-                        <a href="{{ route('front.wallet.create') }}" class="m-0 d-block">{{ trans('front::messages.wallet.increase-wallet-inventory') }}</a>
+                        <a href="{{ route('front.wallet.create') }}" class="m-0 d-block" style="border: 1px solid red"><i class="mdi mdi-square-inc-cash ml-2"></i>{{ trans('front::messages.wallet.increase-wallet-inventory') }}</a>
                     </div>
                     <div class="dt-sl">
                         <div class="table-responsive">
