@@ -1,7 +1,7 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "The Laravel Framework.",
     "keywords": [
         "framework",
