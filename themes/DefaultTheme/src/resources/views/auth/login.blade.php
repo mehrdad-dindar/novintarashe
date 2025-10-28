@@ -1,5 +1,10 @@
 @extends('front::auth.layouts.master', ['title' => trans('front::messages.auth.sign-in-to-site') ])
 
+@push('meta')
+    <meta name="robots" content="noindex, nofollow" />
+    <meta property="og:title" content="{{ trans('front::messages.auth.sign-in-to-site') }}" />
+@endpush
+
 @php
     $redirect_url = request("redirect") ?: Redirect::intended()->getTargetUrl();
 @endphp

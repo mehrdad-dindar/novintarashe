@@ -9,6 +9,7 @@
      <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="msapplication-navbutton-color" content="#f7858d">
     <meta name="apple-mobile-web-app-status-bar-style" content="#f7858d">
+    @stack('meta')
     <title>
         @isset($title)
             {{ $title }} |
