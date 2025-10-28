@@ -1,5 +1,10 @@
 @extends('front::auth.layouts.master', ['title' => trans('front::messages.auth.register-on-the-site') ])
 
+@push('meta')
+    <meta name="robots" content="noindex, nofollow" />
+    <meta property="og:title" content="{{ trans('front::messages.auth.register-on-the-site') }}" />
+@endpush
+
 @section('content')
 
     <!-- Start main-content -->
