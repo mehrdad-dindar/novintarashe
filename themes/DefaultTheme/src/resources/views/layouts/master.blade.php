@@ -10,7 +10,16 @@
     <meta name="robots" content="index, follow"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
-    <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="0d82a955-9dc2-4eae-a974-986f61c80d11";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+    <script type="text/javascript">
+        window.RAYCHAT_TOKEN = "3aef2e2a-3509-4be0-86cf-1fadca555e38";
+        (function () {
+            d = document;
+            s = d.createElement("script");
+            s.src = "https://widget-react.raychat.io/install/widget.js";
+            s.async = 1;
+            d.getElementsByTagName("head")[0].appendChild(s);
+        })();
+    </script>
 
     @stack('meta')
 

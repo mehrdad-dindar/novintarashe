@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -32,6 +33,7 @@ class SendOrderToAccounting implements ShouldQueue
 
         $this->registerCustomer($mobile, $locationData);
         $this->sendOrderToAccounting();
+        $this->cleanup();
     }
 
     private function getMobile(): string
@@ -57,7 +59,7 @@ class SendOrderToAccounting implements ShouldQueue
             'phoneNumber' => $mobile,
             'fullName' => $this->user->fullname,
             'address' => $locationData['fullAddress'],
-            'nationalCode' => $this->user->national_code,
+            'nationalCode' => (string)$this->user->national_code,
             'region' => $locationData['province'],
             'city' => $locationData['city'],
 //            'latitude' => '',
@@ -72,6 +74,11 @@ class SendOrderToAccounting implements ShouldQueue
 
             if ($response->successful()) {
                 Log::warning('Customer registration successful', [
+                    'body' => $response->body()
+                ]);
+            } else {
+                Log::warning('Customer registration failed', [
+                    'State' => $response->status(),
                     'body' => $response->body()
                 ]);
             }
@@ -154,5 +161,10 @@ class SendOrderToAccounting implements ShouldQueue
     private function markOrderAsSent(): void
     {
         $this->order->update(['send_to_accounting' => 1]);
+    }
+
+    private function cleanup(): void
+    {
+        DB::table('failed_jobs')->truncate();
     }
 }
